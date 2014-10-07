@@ -1,0 +1,42 @@
+<?php
+$string['pluginname'] = 'Feedbackwall';
+$string['userpreferences'] = 'User preferences';
+$string["modulename"] = "Feedbackwall";
+$string["modulenameplural"] = "Feedbackwalls";
+$string['modulename_help'] = "This plugin gives the students an opportunity to give the course a feedback,
+which is displayed on a 'wall' and if the student decides so, anonymously.
+With the option to comment a feedback this eventually leads to a little discussion about the feedback/course."; 
+$string["newmodulename"] = "New modulename";
+$string["newmoduleintro"] = "Description";
+$string['pluginadministration'] = "Pluginadministration";
+$string["nameinputdescription"] = "If not set, your Feedback has 'Anonymous' as the author of the Feedback.";
+$string["refreshfeedbacklist"] = "Refresh Feedbackwall";
+$string["oldsortdescription"] = "oldest";
+$string["newsortdescription"] = "newest";
+$string["ratingdescending"] = "rating descending";
+$string["ratingascending"] = "rating ascending";
+$string["feedbackwall"] = "Feedbackwall";
+$string["noComments"] = "There are no Comments for this Feedback";
+$string["noFeedbacks"] ="There are no Feedbacks for this Feedbackwall";
+$string["send"] = "Send";
+$string["name"] = "Name";
+$string["rating"] = "Rating";
+$string["rate"] = "rate";
+$string["showComments"] = "show Comments";
+$string["hideComments"] = "hide Comments";
+$string["writeaFeedback"] = "write a Feedback...";
+$string["writeaComment"] = "write a Comment...";
+$string["loadingpleasewait"] = "Loading, please wait...";
+$string["emptyFeedbackinput"] = "Write something to send a Feedback!";
+$string["emptyCommentinput"] = "Write something to send a Comment!";
+$string["alreadyrated"] = "You already rated this Feedback!";
+$string["infoReturn"] =" Info: ' @@ ' will be a return in your Feedback";
+$string["rateFeedback"] = "Rate this Feedback...";
+$string["rateoneStar"] = "one Star";
+$string["ratetwoStars"] = "two Stars";
+$string["ratethreeStars"] = "three Stars";
+$string["ratefourStars"] = "four Stars";
+$string["ratefiveStars"] = "five Stars";
+$string["amountdescending"] ="amount of ratings desc";
+$string["amountascending"] ="amount of ratings asc";
+$string["anonymous"] = "Anonymous";
