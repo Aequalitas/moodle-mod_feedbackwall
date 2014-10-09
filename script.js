@@ -63,7 +63,7 @@ function feedbackInsert(courseid,coursemoduleid,dateInt)
 		if($.trim($("#feedbackinputfield").val()).length !=0)
 		{
 			var feedback=$("#feedbackinputfield").val().replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/@@/g,"<br>");
-			var name=getName();
+			var name=var name=$("#name").text();
 			
 			
 			
@@ -203,7 +203,7 @@ function commInsert(id,courseid,coursemoduleid,date)
 		if($.trim($("#commtxtarea"+id).val()).length !=0)
 		{
 			var commtext= $("#commtxtarea"+id).val().replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/@@/g,"<br>");
-			var name = getName();
+			var name = var name=$("#name").text();
 			
 			
 			
@@ -309,28 +309,6 @@ function commsRefresh(id,courseid,coursemoduleid,dateInt)
 					
 			});
 	
-}
-
-/*
-	gets the name of the user which is anonymous if 
-	the user didnt write a name into the nameinputfield.
-
-*/
-function getName()
-{
-	var name="";
-	
-		if($("#name").val()!="")
-		
-			{
-				name=$("#name").val().replace(/</g, "&lt;").replace(/>/g, "&gt;");
-			}
-			else
-			{
-				name=$("#name").attr("name");
-			}
-
-		return name;
 }
 
 /*

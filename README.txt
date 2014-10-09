@@ -1,4 +1,4 @@
-Feedbackwall 
+Feedbackwall by Franz Weidmann
 
 With this activity the students can give the course/teacher 
 a short feedback, new thing is that those feedbacks are 

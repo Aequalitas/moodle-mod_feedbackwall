@@ -312,8 +312,11 @@ echo $OUTPUT -> heading(format_string($feedbackwall -> name), 2);
 $table = new html_table();
 $table -> data = array(
 array("<h3>". $feedbackwall -> intro . "</h3>"),
-array("<input type='text'name='" . get_string("anonymous","feedbackwall") ."' id='name' placeholder='Anonymus'><label style='font-size: 11.9px;
-color: #999;'>" . get_string("nameinputdescription","feedbackwall") . "</label>"),
+array("<select  id='name'>
+<option >" . get_string("anonymous","feedbackwall") ."</option>
+<option >" . $USER -> username . "</option>
+</select>
+<label style='font-size: 11.9px;color: #999;'>" . get_string("nameinputdescription","feedbackwall") . "</label>"),
 
 array('<textarea style="margin-top:1%;" id="feedbackinputfield"  rows="4" cols="90" placeholder="' . get_string("writeaFeedback","feedbackwall") .'"></textarea>
 	<input type="button" id="feedbackbutton" onClick="feedbackInsert(' . $course -> id .',' . $cm -> id . ',' . $dateInt . ');" value="' . get_string("send","feedbackwall") . '">
