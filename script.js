@@ -63,7 +63,7 @@ function feedbackInsert(courseid,coursemoduleid,dateInt)
 		if($.trim($("#feedbackinputfield").val()).length !=0)
 		{
 			var feedback=$("#feedbackinputfield").val().replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/@@/g,"<br>");
-			var name=var name=$("#name").text();
+			var name= name=$("#name").val();
 			
 			
 			
@@ -203,7 +203,7 @@ function commInsert(id,courseid,coursemoduleid,date)
 		if($.trim($("#commtxtarea"+id).val()).length !=0)
 		{
 			var commtext= $("#commtxtarea"+id).val().replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/@@/g,"<br>");
-			var name = var name=$("#name").text();
+			var name = name=$("#name").val();
 			
 			
 			
