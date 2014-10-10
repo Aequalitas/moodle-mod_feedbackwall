@@ -42,15 +42,15 @@ if (!defined('MOODLE_INTERNAL')) {
  */
 function feedbackwall_comments($feedback,$commentsentry,$courseid,$coursemoduleid,$dateInt)
 {
-	$fID=$feedback->id;				
+	$fID=$feedback -> id;				
 	$comments = "<div style='margin-left:15%;' id='comments". $fID ."' style='display:none;'>";		
 
-	if($feedback->amountcomments>0)
+	if($feedback -> amountcomments>0)
 	{														
 		foreach($commentsentry as $comment)
 		{
-			$comments .= "<div  id='". $comment->id ."comment".$fID."'>";
-			$comments .= "<h4>" . $comment->name . "</h4>" . $comment->comment . "</br>";
+			$comments .= "<div  id='". $comment -> id ."comment".$fID."'>";
+			$comments .= "<h4>" . $comment -> name . "</h4>" . $comment -> comment . "</br>";
 			$comments .= "</div><br>";
 		}														
 	}	
@@ -91,10 +91,10 @@ function feedbackwall_comments($feedback,$commentsentry,$courseid,$coursemodulei
  */
 function feedbackwall_feedbacks($feedback,$comments,$courseid,$coursemoduleid,$dateInt,$userid)
 {
-	$fID=$feedback->id;	
-	$ratingAverage = $feedback->ratingaverage;
+	$fID=$feedback -> id;	
+	$ratingAverage = $feedback -> ratingaverage;
 
-	$alreadyrated = $feedback->didrate;
+	$alreadyrated = $feedback -> didrate;
 					
 	$alreadyratedArray = explode(",",$alreadyrated);
 	$canRate=1;
@@ -110,7 +110,7 @@ function feedbackwall_feedbacks($feedback,$comments,$courseid,$coursemoduleid,$d
 
 	$feedbacks =  "<div class='feedbacks' id='" . $fID. "'>";  									
 	$feedbacks .=  '<h4> ' . $feedback->name . '</h4>';
-	$feedbacks .=   "<p style='margin-left:5%;margin-top:2%;' >" . $feedback->feedback . "</p>";									
+	$feedbacks .=   "<p style='margin-left:5%;margin-top:2%;' >" . $feedback -> feedback . "</p>";									
 	$feedbacks .=  '	<table>';											
 	$feedbacks .=  '<tr>';		
 
@@ -131,21 +131,21 @@ function feedbackwall_feedbacks($feedback,$comments,$courseid,$coursemoduleid,$d
 			$feedbacks .=  '<td><img src="pix/emptyStar.jpg" alt="emptyStar"></td>';
 		}												
 	}			
-
+	$feedbacks .=  "<td><label title=" . get_string("rating","feedbackwall") . " >(" . $feedback -> rating .")</label></td>";
 	$feedbacks .=  '</tr>';											
 	$feedbacks .=   '</table>';								
-	$feedbacks .=   get_string("rating","feedbackwall") . ":" . $feedback->rating . "";
+
 
 	if($canRate==1)
 	{
 		$feedbacks .= '
 			<select id="selectStar'  . $fID . '">
-			<option value="noStar">' . get_string("rateFeedback","feedbackwall") . '</option>
-			<option value="oneStar">' . get_string("rateoneStar","feedbackwall") . '</option>
-			<option value="twoStars">' . get_string("ratetwoStars","feedbackwall") . '</option>
-			<option value="threeStars">' . get_string("ratethreeStars","feedbackwall") . '</option>
-			<option value="fourStars">' . get_string("ratefourStars","feedbackwall") . '</option>
-			<option value="fiveStars">' . get_string("ratefiveStars","feedbackwall") . '</option>
+				<option value="noStar">' . get_string("rateFeedback","feedbackwall") . '</option>
+				<option value="oneStar">' . get_string("rateoneStar","feedbackwall") . '</option>
+				<option value="twoStars">' . get_string("ratetwoStars","feedbackwall") . '</option>
+				<option value="threeStars">' . get_string("ratethreeStars","feedbackwall") . '</option>
+				<option value="fourStars">' . get_string("ratefourStars","feedbackwall") . '</option>
+				<option value="fiveStars">' . get_string("ratefiveStars","feedbackwall") . '</option>
 			</select>
 		';
 		
@@ -157,9 +157,9 @@ function feedbackwall_feedbacks($feedback,$comments,$courseid,$coursemoduleid,$d
 		$feedbacks .=  '<label id="alreadyrated">' . get_string("alreadyrated","feedbackwall") . '</label>';
 	}
 	$feedbacks .=  "<input type='button' onClick='commShow(" . $fID . ");' class='commShow' id='commShow" . $fID . "' value='";							
-	if($feedback->amountcomments > 0)
+	if($feedback -> amountcomments > 0)
 	{
-		$feedbacks .=  $feedback->amountcomments . " ". get_string("showComments","feedbackwall") . "'>";
+		$feedbacks .=  $feedback -> amountcomments . " ". get_string("showComments","feedbackwall") . "'>";
 	}
 	else
 	{

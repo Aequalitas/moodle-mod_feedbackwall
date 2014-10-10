@@ -313,7 +313,7 @@ $table = new html_table();
 $table -> data = array(
 array("<h3>". $feedbackwall -> intro . "</h3>"),
 array("<select  id='name'>
-<option value='" . get_string("anonymous","feedbackwall") ."' >" . get_string("anonymous","feedbackwall") ."</option>
+<option value='" . get_string("anonymous","feedbackwall") ."' >" . get_string("anonymous","feedbackwall") ."</option>  
 <option value='" . $USER -> username . "' >" . $USER -> username . "</option>
 </select>
 <label style='font-size: 11.9px;color: #999;'>" . get_string("nameinputdescription","feedbackwall") . "</label>"),
