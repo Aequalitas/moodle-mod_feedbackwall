@@ -9,7 +9,7 @@ With the option to comment a feedback this eventually leads to a little discussi
 $string["newmodulename"] = "New modulename";
 $string["newmoduleintro"] = "Description";
 $string['pluginadministration'] = "Pluginadministration";
-$string["nameinputdescription"] = "If not set, your Feedback has 'Anonymous' as the author of the Feedback.";
+$string["nameinputdescription"] = 'If set to "Anonymous", then your feedback will be postet anonymously.';
 $string["refreshfeedbacklist"] = "Refresh Feedbackwall";
 $string["oldsortdescription"] = "oldest";
 $string["newsortdescription"] = "newest";
@@ -20,7 +20,7 @@ $string["noComments"] = "There are no Comments for this Feedback";
 $string["noFeedbacks"] ="There are no Feedbacks for this Feedbackwall";
 $string["send"] = "Send";
 $string["name"] = "Name";
-$string["rating"] = "Rating";
+$string["rating"] = "Amount of Ratings done";
 $string["rate"] = "rate";
 $string["showComments"] = "show Comments";
 $string["hideComments"] = "hide Comments";

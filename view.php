@@ -20,7 +20,7 @@
  * 
  *
  * @author  Franz Weidmann 
- * @version 9/2014
+ * @version 10/2014
  * @package mod/feedbackwall
  * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -41,11 +41,11 @@ if(isset($_POST["fnc"]))
 {
 	if($_POST["fnc"] == "feedbackInsert")
 	{
-		$feedback = $_POST["q"];
-		$name = $_POST["s"];
-		$courseid = $_POST["l"];
-		$coursemoduleid = $_POST["k"];
-		$timecreated = $_POST["r"]; 
+		$feedback =  required_param("q",PARAM_TEXT);
+		$name =  required_param("s",PARAM_TEXT);
+		$courseid = required_param("l",PARAM_INT);
+		$coursemoduleid = required_param("k",PARAM_INT);
+		$timecreated =  required_param("q",PARAM_INT);
 		
 		$entry = new stdClass();
 		$entry -> courseid = $courseid;
@@ -62,10 +62,10 @@ if(isset($_POST["fnc"]))
 	else if($_POST["fnc"] == "feedbackwallRefresh")
 	{
 		
-		$s = $_POST["q"];
-		$courseid = $_POST["s"];
-		$coursemoduleid = $_POST["l"];
-		$date = $_POST["d"];
+		$s = required_param("q",PARAM_TEXT);
+		$courseid = required_param("s",PARAM_INT); 
+		$coursemoduleid = required_param("l",PARAM_INT);
+		$date =  required_param("d",PARAM_TEXT);
 		
 		
 		$entry = "";
@@ -124,10 +124,10 @@ if(isset($_POST["fnc"]))
 	else if($_POST["fnc"]=="rate")
 	{
 	
-		$feedbackid = $_POST["q"];
-		$courseid = $_POST["s"];
-		$coursemoduleid = $_POST["k"];
-		$stars = $_POST["h"];
+		$feedbackid = required_param("q",PARAM_INT);
+		$courseid = required_param("s",PARAM_INT);
+		$coursemoduleid = required_param("k",PARAM_INT);
+		$stars = required_param("h",PARAM_INT);
 		
 		$entry = $DB -> get_record("feedbackwall_feedbacks", array(
 		"courseid"=>$courseid,
@@ -158,12 +158,12 @@ if(isset($_POST["fnc"]))
 	{
 			
 		
-		$comment=$_POST["q"];
-		$feedbackid = $_POST["s"];
-		$name=$_POST["o"];
-		$courseid=$_POST["k"];
-		$coursemoduleid =$_POST["r"];
-		$timecreated =$_POST["l"]; 
+		$comment= required_param("q",PARAM_TEXT);
+		$feedbackid = required_param("s",PARAM_INT);
+		$name= required_param("o",PARAM_TEXT);
+		$courseid= required_param("k",PARAM_INT);
+		$coursemoduleid = required_param("r",PARAM_INT);
+		$timecreated = required_param("l",PARAM_INT);
 
 			
 			$entry = new stdClass();
@@ -198,10 +198,10 @@ if(isset($_POST["fnc"]))
 	else if($_POST["fnc"]=="commentsRefresh")
 	{
 		
-		$feedbackid = $_POST["q"];
-		$courseid = $_POST["k"];
-		$coursemoduleid = $_POST["r"];
-		$date = $_POST["d"];
+		$feedbackid = required_param("q",PARAM_INT);
+		$courseid = required_param("k",PARAM_INT);
+		$coursemoduleid = required_param("r",PARAM_INT);
+		$date =  required_param("d",PARAM_INT);
 		
 		
 		$feedback = $DB->get_record('feedbackwall_feedbacks', array(
@@ -225,10 +225,10 @@ if(isset($_POST["fnc"]))
 
 //end of AJAX-querys
 
-$PAGE->requires->jquery();
-$PAGE->requires->jquery_plugin('ui');
-$PAGE->requires->jquery_plugin('ui-css');
-$PAGE->requires->js( new moodle_url($CFG->wwwroot . '/mod/feedbackwall/script.js') );
+$PAGE -> requires -> jquery();
+$PAGE -> requires -> jquery_plugin('ui');
+$PAGE -> requires -> jquery_plugin('ui-css');
+$PAGE -> requires -> js( new moodle_url($CFG -> wwwroot . '/mod/feedbackwall/script.js') );
 
 $id = optional_param('id', 0, PARAM_INT); // course_module ID, or
 $a  = optional_param('a', 0, PARAM_INT);  // feedbackwall instance ID
@@ -238,22 +238,22 @@ if ($id) {
         error('Course Module ID was incorrect');
     }
 
-    if (! $course = $DB->get_record('course',array('id'=>$cm->course))) {
+    if (! $course = $DB->get_record('course',array('id'=>$cm -> course))) {
         error('Course is misconfigured');
     }
 
-    if (! $feedbackwall = $DB->get_record('feedbackwall', array('id'=>$cm->instance))) {
+    if (! $feedbackwall = $DB->get_record('feedbackwall', array('id'=>$cm -> instance))) {
         error('Course module is incorrect');
     }
 
 } else if ($a) {
-    if (! $feedbackwall = $DB->get_record('feedbackwall', array('id'=>$a))) {
+    if (! $feedbackwall = $DB->get_record('feedbackwall', array('id'=> $a))) {
         error('Course module is incorrect');
     }
-    if (! $course =$DB->get_record('course', array('id'=>$feedbackwall->course))) {
+    if (! $course =$DB->get_record('course', array('id'=>$feedbackwall -> course))) {
         error('Course is misconfigured');
     }
-    if (! $cm = get_coursemodule_from_instance('feedbackwall', $feedbackwall->id, $course->id)) {
+    if (! $cm = get_coursemodule_from_instance('feedbackwall', $feedbackwall -> id, $course -> id)) {
         error('Course Module ID was incorrect');
     }
 
@@ -268,9 +268,9 @@ if (isguestuser()) {
     $PAGE->set_title($feedbackwall->name);
     echo $OUTPUT->header();
     echo $OUTPUT->confirm('<p>'.get_string('noguests', 'feedbackwall').'</p>'.get_string('liketologin'),
-            get_login_url(), $CFG->wwwroot.'/course/view.php?id='.$course->id);
+            get_login_url(), $CFG-> wwwroot.'/course/view.php?id='.$course -> id);
 
-    echo $OUTPUT->footer();
+    echo $OUTPUT-> footer();
     exit;
 }
 
@@ -314,7 +314,7 @@ $table -> data = array(
 array("<h3>". $feedbackwall -> intro . "</h3>"),
 array("<select  id='name'>
 <option value='" . get_string("anonymous","feedbackwall") ."' >" . get_string("anonymous","feedbackwall") ."</option>  
-<option value='" . $USER -> username . "' >" . $USER -> username . "</option>
+<option value='" . $USER -> firstname . " " . $USER -> lastname ."' >" . $USER -> firstname . " " . $USER -> lastname ."</option>
 </select>
 <label style='font-size: 11.9px;color: #999;'>" . get_string("nameinputdescription","feedbackwall") . "</label>"),
 

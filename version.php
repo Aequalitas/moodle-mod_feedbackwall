@@ -23,8 +23,9 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-$plugin -> version  = 2014082900;  
-$plugin -> requires = 2010112400;          
+$plugin -> version  = 2014101200;  
+$plugin -> requires = 2014041100;          
 $plugin -> component = 'mod_feedbackwall';
-$plugin -> release = "0.8";
+$plugin -> release = "0.82";
+$plugin -> maturity = "BETA";
 ?>

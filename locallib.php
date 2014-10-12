@@ -45,7 +45,7 @@ function feedbackwall_comments($feedback,$commentsentry,$courseid,$coursemodulei
 	$fID=$feedback -> id;				
 	$comments = "<div style='margin-left:15%;' id='comments". $fID ."' style='display:none;'>";		
 
-	if($feedback -> amountcomments>0)
+	if($feedback -> amountcomments > 0)
 	{														
 		foreach($commentsentry as $comment)
 		{
@@ -99,6 +99,7 @@ function feedbackwall_feedbacks($feedback,$comments,$courseid,$coursemoduleid,$d
 	$alreadyratedArray = explode(",",$alreadyrated);
 	$canRate=1;
 	$i=0;
+	
 	while($alreadyratedArray[$i]!="0")
 	{
 		if($alreadyratedArray[$i] == $userid)
@@ -130,7 +131,8 @@ function feedbackwall_feedbacks($feedback,$comments,$courseid,$coursemoduleid,$d
 		{
 			$feedbacks .=  '<td><img src="pix/emptyStar.jpg" alt="emptyStar"></td>';
 		}												
-	}			
+	}		
+
 	$feedbacks .=  "<td><label title=" . get_string("rating","feedbackwall") . " >(" . $feedback -> rating .")</label></td>";
 	$feedbacks .=  '</tr>';											
 	$feedbacks .=   '</table>';								
@@ -156,7 +158,9 @@ function feedbackwall_feedbacks($feedback,$comments,$courseid,$coursemoduleid,$d
 	{
 		$feedbacks .=  '<label id="alreadyrated">' . get_string("alreadyrated","feedbackwall") . '</label>';
 	}
-	$feedbacks .=  "<input type='button' onClick='commShow(" . $fID . ");' class='commShow' id='commShow" . $fID . "' value='";							
+
+	$feedbacks .=  "<input type='button' onClick='commShow(" . $fID . ");' class='commShow' id='commShow" . $fID . "' value='";		
+
 	if($feedback -> amountcomments > 0)
 	{
 		$feedbacks .=  $feedback -> amountcomments . " ". get_string("showComments","feedbackwall") . "'>";
@@ -165,6 +169,7 @@ function feedbackwall_feedbacks($feedback,$comments,$courseid,$coursemoduleid,$d
 	{
 		$feedbacks .=  get_string("writeaComment","feedbackwall") . "'>";
 	}
+
 	$feedbacks .=  "<input style='display:none;'  onClick='commHide(" . $fID . ");' class='commHide' type='button'";
 	$feedbacks .=  "id='commHide"  . $fID . "' value='" . get_string("hideComments","feedbackwall") . "'>";					
 	$feedbacks .=  "<hr>";					
