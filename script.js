@@ -70,7 +70,7 @@ function feedbackInsert(courseid,coursemoduleid,dateInt)
 			$.ajax({
 			
 				
-				url:"view.php",
+				url:"ajaxquery.php",
 				type:"POST",
 				data:{fnc : "feedbackInsert" , q:feedback , s:name, l:courseid,k:coursemoduleid,r:dateInt},
 				
@@ -150,7 +150,7 @@ function rate(id,courseid,coursemoduleid,date)
 		
 		$.ajax({
 		
-			url:"view.php",
+			url:"ajaxquery.php",
 			type:"POST",
 			
 			data:{q:id,fnc:"rate",s:courseid,k:coursemoduleid,h:stars},
@@ -210,7 +210,7 @@ function commInsert(id,courseid,coursemoduleid,date)
 			$.ajax({
 				
 				type:"POST",
-				url:"view.php",
+				url:"ajaxquery.php",
 				data:{o:name,q:commtext,s:id,fnc:"commentInsert",k:courseid,r:coursemoduleid,l:date},
 				
 				beforeSend: function(){
@@ -284,7 +284,7 @@ function commsRefresh(id,courseid,coursemoduleid,dateInt)
 	$.ajax({
 					
 				type:"POST",
-				url:"view.php",
+				url:"ajaxquery.php",
 				data:{q:id,k:courseid,r:coursemoduleid,fnc:"commentsRefresh",d:dateInt},
 				
 				beforeSend: function(){
@@ -331,7 +331,7 @@ function feedbackwallRefresh(courseid,coursemoduleid,dateInt)
 		
 			
 		
-			url:"view.php",
+			url:"ajaxquery.php",
 			type:"POST",
 			data:{q:sort,fnc:"feedbackwallRefresh",s:courseid,l:coursemoduleid,d:dateInt},
 			
