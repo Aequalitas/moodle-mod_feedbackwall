@@ -27,21 +27,37 @@
 
 define('AJAX_SCRIPT', true);
 
+
+
 require_once(dirname(dirname(dirname(__FILE__))) . '/config.php');
 require_once(dirname(__FILE__) . '/locallib.php');
 
 
+if (!confirm_sesskey())
+{
+    echo "ERROR(sesskey)";
+	die;
+}
+
+$courseid =  required_param("k",PARAM_INT);  /// those two params are used in every action
+$coursemoduleid = required_param("r",PARAM_INT);
+
+if(!$checkcourseid = $DB -> get_record("feedbackwall",array("course" => $courseid)))
+{
+	echo "ERROR(courseid), contact an admin";
+	die;
+}
+
+require_login($course, false, $cm);
 
 // AJAX-Querys, "fnc" tells which kind of query it was.
-if(isset($_POST["fnc"]))
+if($fnc = required_param("fnc",PARAM_TEXT))
 {
-	if($_POST["fnc"] == "feedbackInsert")
+	if($fnc == "feedbackInsert")
 	{
 		$feedback =  required_param("q",PARAM_TEXT);
 		$name =  required_param("s",PARAM_TEXT);
-		$courseid = required_param("l",PARAM_INT);
-		$coursemoduleid = required_param("k",PARAM_INT);
-		$timecreated =  required_param("q",PARAM_INT);
+		$timecreated =  required_param("l",PARAM_INT);
 		
 		$entry = new stdClass();
 		$entry -> courseid = $courseid;
@@ -55,12 +71,10 @@ if(isset($_POST["fnc"]))
 		$DB -> insert_record("feedbackwall_feedbacks", $entry, false);
 		
 	}
-	else if($_POST["fnc"] == "feedbackwallRefresh")
+	else if($fnc == "feedbackwallRefresh")
 	{
 		
 		$s = required_param("q",PARAM_TEXT);
-		$courseid = required_param("s",PARAM_INT); 
-		$coursemoduleid = required_param("l",PARAM_INT);
 		$date =  required_param("d",PARAM_TEXT);
 		
 		
@@ -92,6 +106,7 @@ if(isset($_POST["fnc"]))
 				break;
 		}
 		
+
 		
 		$entry = $DB->get_records('feedbackwall_feedbacks',
 		array(
@@ -106,8 +121,9 @@ if(isset($_POST["fnc"]))
 					
 					$comments = $DB->get_records("feedbackwall_comments",array("feedbackid"=>$feedback -> id));	
 					
-					echo feedbackwall_feedbacks($feedback,$comments,$courseid,$coursemoduleid,$date,$USER -> id);														
+					echo feedbackwall_feedbacks($feedback,$comments,$courseid,$coursemoduleid,$date,$USER -> id,$USER -> sesskey);														
 				}
+				echo "<h3 id='feedbacksloading' style='display:none;'>" . get_string("loadingpleasewait","feedbackwall") . "</h3>";
 			}
 			else
 			{
@@ -117,18 +133,22 @@ if(isset($_POST["fnc"]))
 		
 		
 	}
-	else if($_POST["fnc"]=="rate")
+	else if($fnc == "rate")
 	{
 	
 		$feedbackid = required_param("q",PARAM_INT);
-		$courseid = required_param("s",PARAM_INT);
-		$coursemoduleid = required_param("k",PARAM_INT);
 		$stars = required_param("h",PARAM_INT);
 				
+		if(!$checkfeedbackid = $DB -> get_record("feedbackwall_feedbacks",array("id" => $feedbackid)))
+		{
+			echo "ERROR(feedbackid), contact an admin";
+			die;
+		}
+
 		$entry = $DB -> get_record("feedbackwall_feedbacks", array(
 		"courseid"=>$courseid,
 		"coursemoduleid"=>$coursemoduleid,
-		"id"=>$feedbackid)
+		"id"=> $feedbackid)
 		);
 				
 		$newamountRating= 1 + $entry -> rating;
@@ -148,15 +168,13 @@ if(isset($_POST["fnc"]))
 		$DB->update_record("feedbackwall_feedbacks",$updateRating);
 		
 	}
-	else if($_POST["fnc"]=="commentInsert")
+	else if($fnc == "commentInsert")
 	{
 			
 		
 		$comment= required_param("q",PARAM_TEXT);
 		$feedbackid = required_param("s",PARAM_INT);
 		$name= required_param("o",PARAM_TEXT);
-		$courseid= required_param("k",PARAM_INT);
-		$coursemoduleid = required_param("r",PARAM_INT);
 		$timecreated = required_param("l",PARAM_INT);
 
 			
@@ -171,6 +189,11 @@ if(isset($_POST["fnc"]))
 			
 			$DB->insert_record("feedbackwall_comments",$entry,false);
 			
+			if(!$checkfeedbackid = $DB -> get_record("feedbackwall_feedbacks",array("id" => $feedbackid)))
+			{
+				echo "ERROR(feedbackid), contact an admin";
+				die;
+			}
 			
 			$entry = $DB->get_record("feedbackwall_feedbacks", array(
 			"courseid"=>$courseid,
@@ -189,15 +212,18 @@ if(isset($_POST["fnc"]))
 			$DB->update_record("feedbackwall_feedbacks",$updateRating);
 			
 	}
-	else if($_POST["fnc"]=="commentsRefresh")
+	else if($fnc == "commentsRefresh")
 	{
 		
 		$feedbackid = required_param("q",PARAM_INT);
-		$courseid = required_param("k",PARAM_INT);
-		$coursemoduleid = required_param("r",PARAM_INT);
 		$date =  required_param("d",PARAM_INT);
 		
-		
+		if(!$checkfeedbackid = $DB -> get_record("feedbackwall_feedbacks",array("id" => $feedbackid)))
+		{
+			echo "ERROR(feedbackid), contact an admin";
+			die;
+		}
+
 		$feedback = $DB->get_record('feedbackwall_feedbacks', array(
 		'courseid'=>$courseid,
 		"coursemoduleid"=>$coursemoduleid,
@@ -210,15 +236,11 @@ if(isset($_POST["fnc"]))
 		"feedbackid"=>$feedbackid)
 		);
 		
-		echo feedbackwall_comments($feedback,$comments,$courseid,$coursemoduleid,$date);
+		echo feedbackwall_comments($feedback,$comments,$courseid,$coursemoduleid,$date,$USER -> sesskey);
 		
 	}
 
 
-}
-else
-{
-	echo "";
 }
 
 //end of AJAX-querys

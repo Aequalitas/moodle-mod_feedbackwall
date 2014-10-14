@@ -30,7 +30,6 @@ $string["loadingpleasewait"] = "Loading, please wait...";
 $string["emptyFeedbackinput"] = "Write something to send a Feedback!";
 $string["emptyCommentinput"] = "Write something to send a Comment!";
 $string["alreadyrated"] = "You already rated this Feedback!";
-$string["infoReturn"] =" Info: ' @@ ' will be a return in your Feedback";
 $string["rateFeedback"] = "Rate this Feedback...";
 $string["rateoneStar"] = "one Star";
 $string["ratetwoStars"] = "two Stars";

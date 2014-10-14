@@ -40,8 +40,10 @@ if (!defined('MOODLE_INTERNAL')) {
  * @param int $dateInt date of comment
  * @return string $comments all the comments of a feedback as HTML-Code
  */
-function feedbackwall_comments($feedback,$commentsentry,$courseid,$coursemoduleid,$dateInt)
+
+function feedbackwall_comments($feedback,$commentsentry,$courseid,$coursemoduleid,$dateInt,$sesskey)
 {
+
 	$fID=$feedback -> id;				
 	$comments = "<div style='margin-left:15%;' id='comments". $fID ."' style='display:none;'>";		
 
@@ -49,8 +51,8 @@ function feedbackwall_comments($feedback,$commentsentry,$courseid,$coursemodulei
 	{														
 		foreach($commentsentry as $comment)
 		{
-			$comments .= "<div  id='". $comment -> id ."comment".$fID."'>";
-			$comments .= "<h4>" . $comment -> name . "</h4>" . $comment -> comment . "</br>";
+			$comments .= "<div  id='". s($comment -> id) ."comment" . $fID . "'>";
+			$comments .= "<h4>" . s($comment -> name) . "</h4>" . format_text($comment -> comment,$format = FORMAT_MOODLE) . "</br>";
 			$comments .= "</div><br>";
 		}														
 	}	
@@ -63,14 +65,14 @@ function feedbackwall_comments($feedback,$commentsentry,$courseid,$coursemodulei
 
 	$areaID = "'commtxtarea" . $fID . "'";		
 
+	$sesskey = '"' . $sesskey . '"';
 	$comments .= '<textarea  onkeyup="textjump(event,' . $fID . ');" onclick="clearArea(' . $areaID . ');"';
 	$comments .= "' id='commtxtarea" . $fID . "' cols='90' rows='3' placeholder='" . get_string("writeaComment","feedbackwall") . "'></textarea>";
-	$comments .= "<input type='button'  onClick='commInsert(" . $fID . "," . $courseid . "," . $coursemoduleid . "," . $dateInt .");";
+	$comments .= "<input type='button'  onClick='commInsert(" . $fID . "," . s($courseid) . "," . s($coursemoduleid) . "," . s($dateInt) ."," . $sesskey . ");";
 	$comments .= "' class='commentarbtn' id='commbtn" . $fID . "' value='" . get_string("send","feedbackwall") . "'>";
 	$comments .= '<label style="display:none; color:red;" id="emptyCommFieldwarning">' . get_string("emptyCommentinput","feedbackwall") . '</label>';														
 	$comments .= "</div></div>";
 
-	$comments .= "<h3 id='commentsloading". $fID ."' style='display:none;'>" . get_string("loadingpleasewait","feedbackwall") . "</h3>";	
 	
 	return $comments;
 }
@@ -89,7 +91,7 @@ function feedbackwall_comments($feedback,$commentsentry,$courseid,$coursemodulei
  * @param int $userid userid
  * @return string $feedbacks all the feedbacks of the module, with its comments, as HTML-Code
  */
-function feedbackwall_feedbacks($feedback,$comments,$courseid,$coursemoduleid,$dateInt,$userid)
+function feedbackwall_feedbacks($feedback,$comments,$courseid,$coursemoduleid,$dateInt,$userid,$sesskey)
 {
 	$fID=$feedback -> id;	
 	$ratingAverage = $feedback -> ratingaverage;
@@ -110,8 +112,8 @@ function feedbackwall_feedbacks($feedback,$comments,$courseid,$coursemoduleid,$d
 	}				
 
 	$feedbacks =  "<div class='feedbacks' id='" . $fID. "'>";  									
-	$feedbacks .=  '<h4> ' . $feedback->name . '</h4>';
-	$feedbacks .=   "<p style='margin-left:5%;margin-top:2%;' >" . $feedback -> feedback . "</p>";									
+	$feedbacks .=  '<h4> ' . s($feedback -> name) . '</h4>';
+	$feedbacks .=   "<p style='margin-left:5%;margin-top:2%;' >" . format_text($feedback -> feedback,$format = FORMAT_MOODLE) . "</p>";									
 	$feedbacks .=  '	<table>';											
 	$feedbacks .=  '<tr>';		
 
@@ -133,7 +135,7 @@ function feedbackwall_feedbacks($feedback,$comments,$courseid,$coursemoduleid,$d
 		}												
 	}		
 
-	$feedbacks .=  "<td><label title=" . get_string("rating","feedbackwall") . " >(" . $feedback -> rating .")</label></td>";
+	$feedbacks .=  "<td><label title=" . get_string("rating","feedbackwall") . " >(" . s($feedback -> rating) .")</label></td>";
 	$feedbacks .=  '</tr>';											
 	$feedbacks .=   '</table>';								
 
@@ -151,7 +153,8 @@ function feedbackwall_feedbacks($feedback,$comments,$courseid,$coursemoduleid,$d
 			</select>
 		';
 		
-		$feedbacks .=  "<input type='button' onClick='rate(" . $fID . "," . $courseid . "," . $coursemoduleid . "," .  $dateInt . ");'";
+		$sesskeyoutput = '"' . $sesskey . '"';
+		$feedbacks .=  "<input type='button' onClick='rate(" . $fID . "," . s($courseid) . "," . s($coursemoduleid) . "," .  s($dateInt) . "," . $sesskeyoutput .");'";
 		$feedbacks .=" id='rate" . $fID . "' value='" . get_string("rate","feedbackwall") . "'></br>";
 	}
 	else
@@ -174,10 +177,10 @@ function feedbackwall_feedbacks($feedback,$comments,$courseid,$coursemoduleid,$d
 	$feedbacks .=  "id='commHide"  . $fID . "' value='" . get_string("hideComments","feedbackwall") . "'>";					
 	$feedbacks .=  "<hr>";					
 	$feedbacks .=  "<div class='comments' id='commfield". $fID ."' style='display:none;'>";						
-	$feedbacks .=  feedbackwall_comments($feedback,$comments,$courseid,$coursemoduleid,$dateInt);									
+	$feedbacks .=  feedbackwall_comments($feedback,$comments,$courseid,$coursemoduleid,$dateInt,$sesskey);									
 	$feedbacks .=  "</div>";					
 	$feedbacks .=  "</div>";
-	$feedbacks .=  "<h3 id='feedbacksloading' style='display:none;'>" . get_string("loadingpleasewait","feedbackwall") . "</h3>";
+	
 	
 	return $feedbacks;
 }

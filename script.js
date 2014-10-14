@@ -5,48 +5,6 @@ Author: Franz Weidmann
 
 */
 
-//This part will be called when the site finished loading.
-
-$(function(){
-
-// creates two @@ when you press return in the feedbackinputfield.
-
-	$("#feedbackinputfield").keyup(function(e) {
-		
-		if ($("#feedbackinputfield").is(":focus")) {
-			if (e.which == 13 ) {
-				
-				var text = $("#feedbackinputfield").val().replace(/</g, "&lt;").replace(/>/g, "&gt;");
-				text = text + "@@";
-				$("#feedbackinputfield").val(text);
-			}
-		}
-		
-	});
-	
-	
-});
-
-////////
-
-/*
-creates two @@ when you press return in the commentinputfield.
-
-@param object e event that appears when a key is pressed
-@param int id id of the feedback in the feedbackwall
-
-*/
-function textjump(e,id)
-{
-	if ($("#commtxtarea"+id).is(":focus")) {
-			if (e.which == 13 ) {
-				
-				var text =$("#commtxtarea"+id).val().replace(/</g, "&lt;").replace(/>/g, "&gt;");
-				text = text + "@@";
-				$("#commtxtarea"+id).val(text);
-			}
-		}
-}
 
 /*
 Calls a php script which creates the feedback.
@@ -56,13 +14,13 @@ Calls a php script which creates the feedback.
 @param int moduleid of the plugin in the course
 @param string date of creation of the feedback
 */
-function feedbackInsert(courseid,coursemoduleid,dateInt)
+function feedbackInsert(courseid,coursemoduleid,dateInt,skey)
 	{
 
 		
 		if($.trim($("#feedbackinputfield").val()).length !=0)
 		{
-			var feedback=$("#feedbackinputfield").val().replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/@@/g,"<br>");
+			var feedback=$("#feedbackinputfield").val().replace(/</g, "&lt;").replace(/>/g, "&gt;");
 			var name= name=$("#name").val();
 			
 			
@@ -72,7 +30,7 @@ function feedbackInsert(courseid,coursemoduleid,dateInt)
 				
 				url:"ajaxquery.php",
 				type:"POST",
-				data:{fnc : "feedbackInsert" , q:feedback , s:name, l:courseid,k:coursemoduleid,r:dateInt},
+				data:{fnc : "feedbackInsert" , q:feedback , s:name, k:courseid,r:coursemoduleid,l:dateInt,sesskey:skey},
 				
 				beforeSend : function(){
 				
@@ -84,7 +42,7 @@ function feedbackInsert(courseid,coursemoduleid,dateInt)
 				success : function(){
 				
 					
-					feedbackwallRefresh(courseid,coursemoduleid,dateInt);
+					feedbackwallRefresh(courseid,coursemoduleid,dateInt,skey);
 					
 				}
 			
@@ -116,7 +74,7 @@ rating of the feedback.
 
 */
 
-function rate(id,courseid,coursemoduleid,date)
+function rate(id,courseid,coursemoduleid,date,skey)
 {
 	var stars = $("#selectStar"+id).val();
 	
@@ -152,8 +110,7 @@ function rate(id,courseid,coursemoduleid,date)
 		
 			url:"ajaxquery.php",
 			type:"POST",
-			
-			data:{q:id,fnc:"rate",s:courseid,k:coursemoduleid,h:stars},
+			data:{q:id,fnc:"rate",k:courseid,r:coursemoduleid,h:stars,sesskey:skey},
 			
 			beforeSend:function(){
 			
@@ -165,7 +122,7 @@ function rate(id,courseid,coursemoduleid,date)
 						
 			success : function(){
 						
-					feedbackwallRefresh(courseid,coursemoduleid,date);
+					feedbackwallRefresh(courseid,coursemoduleid,date,skey);
 					
 			}
 		
@@ -197,12 +154,12 @@ function clearArea(id)
 
 
 */
-function commInsert(id,courseid,coursemoduleid,date)
+function commInsert(id,courseid,coursemoduleid,date,skey)
 {
 		
 		if($.trim($("#commtxtarea"+id).val()).length !=0)
 		{
-			var commtext= $("#commtxtarea"+id).val().replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/@@/g,"<br>");
+			var commtext= $("#commtxtarea"+id).val().replace(/</g, "&lt;").replace(/>/g, "&gt;");
 			var name = name=$("#name").val();
 			
 			
@@ -211,7 +168,7 @@ function commInsert(id,courseid,coursemoduleid,date)
 				
 				type:"POST",
 				url:"ajaxquery.php",
-				data:{o:name,q:commtext,s:id,fnc:"commentInsert",k:courseid,r:coursemoduleid,l:date},
+				data:{o:name,q:commtext,s:id,fnc:"commentInsert",k:courseid,r:coursemoduleid,l:date,sesskey:skey},
 				
 				beforeSend: function(){
 					
@@ -222,7 +179,7 @@ function commInsert(id,courseid,coursemoduleid,date)
 				
 				success: function(){
 				
-					commsRefresh(id,courseid,coursemoduleid,date);
+					commsRefresh(id,courseid,coursemoduleid,date,skey);
 				}
 			
 			});
@@ -277,7 +234,7 @@ the commentssection of a feedback.
 @param int moduleid of the plugin in the course
 @param string date of creation of the feedback
 */
-function commsRefresh(id,courseid,coursemoduleid,dateInt)
+function commsRefresh(id,courseid,coursemoduleid,dateInt,skey)
 {
 	
 	
@@ -285,7 +242,7 @@ function commsRefresh(id,courseid,coursemoduleid,dateInt)
 					
 				type:"POST",
 				url:"ajaxquery.php",
-				data:{q:id,k:courseid,r:coursemoduleid,fnc:"commentsRefresh",d:dateInt},
+				data:{q:id,k:courseid,r:coursemoduleid,fnc:"commentsRefresh",d:dateInt,sesskey:skey},
 				
 				beforeSend: function(){
 					
@@ -320,7 +277,7 @@ feedbacks and comments.
 @param string date of creation of the feedback
 */
 
-function feedbackwallRefresh(courseid,coursemoduleid,dateInt)
+function feedbackwallRefresh(courseid,coursemoduleid,dateInt,skey)
 {
 	
 	var sort=$("#sortmenu").val();
@@ -333,7 +290,7 @@ function feedbackwallRefresh(courseid,coursemoduleid,dateInt)
 		
 			url:"ajaxquery.php",
 			type:"POST",
-			data:{q:sort,fnc:"feedbackwallRefresh",s:courseid,l:coursemoduleid,d:dateInt},
+			data:{q:sort,fnc:"feedbackwallRefresh",k:courseid,r:coursemoduleid,d:dateInt,sesskey:skey},
 			
 			
 			beforeSend : function(){

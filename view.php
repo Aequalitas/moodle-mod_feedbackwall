@@ -76,10 +76,10 @@ require_login($course, true, $cm);
 
 // show some info for guests
 if (isguestuser()) {
-    $PAGE->set_title($feedbackwall->name);
+    $PAGE->set_title($feedbackwall -> name);
     echo $OUTPUT->header();
     echo $OUTPUT->confirm('<p>'.get_string('noguests', 'feedbackwall').'</p>'.get_string('liketologin'),
-            get_login_url(), $CFG-> wwwroot.'/course/view.php?id='.$course -> id);
+            		get_login_url(), $CFG-> wwwroot.'/course/view.php?id='.$course -> id);
 
     echo $OUTPUT-> footer();
     exit;
@@ -120,6 +120,7 @@ echo $OUTPUT -> heading(format_string($feedbackwall -> name), 2);
 // Print the main part of the page
 
 // Topdiv, choose name and way of sort
+$sesskey = "'" . $USER -> sesskey . "'"; // make the sesskey to a string so javascript can use it
 $table = new html_table();
 $table -> data = array(
 array("<h3>". $feedbackwall -> intro . "</h3>"),
@@ -130,8 +131,7 @@ array("<select  id='name'>
 <label style='font-size: 11.9px;color: #999;'>" . get_string("nameinputdescription","feedbackwall") . "</label>"),
 
 array('<textarea style="margin-top:1%;" id="feedbackinputfield"  rows="4" cols="90" placeholder="' . get_string("writeaFeedback","feedbackwall") .'"></textarea>
-	<input type="button" id="feedbackbutton" onClick="feedbackInsert(' . $course -> id .',' . $cm -> id . ',' . $dateInt . ');" value="' . get_string("send","feedbackwall") . '">
-	<p style="font-size: 11.9px;color: #999;">' . get_string("infoReturn","feedbackwall") . '</p>
+	<input type="button" id="feedbackbutton" onClick="feedbackInsert('. $course -> id .','. $cm -> id . ',' . $dateInt . ','. $sesskey . ');" value="' . get_string("send","feedbackwall") . '">
 	<label style="display:none; color:red;" id="emptyFieldWarning">' . get_string("emptyFeedbackinput","feedbackwall") . '</label>
 	')
 );
@@ -142,11 +142,13 @@ echo $OUTPUT -> box(html_writer::table($table),"","topdiv");
 
 //Maindiv, show Feedbacks and its comments.
 
-
+$sesskey = '"' . $USER -> sesskey . '"';
 echo $OUTPUT -> box_start();
-echo "<input type='button'  id='refreshlistbtn' value='" . get_string("refreshfeedbacklist","feedbackwall") . "' onClick='feedbackwallRefresh(" . $course -> id . "," . $cm -> id . "," . $dateInt . ");'>
+echo "<input type='button'  id='refreshlistbtn' value='" . get_string("refreshfeedbacklist","feedbackwall") .
+ "' onClick='feedbackwallRefresh(" . $course -> id . ",". $cm -> id . ",". $dateInt . ",". $sesskey . ");'>
 
-	<select id='sortmenu' onChange='feedbackwallRefresh(" . $course -> id . "," . $cm -> id . "," . $dateInt . ");' >
+
+	<select id='sortmenu' onChange='feedbackwallRefresh(" . $course -> id . "," . $cm -> id . "," . $dateInt . "," . $sesskey . ");' >
 		<option value='new'>" . get_string("newsortdescription","feedbackwall") .  "</option>
 		<option value='old'>" . get_string("oldsortdescription","feedbackwall") .  "</option>
 		<option value='averagedescending'>" . get_string("ratingdescending","feedbackwall") .  "</option>
@@ -173,7 +175,7 @@ if(!empty($entry))
 		
 		$comments = $DB-> get_records("feedbackwall_comments",array("feedbackid"=>$feedback -> id));	
 		
-		echo feedbackwall_feedbacks($feedback,$comments,$course -> id,$cm -> id,$dateInt,$USER -> id);														
+		echo feedbackwall_feedbacks($feedback,$comments,$course -> id,$cm -> id,$dateInt,$USER -> id,$USER -> sesskey);														
 	}
 }
 else
