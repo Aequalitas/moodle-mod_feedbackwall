@@ -120,45 +120,17 @@ echo $OUTPUT -> heading(format_string($feedbackwall -> name), 2);
 // Print the main part of the page
 
 // Topdiv, choose name and way of sort
-$sesskey = "'" . $USER -> sesskey . "'"; // make the sesskey to a string so javascript can use it
-$table = new html_table();
-$table -> data = array(
-array($OUTPUT -> heading($feedbackwall -> intro,3)),
-array("<select  id='name'>
-<option value='" . get_string("anonymous","feedbackwall") ."' >" . get_string("anonymous","feedbackwall") ."</option>  
-<option value='" . $USER -> firstname . " " . $USER -> lastname ."' >" . $USER -> firstname . " " . $USER -> lastname ."</option>
-</select>
-<label style='font-size: 11.9px;color: #999;'>" . get_string("nameinputdescription","feedbackwall") . "</label>"),
 
-array('<textarea style="margin-top:1%;" id="feedbackinputfield"  rows="4" cols="90" placeholder="' . get_string("writeaFeedback","feedbackwall") .'"></textarea>
-	<input type="button" id="feedbackbutton" onClick="feedbackInsert('. $course -> id .','. $cm -> id . ',' . $dateInt . ','. $sesskey . ');" value="' . get_string("send","feedbackwall") . '">
-	<label style="display:none; color:red;" id="emptyFieldWarning">' . get_string("emptyFeedbackinput","feedbackwall") . '</label>
-	')
-);
+$topdiv = new stdclass();
+$topdiv -> sesskey = $USER -> sesskey;
+$topdiv -> courseid = $course -> id;
+$topdiv -> coursemoduleid = $cm -> id;
+$topdiv -> dateInt = $dateInt;
+$topdiv -> firstname = $USER -> firstname;
+$topdiv -> lastname = $USER -> lastname;
+$topdiv -> intro = $feedbackwall -> intro;
 
-
-echo $OUTPUT -> box(html_writer::table($table),"","topdiv");
-
-
-
-$sesskey = '"' . $USER -> sesskey . '"';
-echo $OUTPUT -> box_start();
-echo "<input type='button'  id='refreshlistbtn' value='" . get_string("refreshfeedbacklist","feedbackwall") .
- "' onClick='feedbackwallRefresh(" . $course -> id . ",". $cm -> id . ",". $dateInt . ",". $sesskey . ");'>
-
-
-	<select id='sortmenu' onChange='feedbackwallRefresh(" . $course -> id . "," . $cm -> id . "," . $dateInt . "," . $sesskey . ");' >
-		<option value='new'>" . get_string("newsortdescription","feedbackwall") .  "</option>
-		<option value='old'>" . get_string("oldsortdescription","feedbackwall") .  "</option>
-		<option value='averagedescending'>" . get_string("ratingdescending","feedbackwall") .  "</option>
-		<option value='averageascending'>" . get_string("ratingascending","feedbackwall") .  "</option>
-		<option value='amountdescending'>" . get_string("amountdescending","feedbackwall") .  "</option>
-		<option value='amountascending'>" . get_string("amountascending","feedbackwall") .  "</option>
-	</select>
-		
-";
-
-echo $OUTPUT->box_end();
+echo $rend -> render_topdiv($topdiv);
 
 //Maindiv, show Feedbacks and its comments.
 

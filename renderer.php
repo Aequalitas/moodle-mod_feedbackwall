@@ -26,7 +26,94 @@
 defined('MOODLE_INTERNAL') || die();
 
 class mod_feedbackwall_renderer extends plugin_renderer_base {
+	
+	/**
+	 * This function loads the top component of the mainpage 
+	 * as HTML-Code
+	 *
+	 */
+	public function render_topdiv($data)
+	{
+		
+		$topdiv = "";
+		
+		$sesskey = "'" . $data -> sesskey . "'"; // make the sesskey to a string so javascript can use it
+		
+		
+		$inputdesc = html_writer::tag("label",get_string("nameinputdescription","feedbackwall"),array("style"=>'font-size:11.9px;color:#999;'));
+		
+		$textarea = html_writer::tag('textarea',"",array(
+			"style"=>"margin-top:1%;",
+			"id"=>"feedbackinputfield",
+			"rows"=>"4",
+			"cols"=>"90",
+			"placeholder"=>get_string("writeaFeedback","feedbackwall")
+			)
+		); 
+		
+		$inputsend = html_writer::tag('input',"",array(
+		"type"=>"button",
+		"id"=>"feedbackbutton",
+		"onClick"=>"feedbackInsert(" . 
+					$data -> courseid  .','.
+					$data -> coursemoduleid  . ',' .
+					$data -> dateInt . ','.
+					$sesskey . ");",
+		"value"=>get_string("send","feedbackwall")
+		));
+		
+		$warnlabel = html_writer::tag('label',get_string("emptyFeedbackinput","feedbackwall"),array(
+		"style"=>"display:none;color:red;",
+		"id"=>"emptyFieldWarning"
+		)); 
+		
+		$table = new html_table();
+		$table -> data = array(
+		array($this -> heading($data -> intro,3)),
+		array("
+			<select  id='name'>
+			<option value='" . get_string("anonymous","feedbackwall") ."' >" . get_string("anonymous","feedbackwall") ."</option>  
+			<option value='" . $data -> firstname . " " . $data -> lastname ."' >" . $data -> firstname . " " . $data -> lastname ."</option>
+			</select> " . $inputdesc
+		),
+		array( 
+			$textarea . $inputsend . $warnlabel)
+		);
 
+		$topdiv .= $this -> box(html_writer::table($table),"","topdiv");
+
+
+		$sesskey = '"' . $data-> sesskey . '"';
+		$topdiv .= $this -> box_start();
+		
+		$topdiv .=  html_writer::tag("input","",array(
+		"type"=>'button',
+		"id"=>'refreshlistbtn',
+		"value"=> get_string("refreshfeedbacklist","feedbackwall"),
+		"onClick"=>'feedbackwallRefresh(' .
+					$data -> courseid  . ",".
+					$data -> coursemoduleid  . ",".
+					$data -> dateInt . ",".
+					$sesskey . ');')
+		);
+	
+
+		$topdiv .=
+			"<select id='sortmenu' onChange='feedbackwallRefresh(" . $data -> courseid . "," . $data -> coursemoduleid  . "," . $data -> dateInt . "," . $sesskey . ");' >
+				<option value='new'>" . get_string("newsortdescription","feedbackwall") .  "</option>
+				<option value='old'>" . get_string("oldsortdescription","feedbackwall") .  "</option>
+				<option value='averagedescending'>" . get_string("ratingdescending","feedbackwall") .  "</option>
+				<option value='averageascending'>" . get_string("ratingascending","feedbackwall") .  "</option>
+				<option value='amountdescending'>" . get_string("amountdescending","feedbackwall") .  "</option>
+				<option value='amountascending'>" . get_string("amountascending","feedbackwall") .  "</option>
+			</select>
+				
+		";
+		
+		$topdiv .= $this -> box_end();
+		
+		return $topdiv;
+	}
 
 
 	/**
@@ -48,7 +135,7 @@ class mod_feedbackwall_renderer extends plugin_renderer_base {
 
 		$comments = "";
 		
-		if( $data -> feedback -> amountcomments > 0)
+		if($data -> feedback -> amountcomments > 0)
 		{														
 			foreach( $data -> comments as $comment)
 			{
@@ -68,17 +155,34 @@ class mod_feedbackwall_renderer extends plugin_renderer_base {
 		$areaID = "'commtxtarea" . $fID . "'";		
 
 		$sesskey = '"' .  $data -> sesskey . '"';
+	
+		$comments .= html_writer::tag("textarea","",array(
+		"onclick"=>"clearArea(" . $areaID . ");",
+		"id"=>'commtxtarea' . $fID,
+		"cols"=>'90',
+		"rows"=>'3',
+		"placeholder"=>get_string("writeaComment","feedbackwall"))
+		);
+		
+		
 
-		$comments .= '<textarea  onclick="clearArea(' . $areaID . ');"';
-		$comments .= "' id='commtxtarea" . $fID . "' cols='90' rows='3' placeholder='" . get_string("writeaComment","feedbackwall") . "'>";
-		$comments .= "</textarea>";
+		$comments .= html_writer::tag("input","",array(
+		"type"=>'button',
+		"onClick"=>'commInsert(' 
+					. $fID . "," .
+					s($data -> courseid) . "," .
+					s($data -> coursemoduleid) . "," .
+					s($data -> dateInt) ."," .
+					$sesskey . ');',
+		"class"=>'commentarbtn',
+		"id"=>'commbtn' . $fID,
+		"value"=>get_string("send","feedbackwall"))
+		);
 
-		$comments .= "<input type='button'  onClick='commInsert(" . $fID . "," . s($data -> courseid) . "," . s($data -> coursemoduleid) . "," . s($data -> dateInt) ."," . $sesskey . ");";
-		$comments .= "' class='commentarbtn' id='commbtn" . $fID . "' value='" . get_string("send","feedbackwall") . "'>";
-
-		$comments .= html_writer::tag('label',get_string("emptyCommentinput","feedbackwall"),array("style"=>"display:none; color:red;","id"=>"emptyCommFieldwarning"));														
+		$comments .= html_writer::tag('label',get_string("emptyCommentinput","feedbackwall"),array("style"=>"display:none; color:red;","id"=>"emptyCommFieldwarning". $fID));														
 		
 		$comments .=  $this -> container_end();
+		
 
 		
 		return $comments;
@@ -160,7 +264,7 @@ class mod_feedbackwall_renderer extends plugin_renderer_base {
 
 		if($canRate==1)
 		{	
-		
+			
 			
 			$feedback .= '
 				<select id="selectStar'  . $fID . '">
@@ -174,27 +278,55 @@ class mod_feedbackwall_renderer extends plugin_renderer_base {
 			';
 			
 			$sesskeyoutput = '"' . $data -> sesskey . '"';
-			$feedback .=  "<input type='button' onClick='rate(" . $fID . "," . s($data -> courseid) . "," . s($data -> coursemoduleid) . "," .  s($data -> dateInt) . "," . $sesskeyoutput .");'";
-			$feedback .=" id='rate" . $fID . "' value='" . get_string("rate","feedbackwall") . "'></br>";
+			
+			$feedback .=  html_writer::tag("input","",array(
+			"type"=>'button',
+			"onClick"=>'rate('
+						. $fID . "," .
+						s($data -> courseid) . "," .
+						s($data -> coursemoduleid) . "," .
+						s($data -> dateInt) . "," .
+						$sesskeyoutput . ');',
+			"id"=>'rate' . $fID,
+			"value"=>get_string("rate","feedbackwall"))
+			);
+			
+			$feedback .= "</br>";
 		}
 		else
 		{
 			$feedback .=  html_writer::tag('label',get_string("alreadyrated","feedbackwall"),array("id"=>"alreadyrated"));
 		}
-
-		$feedback .=  "<input type='button' onClick='commShow(" . $fID . ");' class='commShow' id='commShow" . $fID . "' value='";		
-
+		
+		$combtn = "";
+		
 		if($data -> feedback -> amountcomments > 0)
 		{
-			$feedback .=  $data -> feedback -> amountcomments . " ". get_string("showComments","feedbackwall") . "'>";
+			$combtn .=  $data -> feedback -> amountcomments . " ". get_string("showComments","feedbackwall");
 		}
 		else
 		{
-			$feedback .=  get_string("writeaComment","feedbackwall") . "'>";
+			$combtn .=  get_string("writeaComment","feedbackwall");
 		}
+		
+		$feedback .=  html_writer::tag("input","",array(
+		"type"=>'button',
+		"onClick"=>'commShow(' . $fID . ');',
+		"class"=>'commShow',
+		"id"=>'commShow' . $fID,
+		"value"=> $combtn )
+		);
 
-		$feedback .=  "<input style='display:none;'  onClick='commHide(" . $fID . ");' class='commHide' type='button'";
-		$feedback .=  "id='commHide"  . $fID . "' value='" . get_string("hideComments","feedbackwall") . "'>";					
+
+		$feedback .=  html_writer::tag("input","",array(
+		"style"=>'display:none;',
+		"onClick"=>'commHide(' . $fID . ');',
+		"class"=>'commHide',
+		"type"=>'button',
+		"id"=>'commHide' . $fID,
+		"value"=> get_string("hideComments","feedbackwall"))
+		);
+		
 		$feedback .=  "<hr>";					
 		$feedback .=  $this -> output -> box_start("comments",'commfield'. $fID,array("style"=>'display:none;margin-left:15%;'));
 	
@@ -210,8 +342,11 @@ class mod_feedbackwall_renderer extends plugin_renderer_base {
 		global $PAGE;
 		$rend = $PAGE -> get_renderer("mod_feedbackwall");
 	
+	
+
 		$feedback .= $rend -> render_comment($commentdata);			
 
+	
 		$feedback .=  $this -> output -> box_end();				
 		$feedback .=  $this -> output -> container_end();
 		
@@ -220,3 +355,4 @@ class mod_feedbackwall_renderer extends plugin_renderer_base {
 	}
 }
 
+	
