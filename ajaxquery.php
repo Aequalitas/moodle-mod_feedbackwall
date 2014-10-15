@@ -49,7 +49,8 @@ if(!$checkcourseid = $DB -> get_record("feedbackwall",array("course" => $coursei
 }
 
 require_login($course, false, $cm);
-
+	
+		
 // AJAX-Querys, "fnc" tells which kind of query it was.
 if($fnc = required_param("fnc",PARAM_TEXT))
 {
@@ -108,20 +109,31 @@ if($fnc = required_param("fnc",PARAM_TEXT))
 		
 
 		
-		$entry = $DB->get_records('feedbackwall_feedbacks',
-		array(
-		'courseid'=>$courseid,
-		"coursemoduleid"=>$coursemoduleid,
-		),$sort=$s);
+		$entry = $DB->get_records('feedbackwall_feedbacks',array('courseid'=>$courseid,"coursemoduleid"=>$coursemoduleid),$sort=$s);
+		
 		
 		if(!empty($entry))
 			{
+				global $PAGE;
+				$rend = $PAGE -> get_renderer("mod_feedbackwall");
+	
 				foreach($entry as $feedback)
 				{			
 					
 					$comments = $DB->get_records("feedbackwall_comments",array("feedbackid"=>$feedback -> id));	
 					
-					echo feedbackwall_feedbacks($feedback,$comments,$courseid,$coursemoduleid,$date,$USER -> id,$USER -> sesskey);														
+					
+					$data = new stdclass();
+					$data -> feedback = $feedback;
+					$data -> comments = $comments;
+					$data -> courseid = $courseid;
+					$data -> coursemoduleid = $coursemoduleid;
+					$data -> dateInt = $date;
+					$data -> userid = $USER -> id;
+					$data -> sesskey = $USER -> sesskey;
+	
+					
+					echo $rend -> render_feedback ($data);														
 				}
 				echo "<h3 id='feedbacksloading' style='display:none;'>" . get_string("loadingpleasewait","feedbackwall") . "</h3>";
 			}
@@ -236,7 +248,20 @@ if($fnc = required_param("fnc",PARAM_TEXT))
 		"feedbackid"=>$feedbackid)
 		);
 		
-		echo feedbackwall_comments($feedback,$comments,$courseid,$coursemoduleid,$date,$USER -> sesskey);
+		global $PAGE;
+		$rend = $PAGE -> get_renderer("mod_feedbackwall");
+	
+			
+		$data = new stdclass();
+		$data -> feedback = $feedback;
+		$data -> comments = $comments;
+		$data -> courseid = $courseid;
+		$data -> coursemoduleid = $coursemoduleid;
+		$data -> dateInt = $date;
+		$data -> sesskey = $USER -> sesskey;
+	
+		
+		echo $rend -> render_comment ($data);	
 		
 	}
 

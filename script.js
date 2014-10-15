@@ -261,7 +261,7 @@ function commsRefresh(id,courseid,coursemoduleid,dateInt,skey)
 					});
 					
 					$("#commloading"+id).hide();
-					
+					$("#commfield"+id).show();
 				}	
 					
 			});

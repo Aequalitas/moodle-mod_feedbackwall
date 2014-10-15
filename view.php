@@ -105,7 +105,7 @@ if (isguestuser()) {
 $courseshortname = format_string($course -> shortname, true, array('context' => context_course::instance($course -> id)));
 $title = $courseshortname . ': ' . format_string($feedbackwall -> name);
 
-
+$rend = $PAGE -> get_renderer('mod_feedbackwall');
 $PAGE -> set_url('/mod/feedbackwall/view.php', array('id' => $cm -> id));
 $PAGE -> set_title($title);
 $PAGE -> set_heading($course -> fullname);
@@ -123,7 +123,7 @@ echo $OUTPUT -> heading(format_string($feedbackwall -> name), 2);
 $sesskey = "'" . $USER -> sesskey . "'"; // make the sesskey to a string so javascript can use it
 $table = new html_table();
 $table -> data = array(
-array("<h3>". $feedbackwall -> intro . "</h3>"),
+array($OUTPUT -> heading($feedbackwall -> intro,3)),
 array("<select  id='name'>
 <option value='" . get_string("anonymous","feedbackwall") ."' >" . get_string("anonymous","feedbackwall") ."</option>  
 <option value='" . $USER -> firstname . " " . $USER -> lastname ."' >" . $USER -> firstname . " " . $USER -> lastname ."</option>
@@ -140,7 +140,6 @@ array('<textarea style="margin-top:1%;" id="feedbackinputfield"  rows="4" cols="
 echo $OUTPUT -> box(html_writer::table($table),"","topdiv");
 
 
-//Maindiv, show Feedbacks and its comments.
 
 $sesskey = '"' . $USER -> sesskey . '"';
 echo $OUTPUT -> box_start();
@@ -161,13 +160,16 @@ echo "<input type='button'  id='refreshlistbtn' value='" . get_string("refreshfe
 
 echo $OUTPUT->box_end();
 
-echo "<h2>". get_string("feedbackwall","feedbackwall") . "</h2>";
+//Maindiv, show Feedbacks and its comments.
+
+echo $OUTPUT -> heading(get_string("feedbackwall","feedbackwall"),2);
 echo "<hr>";
 
 echo $OUTPUT->box_start("","maindiv",array("style"=>"overflow:auto;"));
 
 // getting all feedbacks of this module from the database
-$entry = $DB -> get_records('feedbackwall_feedbacks', array('courseid'=>$course -> id,"coursemoduleid"=>$cm -> id,),$sort='id DESC');
+$entry = $DB -> get_records('feedbackwall_feedbacks', array('courseid'=>$course -> id,"coursemoduleid"=>$cm -> id),$sort='id DESC');
+
 if(!empty($entry))
 {
 	foreach($entry as $feedback)
@@ -175,12 +177,22 @@ if(!empty($entry))
 		
 		$comments = $DB-> get_records("feedbackwall_comments",array("feedbackid"=>$feedback -> id));	
 		
-		echo feedbackwall_feedbacks($feedback,$comments,$course -> id,$cm -> id,$dateInt,$USER -> id,$USER -> sesskey);														
+		$data = new stdclass();
+		$data -> feedback = $feedback;
+		$data -> comments = $comments;
+		$data -> courseid = $course -> id;
+		$data -> coursemoduleid = $cm -> id;
+		$data -> dateInt = $dateInt;
+		$data -> userid = $USER -> id;
+		$data -> sesskey = $USER -> sesskey;
+		
+		
+		echo $rend -> render_feedback($data);
 	}
 }
 else
 {
-	echo "<h2 class='feedbacks' style='margin-top:10%;'>". get_string("noFeedbacks","feedbackwall") . "</h2>";
+	echo $OUTPUT -> heading(get_string("noFeedbacks","feedbackwall"),2,"","",array("class"=>'feedbacks',"style"=>'margin-top:10%;'));
 }
 echo $OUTPUT->box_end();
 
