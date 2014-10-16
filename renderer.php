@@ -47,12 +47,9 @@ class mod_feedbackwall_renderer extends plugin_renderer_base {
 	{
 		
 		$topdiv = "";
-		
 		$sesskey = "'" . $data -> sesskey . "'"; // make the sesskey to a string so javascript can use it
 		
-		
 		$inputdesc = html_writer::tag("label",get_string("nameinputdescription","feedbackwall"),array("style"=>'font-size:11.9px;color:#999;'));
-		
 		$textarea = html_writer::tag('textarea',"",array(
 			"style"=>"margin-top:1%;",
 			"id"=>"feedbackinputfield",
@@ -77,26 +74,27 @@ class mod_feedbackwall_renderer extends plugin_renderer_base {
 		"style"=>"display:none;color:red;",
 		"id"=>"emptyFieldWarning"
 		)); 
-		
+
+
 		$table = new html_table();
 		$table -> data = array(
-		array($this -> heading($data -> intro,3)),
-		array("
-			<select  id='name'>
-			<option value='" . get_string("anonymous","feedbackwall") ."' >" . get_string("anonymous","feedbackwall") ."</option>  
-			<option value='" . $data -> firstname . " " . $data -> lastname ."' >" . $data -> firstname . " " . $data -> lastname ."</option>
-			</select> " . $inputdesc
+		array(
+			$this -> heading($data -> intro,3)
+		),
+		array(html_writer::select(array(
+			get_string("anonymous","feedbackwall") => get_string("anonymous","feedbackwall"),
+			$data -> firstname . " " . $data -> lastname => $data -> firstname . " " . $data -> lastname
+			),"",0,"",array("id"=>"name")) . $inputdesc
 		),
 		array( 
 			$textarea . $inputsend . $warnlabel)
 		);
 
+
 		$topdiv .= $this -> box(html_writer::table($table),"","topdiv");
-
-
+		
 		$sesskey = '"' . $data-> sesskey . '"';
 		$topdiv .= $this -> box_start();
-		
 		$topdiv .=  html_writer::tag("input","",array(
 		"type"=>'button',
 		"id"=>'refreshlistbtn',
@@ -108,21 +106,25 @@ class mod_feedbackwall_renderer extends plugin_renderer_base {
 					$sesskey . ');')
 		);
 	
-
-		$topdiv .=
-			"<select id='sortmenu' onChange='feedbackwallRefresh(" . $data -> courseid . "," . $data -> coursemoduleid  . "," . $data -> dateInt . "," . $sesskey . ");' >
-				<option value='new'>" . get_string("newsortdescription","feedbackwall") .  "</option>
-				<option value='old'>" . get_string("oldsortdescription","feedbackwall") .  "</option>
-				<option value='averagedescending'>" . get_string("ratingdescending","feedbackwall") .  "</option>
-				<option value='averageascending'>" . get_string("ratingascending","feedbackwall") .  "</option>
-				<option value='amountdescending'>" . get_string("amountdescending","feedbackwall") .  "</option>
-				<option value='amountascending'>" . get_string("amountascending","feedbackwall") .  "</option>
-			</select>
-				
-		";
+		// selectmenu to sort 
+		$topdiv .= html_writer::select(array(
+		'new' =>get_string("newsortdescription","feedbackwall"),
+		'old'=>get_string("oldsortdescription","feedbackwall"),
+		'averagedescending'=>get_string("ratingdescending","feedbackwall"),
+		'averageascending'=>get_string("ratingascending","feedbackwall"),
+		'amountdescending'=>get_string("amountdescending","feedbackwall"),
+		'amountascending'=>get_string("amountascending","feedbackwall"),
+		),'sort',0,"",array(
+		"id"=>"sortmenu",
+		"onchange"=>"feedbackwallRefresh(" .
+					$data -> courseid . "," .
+					$data -> coursemoduleid  . "," .
+					$data -> dateInt . "," .
+					$sesskey . ");"
+				)
+		);
 		
 		$topdiv .= $this -> box_end();
-		
 		return $topdiv;
 	}
 
@@ -146,7 +148,6 @@ class mod_feedbackwall_renderer extends plugin_renderer_base {
 	public function render_comment(stdclass $data)
 	{
 		$fID= $data -> feedback -> id;
-
 		$comments = "";
 		
 		if($data -> feedback -> amountcomments > 0)
@@ -165,11 +166,8 @@ class mod_feedbackwall_renderer extends plugin_renderer_base {
 		}		
 
 		$comments .= "<hr>" .  $this -> container_start('commanShow'. $fID,"",array("style"=>'margin-top:3%;'));	
-
 		$areaID = "'commtxtarea" . $fID . "'";		
 
-		
-	
 		$comments .= html_writer::tag("textarea","",array(
 		"onclick"=>"clearArea(" . $areaID . ");",
 		"id"=>'commtxtarea' . $fID,
@@ -179,7 +177,7 @@ class mod_feedbackwall_renderer extends plugin_renderer_base {
 		);
 		
 		$sesskey = '"' .  $data -> sesskey . '"';
-
+		// button to send a comment
 		$comments .= html_writer::tag("input","",array(
 		"type"=>'button',
 		"onClick"=>'commInsert(' 
@@ -194,10 +192,7 @@ class mod_feedbackwall_renderer extends plugin_renderer_base {
 		);
 
 		$comments .= html_writer::tag('label',get_string("emptyCommentinput","feedbackwall"),array("style"=>"display:none; color:red;","id"=>"emptyCommFieldwarning". $fID));														
-		
 		$comments .=  $this -> container_end();
-		
-
 		
 		return $comments;
 	}	
@@ -223,11 +218,8 @@ class mod_feedbackwall_renderer extends plugin_renderer_base {
 	{
 
 		$fID = $data -> feedback -> id;	
-		
 		$ratingAverage = $data -> feedback -> ratingaverage;
-
-		$alreadyrated = $data -> feedback -> didrate;
-						
+		$alreadyrated = $data -> feedback -> didrate;				
 		$alreadyratedArray = explode(",",$alreadyrated);
 		$canRate=1;
 		$i=0;
@@ -245,53 +237,46 @@ class mod_feedbackwall_renderer extends plugin_renderer_base {
 		$feedback .= html_writer::tag("h4",s($data -> feedback -> name));
 		$feedback .=  $this -> output -> box(format_text($data -> feedback -> feedback,$format = FORMAT_MOODLE),"","",array("style"=>'margin-left:5%;margin-top:2%;')) . "</br>";									
 		
-		
-		
-		
-		$feedback .=  html_writer::start_tag('table');											
-		$feedback .=  html_writer::start_tag('tr');		
-	
+		$startable = new html_table();
 		
 		for($i=0;$i<5;$i++)
 		{							
 		
 			if($ratingAverage - 1 >= 0 )
 			{
-				$feedback .= html_writer::tag('td',html_writer::tag("img","",array("src"=>"pix/fullStar.jpg","alt"=>"fullStar")));
+				$startable -> data[0][$i] = html_writer::tag("img","",array("src"=>"pix/fullStar.jpg","alt"=>"fullStar"));
 				$ratingAverage -= 1;
 			}
 			else if($ratingAverage - 0.5 >= 0 )
 			{
-				$feedback .= html_writer::tag('td',html_writer::tag("img","",array("src"=>"pix/halfStar.jpg","alt"=>"halfStar")));
+				$startable -> data[0][$i] = html_writer::tag("img","",array("src"=>"pix/halfStar.jpg","alt"=>"halfStar"));
 				$ratingAverage -= 0.5;
 			}
 			else
 			{
-				$feedback .= html_writer::tag('td',html_writer::tag("img","",array("src"=>"pix/emptyStar.jpg","alt"=>"emptyStar")));
+				$startable -> data[0][$i] = html_writer::tag("img","",array("src"=>"pix/emptyStar.jpg","alt"=>"emptyStar"));
 			}												
 		}		
 	
 
-		$feedback .=  html_writer::tag("td",html_writer::tag("label","(" . s($data -> feedback -> rating) .  ")",array("title"=>get_string("rating","feedbackwall"))));
-		
-		$feedback .=  html_writer::end_tag('tr');											
-		$feedback .=  html_writer::end_tag('table');					
-
+		$startable -> data[0][5] = html_writer::tag("label","(" . s($data -> feedback -> rating) .  ")",array("title"=>get_string("rating","feedbackwall")));					
+	
+		$startable-> attributes["class"] = "empty";
+		$feedback .= html_writer::table($startable);
 
 		if($canRate==1)
 		{	
 			
 			
-			$feedback .= '
-				<select id="selectStar'  . $fID . '">
-					<option value="noStar">' . get_string("rateFeedback","feedbackwall") . '</option>
-					<option value="oneStar">' . get_string("rateoneStar","feedbackwall") . '</option>
-					<option value="twoStars">' . get_string("ratetwoStars","feedbackwall") . '</option>
-					<option value="threeStars">' . get_string("ratethreeStars","feedbackwall") . '</option>
-					<option value="fourStars">' . get_string("ratefourStars","feedbackwall") . '</option>
-					<option value="fiveStars">' . get_string("ratefiveStars","feedbackwall") . '</option>
-				</select>
-			';
+			$feedback .= html_writer::select(array(
+			"noStar"=>get_string("rateFeedback","feedbackwall"),
+			"oneStar"=>get_string("rateoneStar","feedbackwall"),
+			"twoStars"=>get_string("ratetwoStars","feedbackwall"),
+			"threeStars"=>get_string("ratethreeStars","feedbackwall"),
+			"fourStars"=>get_string("ratefourStars","feedbackwall"),
+			"fiveStars"=>get_string("ratefiveStars","feedbackwall")
+			),"",0,"",array("id"=>"selectStar"  . $fID)
+			);
 			
 			$sesskeyoutput = '"' . $data -> sesskey . '"';
 			
@@ -359,15 +344,10 @@ class mod_feedbackwall_renderer extends plugin_renderer_base {
 		
 		global $PAGE;
 		$rend = $PAGE -> get_renderer("mod_feedbackwall");
-	
-	
-
 		$feedback .= $rend -> render_comment($commentdata);			
 
-	
 		$feedback .=  $this -> output -> box_end();				
 		$feedback .=  $this -> output -> box_end();
-		
 		
 		return $feedback;
 	}
