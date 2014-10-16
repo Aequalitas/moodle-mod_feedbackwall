@@ -27,8 +27,6 @@
 
 define('AJAX_SCRIPT', true);
 
-
-
 require_once(dirname(dirname(dirname(__FILE__))) . '/config.php');
 require_once(dirname(__FILE__) . '/locallib.php');
 
@@ -36,7 +34,7 @@ require_once(dirname(__FILE__) . '/locallib.php');
 if (!confirm_sesskey())
 {
     echo "ERROR(sesskey)";
-	die;
+	die();
 }
 
 $courseid =  required_param("k",PARAM_INT);  /// those two params are used in every action
@@ -45,7 +43,7 @@ $coursemoduleid = required_param("r",PARAM_INT);
 if(!$checkcourseid = $DB -> get_record("feedbackwall",array("course" => $courseid)))
 {
 	echo "ERROR(courseid), contact an admin";
-	die;
+	die();
 }
 
 require_login($course, false, $cm);
@@ -56,6 +54,7 @@ if($fnc = required_param("fnc",PARAM_TEXT))
 {
 	if($fnc == "feedbackInsert")
 	{
+
 		$feedback =  required_param("q",PARAM_TEXT);
 		$name =  required_param("s",PARAM_TEXT);
 		$timecreated =  required_param("l",PARAM_INT);
@@ -135,11 +134,15 @@ if($fnc = required_param("fnc",PARAM_TEXT))
 					
 					echo $rend -> render_feedback ($data);														
 				}
-				echo "<h3 id='feedbacksloading' style='display:none;'>" . get_string("loadingpleasewait","feedbackwall") . "</h3>";
+
+				echo html_writer::tag("h3", get_string("loadingpleasewait","feedbackwall"),array(
+				"id"=>'feedbacksloading',
+				"style"=>'display:none;')
+				);
 			}
 			else
 			{
-				echo "<h2 style='margin-top:20%;margin-bottom:20%;'>". get_string("noFeedbacks","feedbackwall") . "</h2>";
+				echo html_writer::tag("h2",get_string("noFeedbacks","feedbackwall"),array("style"=>'margin-top:20%;margin-bottom:20%;'));
 			}
 			
 		
@@ -154,7 +157,7 @@ if($fnc = required_param("fnc",PARAM_TEXT))
 		if(!$checkfeedbackid = $DB -> get_record("feedbackwall_feedbacks",array("id" => $feedbackid)))
 		{
 			echo "ERROR(feedbackid), contact an admin";
-			die;
+			die();
 		}
 
 		$entry = $DB -> get_record("feedbackwall_feedbacks", array(
@@ -204,7 +207,7 @@ if($fnc = required_param("fnc",PARAM_TEXT))
 			if(!$checkfeedbackid = $DB -> get_record("feedbackwall_feedbacks",array("id" => $feedbackid)))
 			{
 				echo "ERROR(feedbackid), contact an admin";
-				die;
+				die();
 			}
 			
 			$entry = $DB->get_record("feedbackwall_feedbacks", array(
@@ -233,7 +236,7 @@ if($fnc = required_param("fnc",PARAM_TEXT))
 		if(!$checkfeedbackid = $DB -> get_record("feedbackwall_feedbacks",array("id" => $feedbackid)))
 		{
 			echo "ERROR(feedbackid), contact an admin";
-			die;
+			die();
 		}
 
 		$feedback = $DB->get_record('feedbackwall_feedbacks', array(

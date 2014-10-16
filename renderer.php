@@ -19,7 +19,7 @@
  * Chat module rendering methods
  *
  * @package    mod_feedbackwall
- * @copyright  2014 Franz Weidmann
+ * @copyright  10/2014 Franz Weidmann
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
@@ -31,8 +31,19 @@ class mod_feedbackwall_renderer extends plugin_renderer_base {
 	 * This function loads the top component of the mainpage 
 	 * as HTML-Code
 	 *
+	 *
+	 * @param stdclass $data has this data->
+	 * String sesskey Sessionkey
+	 * int $courseid courseid
+	 * int coursemoduleid moduleid of the plugin within the course
+	 * int dateInt date of comment
+	 * String firstname firstname of the account
+	 * String lastname lastname of the account
+	 * String intro introtext about this module
+	 *
+	 * @return String $topdiv top part of the page as HTML-Code
 	 */
-	public function render_topdiv($data)
+	public function render_topdiv(stdclass $data)
 	{
 		
 		$topdiv = "";
@@ -120,16 +131,19 @@ class mod_feedbackwall_renderer extends plugin_renderer_base {
 	 * This function loads all comments of a feedback 
 	 * into its comment section
 	 *
-	 * @param object $feedback database entry of a feedback
-	 * @param object $commentsentry database entry of the comments of the feedback
-	 * @param int $courseid courseid
-	 * @param int $coursemoduleid moduleid of the plugin within the course
-	 * @param int $dateInt date of comment
+	 * @param stdclass $data has this data->
+	 * object feedback database entry of a feedback
+	 * object commentsentry database entry of the comments of the feedback
+	 * int $courseid courseid
+	 * int coursemoduleid moduleid of the plugin within the course
+	 * int dateInt date of comment
+	 * String sesskey Sessionkey
+	 *
 	 * @return string $comments all the comments of a feedback as HTML-Code
 	 */
 
 
-	public function render_comment($data)
+	public function render_comment(stdclass $data)
 	{
 		$fID= $data -> feedback -> id;
 
@@ -154,7 +168,7 @@ class mod_feedbackwall_renderer extends plugin_renderer_base {
 
 		$areaID = "'commtxtarea" . $fID . "'";		
 
-		$sesskey = '"' .  $data -> sesskey . '"';
+		
 	
 		$comments .= html_writer::tag("textarea","",array(
 		"onclick"=>"clearArea(" . $areaID . ");",
@@ -164,7 +178,7 @@ class mod_feedbackwall_renderer extends plugin_renderer_base {
 		"placeholder"=>get_string("writeaComment","feedbackwall"))
 		);
 		
-		
+		$sesskey = '"' .  $data -> sesskey . '"';
 
 		$comments .= html_writer::tag("input","",array(
 		"type"=>'button',
@@ -193,13 +207,15 @@ class mod_feedbackwall_renderer extends plugin_renderer_base {
 	 * This function loads a feedback which belongs to 
 	 * this module from the database.
 	 *
+	 * @param stdclass $data has this data->
+	 * object feedback database entry of a feedback
+	 * object comments database entry of the comments of the feedback
+	 * int courseid courseid
+	 * int coursemoduleid moduleid of the plugin within the course
+	 * int dateInt date of comment
+	 * int userid userid
+	 * String sesskey Sessionkey
 	 *
-	 * @param object $feedback database entry of a feedback
-	 * @param object $comments database entry of the comments of the feedback
-	 * @param int $courseid courseid
-	 * @param int $coursemoduleid moduleid of the plugin within the course
-	 * @param int $dateInt date of comment
-	 * @param int $userid userid
 	 * @return string $feedbacks all the feedbacks of the module, with its comments, as HTML-Code
 	*/
 	
@@ -225,7 +241,7 @@ class mod_feedbackwall_renderer extends plugin_renderer_base {
 			$i++;
 		}				
 
-		$feedback = $this -> output -> container_start("feedbacks",$fID);  									
+		$feedback = $this -> output -> box_start("feedbacks",$fID);  									
 		$feedback .= html_writer::tag("h4",s($data -> feedback -> name));
 		$feedback .=  $this -> output -> box(format_text($data -> feedback -> feedback,$format = FORMAT_MOODLE),"","",array("style"=>'margin-left:5%;margin-top:2%;')) . "</br>";									
 		
@@ -309,6 +325,8 @@ class mod_feedbackwall_renderer extends plugin_renderer_base {
 			$combtn .=  get_string("writeaComment","feedbackwall");
 		}
 		
+		
+		// button which shows the comments 
 		$feedback .=  html_writer::tag("input","",array(
 		"type"=>'button',
 		"onClick"=>'commShow(' . $fID . ');',
@@ -317,7 +335,7 @@ class mod_feedbackwall_renderer extends plugin_renderer_base {
 		"value"=> $combtn )
 		);
 
-
+		// button which hides the comments 
 		$feedback .=  html_writer::tag("input","",array(
 		"style"=>'display:none;',
 		"onClick"=>'commHide(' . $fID . ');',
@@ -348,7 +366,7 @@ class mod_feedbackwall_renderer extends plugin_renderer_base {
 
 	
 		$feedback .=  $this -> output -> box_end();				
-		$feedback .=  $this -> output -> container_end();
+		$feedback .=  $this -> output -> box_end();
 		
 		
 		return $feedback;

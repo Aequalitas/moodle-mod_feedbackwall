@@ -2,7 +2,7 @@
 /* Javascript for the feedbackwall mainpage.
 
 Author: Franz Weidmann 
-
+10/2014
 */
 
 
@@ -21,7 +21,7 @@ function feedbackInsert(courseid,coursemoduleid,dateInt,skey)
 		if($.trim($("#feedbackinputfield").val()).length !=0)
 		{
 			var feedback=$("#feedbackinputfield").val().replace(/</g, "&lt;").replace(/>/g, "&gt;");
-			var name= name=$("#name").val();
+			var name=$("#name").val();
 			
 			
 			
@@ -33,14 +33,14 @@ function feedbackInsert(courseid,coursemoduleid,dateInt,skey)
 				data:{fnc : "feedbackInsert" , q:feedback , s:name, k:courseid,r:coursemoduleid,l:dateInt,sesskey:skey},
 				
 				beforeSend : function(){
-				
+
+					
 					$(".feedbacks").hide();
 					$("#feedbacksloading").show();
 				
 				},
 				
-				success : function(){
-				
+				success : function(data){
 					
 					feedbackwallRefresh(courseid,coursemoduleid,dateInt,skey);
 					
@@ -302,12 +302,9 @@ function feedbackwallRefresh(courseid,coursemoduleid,dateInt,skey)
 					
 			success : function(data){
 					
-				$(".feedbacks").show(500,function(){
-					
-					$("#maindiv").html(data);
-				
-				});
-				$("#feedbacksloading").hide();		
+				$("#feedbacksloading").hide();
+				$("#maindiv").html(data);
+						
 				
 			}
 		
