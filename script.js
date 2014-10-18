@@ -14,7 +14,7 @@ Calls a php script which creates the feedback.
 @param int moduleid of the plugin in the course
 @param string date of creation of the feedback
 */
-function feedbackInsert(courseid,coursemoduleid,dateInt,skey)
+function feedbackwall_feedbackInsert(courseid,coursemoduleid,dateInt,skey)
 	{
 
 		
@@ -42,7 +42,7 @@ function feedbackInsert(courseid,coursemoduleid,dateInt,skey)
 				
 				success : function(data){
 					
-					feedbackwallRefresh(courseid,coursemoduleid,dateInt,skey);
+					feedbackwall_feedbackwallRefresh(courseid,coursemoduleid,dateInt,skey);
 					
 				}
 			
@@ -74,7 +74,7 @@ rating of the feedback.
 
 */
 
-function rate(id,courseid,coursemoduleid,date,skey)
+function feedbackwall_rate(id,courseid,coursemoduleid,date,skey)
 {
 	var stars = $("#selectStar"+id).val();
 	
@@ -122,7 +122,7 @@ function rate(id,courseid,coursemoduleid,date,skey)
 						
 			success : function(){
 						
-					feedbackwallRefresh(courseid,coursemoduleid,date,skey);
+					feedbackwall_feedbackwallRefresh(courseid,coursemoduleid,date,skey);
 					
 			}
 		
@@ -136,7 +136,7 @@ Function which clears the focused textarea
 
 @param int id id of the feedback
 */
-function clearArea(id)
+function feedbackwall_clearArea(id)
 {
 	
 	$("#"+id).val("");
@@ -154,7 +154,7 @@ function clearArea(id)
 
 
 */
-function commInsert(id,courseid,coursemoduleid,date,skey)
+function feedbackwall_commInsert(id,courseid,coursemoduleid,date,skey)
 {
 		
 		if($.trim($("#commtxtarea"+id).val()).length !=0)
@@ -179,7 +179,7 @@ function commInsert(id,courseid,coursemoduleid,date,skey)
 				
 				success: function(){
 				
-					commsRefresh(id,courseid,coursemoduleid,date,skey);
+					feedbackwall_commsRefresh(id,courseid,coursemoduleid,date,skey);
 				}
 			
 			});
@@ -200,7 +200,7 @@ makes the comment section of a feedback visible
 @param int id id of the feedback
 */
 
-function commShow(id)
+function feedbackwall_commShow(id)
 {
 
 	$("#comments"+id).show();
@@ -217,7 +217,7 @@ hides the comment section of a feedback.
 @param int id id of the feedback
 
 */
-function commHide(id)
+function feedbackwall_commHide(id)
 {
 	$("#comments"+id).hide();
 	$("#commfield"+id).hide();
@@ -234,7 +234,7 @@ the commentssection of a feedback.
 @param int moduleid of the plugin in the course
 @param string date of creation of the feedback
 */
-function commsRefresh(id,courseid,coursemoduleid,dateInt,skey)
+function feedbackwall_commsRefresh(id,courseid,coursemoduleid,dateInt,skey)
 {
 	
 	
@@ -277,7 +277,7 @@ feedbacks and comments.
 @param string date of creation of the feedback
 */
 
-function feedbackwallRefresh(courseid,coursemoduleid,dateInt,skey)
+function feedbackwall_feedbackwallRefresh(courseid,coursemoduleid,dateInt,skey)
 {
 	
 	var sort=$("#sortmenu").val();

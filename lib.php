@@ -229,4 +229,4 @@ function feedbackwall_uninstall() {
 // recommended to move all funcions below to a new "localib.php" file.
 
 
-?>
+

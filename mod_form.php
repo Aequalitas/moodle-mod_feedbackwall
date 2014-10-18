@@ -21,7 +21,6 @@
  *             (standard formats are: MOODLE, HTML, PLAIN, MARKDOWN)
  *             See lib/weblib.php Constants and the format_text()
  *             function for more info
- 
  */
 if (!defined('MOODLE_INTERNAL')) {
     die('Direct access to this script is forbidden.'); // It must be included from a Moodle page
@@ -31,9 +30,7 @@ if (!defined('MOODLE_INTERNAL')) {
 require_once($CFG->dirroot.'/course/moodleform_mod.php');
 
 class mod_feedbackwall_mod_form extends moodleform_mod {
-
     function definition() {
-
         global $COURSE;
         $mform =& $this->_form;
 
@@ -66,4 +63,4 @@ class mod_feedbackwall_mod_form extends moodleform_mod {
     }
 }
 
-?>
+
