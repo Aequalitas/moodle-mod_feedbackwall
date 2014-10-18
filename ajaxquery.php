@@ -37,15 +37,15 @@ if (!confirm_sesskey()) {
 $courseid = required_param("k", PARAM_INT);  // Those two params are used in every action
 $coursemoduleid = required_param("r", PARAM_INT);
 
-$checkcourseid = $DB->get_record("feedbackwall", array("course" => $courseid),"*",MUST_EXIST);
+$checkcourseid = $DB->get_record("feedbackwall", array("course" => $courseid), "*", MUST_EXIST);
 
 require_login($course, false, $cm);
 
 // AJAX-Querys, "fnc" tells which kind of query it was.
-if($fnc = required_param("fnc", PARAM_TEXT)) {
+if($fnc = required_param("fnc", PARAM_ALPHA)) {
     if($fnc == "feedbackInsert"){
         $feedback = required_param("q", PARAM_TEXT);
-        $name = required_param("s", PARAM_TEXT);
+        $name = required_param("s", PARAM_ALPHA);
         $timecreated = required_param("l", PARAM_INT);
 
         $entry = new stdClass();
@@ -60,8 +60,8 @@ if($fnc = required_param("fnc", PARAM_TEXT)) {
         $DB->insert_record("feedbackwall_feedbacks", $entry, false);
 
     } else if ($fnc == "feedbackwallRefresh") {
-        $s = required_param("q", PARAM_TEXT);
-        $date = required_param("d", PARAM_TEXT);
+        $s = required_param("q", PARAM_ALPHA);
+        $date = required_param("d", PARAM_INT);
 
         $entry = "";
         switch ($s)
@@ -131,7 +131,7 @@ if($fnc = required_param("fnc", PARAM_TEXT)) {
         $feedbackid = required_param("q", PARAM_INT);
         $stars = required_param("h", PARAM_INT);
 
-        $checkfeedbackid = $DB->get_record("feedbackwall_feedbacks", array("id" => $feedbackid),"*",MUST_EXIST);
+        $checkfeedbackid = $DB->get_record("feedbackwall_feedbacks", array("id" => $feedbackid), "*", MUST_EXIST);
 
         $entry = $DB->get_record("feedbackwall_feedbacks", array(
         "courseid" => $courseid,
@@ -156,7 +156,7 @@ if($fnc = required_param("fnc", PARAM_TEXT)) {
     } else if($fnc == "commentInsert") {
         $comment = required_param("q", PARAM_TEXT);
         $feedbackid = required_param("s", PARAM_INT);
-        $name = required_param("o", PARAM_TEXT);
+        $name = required_param("o", PARAM_ALPHA);
         $timecreated = required_param("l", PARAM_INT);
 
         $entry = new stdClass();
@@ -170,7 +170,7 @@ if($fnc = required_param("fnc", PARAM_TEXT)) {
 
         $DB->insert_record("feedbackwall_comments", $entry, false);
 
-        $checkfeedbackid = $DB->get_record("feedbackwall_feedbacks", array("id" => $feedbackid),"*",MUST_EXIST);
+        $checkfeedbackid = $DB->get_record("feedbackwall_feedbacks", array("id" => $feedbackid), "*", MUST_EXIST);
 
         $entry = $DB->get_record("feedbackwall_feedbacks", array(
         "courseid" => $courseid,
@@ -192,8 +192,8 @@ if($fnc = required_param("fnc", PARAM_TEXT)) {
         $feedbackid = required_param("q", PARAM_INT);
         $date = required_param("d", PARAM_INT);
 
-        $checkfeedbackid = $DB->get_record("feedbackwall_feedbacks", array("id" => $feedbackid),"*",MUST_EXIST);
-        
+        $checkfeedbackid = $DB->get_record("feedbackwall_feedbacks", array("id" => $feedbackid), "*", MUST_EXIST);
+
         $feedback = $DB->get_record('feedbackwall_feedbacks', array(
         'courseid' => $courseid,
         "coursemoduleid" => $coursemoduleid,
