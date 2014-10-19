@@ -35,7 +35,6 @@ class mod_feedbackwall_renderer extends plugin_renderer_base {
      * String sesskey Sessionkey
      * int $courseid courseid
      * int coursemoduleid moduleid of the plugin within the course
-     * int dateint date of comment
      * String firstname firstname of the account
      * String lastname lastname of the account
      * String intro introtext about this module
@@ -62,7 +61,6 @@ class mod_feedbackwall_renderer extends plugin_renderer_base {
            "onClick" => "feedbackwall_feedbackInsert(" .
                     $data->courseid  .','.
                     $data->coursemoduleid  . ',' .
-                    $data->dateint . ','.
                     $sesskey . ");",
             "value" => get_string("send", "feedbackwall")
         ));
@@ -79,7 +77,7 @@ class mod_feedbackwall_renderer extends plugin_renderer_base {
         ),
         array(html_writer::select(array(
                get_string("anonymous", "feedbackwall") => get_string("anonymous", "feedbackwall"),
-               $data->firstname . " " . $data->lastname => $data->firstname . " " . $data->lastname
+               $data->firstname . "_" . $data->lastname => $data->firstname . "_" . $data->lastname
             ), "" , 0, "", array("id" => "name")) . $inputdesc
         ),
         array(
@@ -97,7 +95,6 @@ class mod_feedbackwall_renderer extends plugin_renderer_base {
             "onClick" => 'feedbackwall_feedbackwallRefresh(' .
                         $data->courseid  . ",".
                         $data->coursemoduleid  . ",".
-                        $data->dateint . ",".
                         $sesskey . ');'
             )
         );
@@ -115,7 +112,6 @@ class mod_feedbackwall_renderer extends plugin_renderer_base {
             "onchange" => "feedbackwall_feedbackwallRefresh(" .
                         $data->courseid . "," .
                         $data->coursemoduleid  . "," .
-                        $data->dateint . "," .
                         $sesskey . ");"
             )
         );
@@ -134,7 +130,6 @@ class mod_feedbackwall_renderer extends plugin_renderer_base {
      * object commentsentry database entry of the comments of the feedback
      * int $courseid courseid
      * int coursemoduleid moduleid of the plugin within the course
-     * int dateint date of comment
      * String sesskey Sessionkey
      *
      * @return string $comments all the comments of a feedback as HTML-Code
@@ -178,7 +173,6 @@ class mod_feedbackwall_renderer extends plugin_renderer_base {
                     . $fid . "," .
                     s($data->courseid) . "," .
                     s($data->coursemoduleid) . "," .
-                    s($data->dateint) ."," .
                     $sesskey . ');',
                 "class" => 'commentarbtn',
                 "id" => 'commbtn' . $fid,
@@ -205,7 +199,6 @@ class mod_feedbackwall_renderer extends plugin_renderer_base {
      * object comments database entry of the comments of the feedback
      * int courseid courseid
      * int coursemoduleid moduleid of the plugin within the course
-     * int dateint date of comment
      * int userid userid
      * String sesskey Sessionkey
      *
@@ -272,7 +265,6 @@ class mod_feedbackwall_renderer extends plugin_renderer_base {
                     . $fid . "," .
                     s($data->courseid) . "," .
                     s($data->coursemoduleid) . "," .
-                    s($data->dateint) . "," .
                     $sesskeyoutput . ');',
             "id" => 'rate' . $fid,
             "value" => get_string("rate", "feedbackwall"))
@@ -324,7 +316,6 @@ class mod_feedbackwall_renderer extends plugin_renderer_base {
         $commentdata->comments = $data->comments;
         $commentdata->courseid = $data->courseid;
         $commentdata->coursemoduleid = $data->coursemoduleid;
-        $commentdata->dateint = $data->dateint;
         $commentdata->sesskey = $data->sesskey;
 
         global $PAGE;

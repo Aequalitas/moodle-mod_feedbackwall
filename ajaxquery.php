@@ -45,8 +45,18 @@ require_login($course, false, $cm);
 if($fnc = required_param("fnc", PARAM_ALPHA)) {
     if($fnc == "feedbackInsert"){
         $feedback = required_param("q", PARAM_TEXT);
-        $name = required_param("s", PARAM_ALPHA);
-        $timecreated = required_param("l", PARAM_INT);
+        $name = required_param("s", PARAM_ALPHAEXT);
+
+        $date = usergetdate(time());
+
+        if(strlen($date["mday"]) == 1) {
+            $date["mday"] = 0 . $date["mday"];
+        }
+        if (strlen($date["mon"]) == 1) {
+            $date["mon"] = 0 . $date["mon"];
+        }
+        $timecreated = $date["mday"] . $date["mon"] . $date["year"];
+
 
         $entry = new stdClass();
         $entry->courseid = $courseid;
@@ -61,7 +71,6 @@ if($fnc = required_param("fnc", PARAM_ALPHA)) {
 
     } else if ($fnc == "feedbackwallRefresh") {
         $s = required_param("q", PARAM_ALPHA);
-        $date = required_param("d", PARAM_INT);
 
         $entry = "";
         switch ($s)
@@ -109,7 +118,6 @@ if($fnc = required_param("fnc", PARAM_ALPHA)) {
                 $data->comments = $comments;
                 $data->courseid = $courseid;
                 $data->coursemoduleid = $coursemoduleid;
-                $data->dateint = $date;
                 $data->userid = $USER->id;
                 $data->sesskey = $USER->sesskey;
 
@@ -156,8 +164,18 @@ if($fnc = required_param("fnc", PARAM_ALPHA)) {
     } else if($fnc == "commentInsert") {
         $comment = required_param("q", PARAM_TEXT);
         $feedbackid = required_param("s", PARAM_INT);
-        $name = required_param("o", PARAM_ALPHA);
-        $timecreated = required_param("l", PARAM_INT);
+        $name = required_param("o", PARAM_ALPHAEXT);
+
+
+        $date = usergetdate(time());
+
+        if(strlen($date["mday"]) == 1) {
+            $date["mday"] = 0 . $date["mday"];
+        }
+        if (strlen($date["mon"]) == 1) {
+            $date["mon"] = 0 . $date["mon"];
+        }
+        $timecreated = $date["mday"] . $date["mon"] . $date["year"];
 
         $entry = new stdClass();
         $entry->courseid = $courseid;
@@ -190,7 +208,6 @@ if($fnc = required_param("fnc", PARAM_ALPHA)) {
 
     } else if($fnc == "commentsRefresh") {
         $feedbackid = required_param("q", PARAM_INT);
-        $date = required_param("d", PARAM_INT);
 
         $checkfeedbackid = $DB->get_record("feedbackwall_feedbacks", array("id" => $feedbackid), "*", MUST_EXIST);
 
@@ -214,7 +231,6 @@ if($fnc = required_param("fnc", PARAM_ALPHA)) {
         $data->comments = $comments;
         $data->courseid = $courseid;
         $data->coursemoduleid = $coursemoduleid;
-        $data->dateint = $date;
         $data->sesskey = $USER->sesskey;
 
         echo $rend->render_comment($data);

@@ -146,7 +146,7 @@ if(!empty($entry)) {
         $data->comments = $comments;
         $data->courseid = $course->id;
         $data->coursemoduleid = $cm->id;
-        $data->dateInt = $dateint;
+        $data->dateint = $dateint;
         $data->userid = $USER->id;
         $data->sesskey = $USER->sesskey;
 
