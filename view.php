@@ -82,21 +82,6 @@ if (isguestuser()) {
     exit;
 }
 
-// create date
-
-    $date = usergetdate(time());
-
-    if(strlen($date["mday"]) == 1) {
-        $date["mday"] = 0 . $date["mday"];
-
-    }
-    if (strlen($date["mon"]) == 1) {
-        $date["mon"] = 0 . $date["mon"];
-    }
-
-    $dateint = $date["mday"] . $date["mon"] . $date["year"];
-
-
 // initialise site
 $courseshortname = format_string($course->shortname, true, array('context' => context_course::instance($course->id)));
 $title = $courseshortname . ': ' . format_string($feedbackwall->name);
@@ -115,13 +100,12 @@ echo $OUTPUT->heading(format_string($feedbackwall->name), 2);
 
 // Print the main part of the page
 
-// Topdiv, choose name and way of sort
+// Topdiv,where you choose name and way of sort
 
 $topdiv = new stdclass();
 $topdiv->sesskey = $USER->sesskey;
 $topdiv->courseid = $course->id;
 $topdiv->coursemoduleid = $cm->id;
-$topdiv->dateint = $dateint;
 $topdiv->firstname = $USER->firstname;
 $topdiv->lastname = $USER->lastname;
 $topdiv->intro = $feedbackwall->intro;
@@ -146,7 +130,6 @@ if(!empty($entry)) {
         $data->comments = $comments;
         $data->courseid = $course->id;
         $data->coursemoduleid = $cm->id;
-        $data->dateint = $dateint;
         $data->userid = $USER->id;
         $data->sesskey = $USER->sesskey;
 
