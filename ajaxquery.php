@@ -45,7 +45,7 @@ require_login($course, false, $cm);
 if($fnc = required_param("fnc", PARAM_ALPHA)) {
     if($fnc == "feedbackInsert"){
         $feedback = required_param("q", PARAM_TEXT);
-        $name = required_param("s", PARAM_ALPHATEXT);
+        $name = required_param("s", PARAM_ALPHAEXT);
 
         $date = usergetdate(time());
 
@@ -164,7 +164,7 @@ if($fnc = required_param("fnc", PARAM_ALPHA)) {
     } else if($fnc == "commentInsert") {
         $comment = required_param("q", PARAM_TEXT);
         $feedbackid = required_param("s", PARAM_INT);
-        $name = required_param("o", PARAM_ALPHATEXT);
+        $name = required_param("o", PARAM_ALPHAEXT);
 
 
         $date = usergetdate(time());
