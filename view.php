@@ -38,8 +38,8 @@ $PAGE->requires->jquery_plugin('ui');
 $PAGE->requires->jquery_plugin('ui-css');
 $PAGE->requires->js(new moodle_url($CFG->wwwroot . '/mod/feedbackwall/script.js') );
 
-$id = optional_param('id', 0, PARAM_INT); // course_module ID, or
-$a  = optional_param('a', 0, PARAM_INT);  // feedbackwall instance ID
+$id = optional_param('id', 0, PARAM_INT); // Course_module ID, or
+$a  = optional_param('a', 0, PARAM_INT);  // Feedbackwall instance ID.
 
 if ($id) {
     if (! $cm = get_coursemodule_from_id('feedbackwall', $id)) {
@@ -71,7 +71,7 @@ if ($id) {
 
 require_login($course, true, $cm);
 
-// show some info for guests
+// Show some info for guests.
 if (isguestuser()) {
     $PAGE->set_title($feedbackwall->name);
     echo $OUTPUT->header();
@@ -82,7 +82,7 @@ if (isguestuser()) {
     exit;
 }
 
-// initialise site
+// Initialise site.
 $courseshortname = format_string($course->shortname, true, array('context' => context_course::instance($course->id)));
 $title = $courseshortname . ': ' . format_string($feedbackwall->name);
 
@@ -91,16 +91,16 @@ $PAGE->set_url('/mod/feedbackwall/view.php', array('id' => $cm->id));
 $PAGE->set_title($title);
 $PAGE->set_heading($course->fullname);
 
-// Print the page header
+// Print the page header.
 $strnewmodules = get_string('modulenameplural', 'feedbackwall');
 $strnewmodule = get_string('modulename', 'feedbackwall');
 
 echo $OUTPUT->header();
 echo $OUTPUT->heading(format_string($feedbackwall->name), 2);
 
-// Print the main part of the page
+// Print the main part of the page.
 
-// Topdiv,where you choose name and way of sort
+// Topdiv,where you choose name and way of sort.
 
 $topdiv = new stdclass();
 $topdiv->sesskey = $USER->sesskey;
@@ -114,16 +114,18 @@ echo $rend->render_topdiv($topdiv);
 
 // Maindiv, show Feedbacks and its comments.
 
-echo $OUTPUT->heading(get_string("feedbackwall", "feedbackwall"), 2);
+echo "<br/>";
 echo "<hr>";
 
 echo $OUTPUT->box_start("", "maindiv", array("style" => "overflow:auto;"));
 
-// getting all feedbacks of this module from the database
-$entry = $DB->get_records('feedbackwall_feedbacks', array('courseid' => $course->id, "coursemoduleid" => $cm->id), $sort = 'id DESC');
+// Getting all feedbacks of this module from the database.
+$entry = $DB->get_records('feedbackwall_feedbacks',
+array('courseid' => $course->id, "coursemoduleid" => $cm->id),
+$sort = 'id DESC');
 
-if(!empty($entry)) {
-    foreach($entry as $feedback) {
+if (!empty($entry)) {
+    foreach ($entry as $feedback) {
         $comments = $DB->get_records("feedbackwall_comments", array("feedbackid" => $feedback->id));
         $data = new stdclass();
         $data->feedback = $feedback;
@@ -135,12 +137,12 @@ if(!empty($entry)) {
 
         echo $rend->render_feedback($data);
     }
-}
-else
-{
-    echo $OUTPUT->heading(get_string("noFeedbacks", "feedbackwall"), 2, "", "", array("class" => 'feedbacks', "style" => 'margin-top:10%;'));
+} else {
+    echo $OUTPUT->heading(get_string("noFeedbacks", "feedbackwall"), 2, "", "",
+    array("class" => 'feedbacks', "style" => 'margin-top:10%;')
+    );
 }
 echo $OUTPUT->box_end();
 
-// Finish the page
+// Finish the page.
 echo $OUTPUT->footer();

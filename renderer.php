@@ -44,9 +44,14 @@ class mod_feedbackwall_renderer extends plugin_renderer_base {
     public function render_topdiv(stdclass $data) {
 
         $topdiv = "";
-        $sesskey = "'" . $data->sesskey . "'"; // Make the sesskey to a string so javascript can use it
+        $sesskey = "'" . $data->sesskey . "'"; // Make the sesskey to a string so javascript can use it.
 
-        $inputdesc = html_writer::tag("label", get_string("nameinputdescription", "feedbackwall"), array("style" => 'font-size:11.9px;color:#999;'));
+        $inputdesc = html_writer::tag("label",
+        get_string("nameinputdescription",
+        "feedbackwall"),
+        array("style" => 'font-size:11.9px;color:#999;')
+        );
+
         $textarea = html_writer::tag('textarea', "", array(
             "style" => "margin-top:1%;",
             "id" => "feedbackinputfield",
@@ -73,7 +78,7 @@ class mod_feedbackwall_renderer extends plugin_renderer_base {
         $table = new html_table();
         $table->data = array(
         array(
-               $this->heading($data->intro, 3)
+               $data->intro
         ),
         array(html_writer::select(array(
                get_string("anonymous", "feedbackwall") => get_string("anonymous", "feedbackwall"),
@@ -88,18 +93,9 @@ class mod_feedbackwall_renderer extends plugin_renderer_base {
 
         $sesskey = '"' . $data->sesskey . '"';
         $topdiv .= $this->box_start();
-        $topdiv .= html_writer::tag("input", "", array(
-            "type" => 'button',
-            "id" => 'refreshlistbtn',
-            "value" => get_string("refreshfeedbacklist", "feedbackwall"),
-            "onClick" => 'feedbackwall_feedbackwallRefresh(' .
-                        $data->courseid  . ",".
-                        $data->coursemoduleid  . ",".
-                        $sesskey . ');'
-            )
-        );
+        $topdiv .= get_string("sortfor", "feedbackwall") . "&nbsp&nbsp";
 
-            // selectmenu to sort
+            // Selectmenu to sort.
             $topdiv .= html_writer::select(array(
             'new' => get_string("newsortdescription", "feedbackwall"),
             'old' => get_string("oldsortdescription", "feedbackwall"),
@@ -138,23 +134,33 @@ class mod_feedbackwall_renderer extends plugin_renderer_base {
 
     public function render_comment(stdclass $data) {
 
+        $date = $data->feedback->timecreated;
+
+        $datestring = $date[0] . $date[1] . "." . $date[2] . $date[3] . "."
+        . $date[4] . $date[5] . $date[6] . $date[7] . "&nbsp"
+        . $date[8] . $date[9] . ":" . $date[10] . $date[11];
+
         $fid = $data->feedback->id;
         $comments = "";
 
-        if($data->feedback->amountcomments > 0) {
-            foreach($data->comments as $comment) {
+        if ($data->feedback->amountcomments > 0) {
+            foreach ($data->comments as $comment) {
                 $comments .= $this->box_start("", s($comment->id) . "comment" . $fid );
-                $comments .= html_writer::tag("h4", s($comment->name));
+                
                 $comments .= format_text($comment->comment, $format = FORMAT_MOODLE) . "</br>";
-                $comments .= $this->box_end() . "</br>";
-
+                $comments .= html_writer::tag("p",
+                s($comment->name)
+                . " - " .
+                $datestring
+                );
+                $comments .= $this->box_end() . "<hr></br>";
             }
 
         } else {
                $comments .= $this->box(get_string("noComments", "feedbackwall"), "", array("class" => 'commShow' . $fid));
-        
+
         }
-            $comments .= "<hr>" .  $this->container_start('commanShow'. $fid, "", array("style" => 'margin-top:3%;'));
+            $comments .= $this->container_start('commanShow'. $fid, "", array("style" => 'margin-top:3%;'));
             $areaid = "'commtxtarea" . $fid . "'";
 
             $comments .= html_writer::tag("textarea", "", array(
@@ -166,7 +172,7 @@ class mod_feedbackwall_renderer extends plugin_renderer_base {
             );
 
             $sesskey = '"' .  $data->sesskey . '"';
-            // button to send a comment
+            // Button to send a comment.
             $comments .= html_writer::tag("input", "", array(
                 "type" => 'button',
                 "onClick" => 'feedbackwall_commInsert('
@@ -214,27 +220,44 @@ class mod_feedbackwall_renderer extends plugin_renderer_base {
         $canrate = 1;
         $i = 0;
 
-        while($alreadyratedarray[$i] != "0") {
+        while ($alreadyratedarray[$i] != "0") {
 
-            if($alreadyratedarray[$i] == $data->userid) {
-
+            if ($alreadyratedarray[$i] == $data->userid) {
                 $canrate = 0;
             }
+
             $i++;
         }
 
         $feedback = $this->output->box_start("feedbacks", $fid);
-        $feedback .= html_writer::tag("h4", s($data->feedback->name));
-        $feedback .= $this->output->box(format_text($data->feedback->feedback, $format = FORMAT_MOODLE), "", "", array("style" => 'margin-left:5%;margin-top:2%;')) . "</br>";
+        
+
+        $feedback .= $this->output->box(
+        format_text($data->feedback->feedback,
+        $format = FORMAT_MOODLE),
+        "", "", array("style" => 'margin-left:5%;margin-top:2%;')
+        ) . "</br>";
+
+        $date = $data->feedback->timecreated;
+
+        $datestring = $date[0] . $date[1] . "." . $date[2] . $date[3] . "."
+        . $date[4] . $date[5] . $date[6] . $date[7] . "&nbsp"
+        . $date[8] . $date[9] . ":" . $date[10] . $date[11];
+
+        $feedback .= html_writer::tag("p",
+        s($data->feedback->name)
+        . " - " . 
+        $datestring
+        );
 
         $startable = new html_table();
 
-        for($i = 0; $i < 5; $i++) {
-            if($ratingaverage - 1 >= 0 ) {
+        for ($i = 0; $i < 5; $i++) {
+            if ($ratingaverage - 1 >= 0 ) {
                 $startable->data[0][$i] = html_writer::tag("img", "", array("src" => "pix/fullStar.jpg", "alt" => "fullStar"));
                 $ratingaverage -= 1;
 
-            } else if($ratingaverage - 0.5 >= 0 ) {
+            } else if ($ratingaverage - 0.5 >= 0 ) {
                 $startable->data[0][$i] = html_writer::tag("img", "", array("src" => "pix/halfStar.jpg", "alt" => "halfStar"));
                 $ratingaverage -= 0.5;
 
@@ -243,11 +266,15 @@ class mod_feedbackwall_renderer extends plugin_renderer_base {
             }
         }
 
-        $startable->data[0][5] = html_writer::tag("label", "(" . s($data->feedback->rating) .  ")", array("title" => get_string("rating", "feedbackwall")));
-        $startable->attributes["class"] = "empty";
+        $startable->data[0][5] = html_writer::tag("label",
+        "(" . s($data->feedback->rating) .  ")",
+        array("title" => get_string("rating", "feedbackwall"))
+        );
+
+        $startable->attributes["class"] = "empty"; // Otherwise the cells are too big.
         $feedback .= html_writer::table($startable);
 
-        if($canrate == 1) {
+        if ($canrate == 1) {
             $feedback .= html_writer::select(array(
                 "noStar" => get_string("rateFeedback" , "feedbackwall"),
                 "oneStar" => get_string("rateoneStar" , "feedbackwall"),
@@ -278,15 +305,14 @@ class mod_feedbackwall_renderer extends plugin_renderer_base {
 
         $combtn = "";
 
-        if($data->feedback->amountcomments > 0) {
+        if ($data->feedback->amountcomments > 0) {
             $combtn .= $data->feedback->amountcomments . " ". get_string("showComments", "feedbackwall");
-
         } else {
             $combtn .= get_string("writeaComment", "feedbackwall");
 
         }
 
-        // button which shows the comments
+        // Button which shows the comments.
 
         $feedback .= html_writer::tag("input", "", array(
 
@@ -297,7 +323,7 @@ class mod_feedbackwall_renderer extends plugin_renderer_base {
             "value" => $combtn )
         );
 
-        // button which hides the comments
+        // Button which hides the comments.
         $feedback .= html_writer::tag("input", "", array(
 
             "style" => 'display:none;',

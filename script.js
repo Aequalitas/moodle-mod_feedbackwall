@@ -1,14 +1,9 @@
-
 /* Javascript for the feedbackwall mainpage.
-
-Author: Franz Weidmann 
+Author: Franz Weidmann
 10/2014
 */
-
-
 /*
 Calls a php script which creates the feedback.
-
 
 @param int courseid id of the course
 @param int moduleid of the plugin in the course
@@ -16,7 +11,7 @@ Calls a php script which creates the feedback.
 
 */
 function feedbackwall_feedbackInsert(courseid, coursemoduleid, skey) {
-    if($.trim($("#feedbackinputfield").val()).length !=0) {
+    if ($.trim($("#feedbackinputfield").val()).length != 0) {
         var feedback = $("#feedbackinputfield").val().replace(/</g, "&lt;").replace(/>/g, "&gt;");
         var name = $("#name").val();
 
@@ -48,9 +43,9 @@ function feedbackwall_feedbackInsert(courseid, coursemoduleid, skey) {
 
 
 /*
-	
+
 Function which will be called when a user rates a feedback.
-This function the calls a php script which calculates the new 
+This function the calls a php script which calculates the new
 rating of the feedback.
 
 @param int id id of the feedback
@@ -60,13 +55,12 @@ rating of the feedback.
 
 */
 
-function feedbackwall_rate(id, courseid, coursemoduleid, skey)
-{
-    var stars = $("#selectStar"+id).val();
+function feedbackwall_rate (id, courseid, coursemoduleid, skey) {
+    var stars = $("#selectStar" + id).val();
 
-    if(stars != "noStar") {
+    if (stars != "noStar") {
 
-        switch(stars) {
+        switch (stars) {
             case "oneStar":
                 stars = 1;
             break;
@@ -88,7 +82,7 @@ function feedbackwall_rate(id, courseid, coursemoduleid, skey)
             break;
         }
 
-        $.ajax({
+        $.ajax ({
             url:"ajaxquery.php",
             type:"POST",
             data:{q:id,fnc:"rate",k:courseid,r:coursemoduleid,h:stars,sesskey:skey},
@@ -115,13 +109,13 @@ Function which clears the focused textarea
 @param int id id of the feedback
 */
 function feedbackwall_clearArea(id) {
-    $("#"+id).val("");
+    $("#" + id).val("");
 }
 
 
 /*
-	Function which will be called when a user creates a comment.
-	Calls a php script which insert the comment into the database
+    Function which will be called when a user creates a comment.
+    Calls a php script which insert the comment into the database
 
 @param int id  id of the feedback
 @param int courseid id of the course
@@ -129,32 +123,30 @@ function feedbackwall_clearArea(id) {
 @param String skey the sessionkey as a string
 
 */
-function feedbackwall_commInsert(id, courseid, coursemoduleid, skey)
-{
-    if($.trim($("#commtxtarea"+id).val()).length !=0) {
-        var commtext = $("#commtxtarea"+id).val().replace(/</g, "&lt;").replace(/>/g, "&gt;");
+function feedbackwall_commInsert(id, courseid, coursemoduleid, skey) {
+    if ($.trim($("#commtxtarea" + id).val()).length != 0) {
+        var commtext = $("#commtxtarea" + id).val().replace(/</g, "&lt;").replace(/>/g, "&gt;");
         var name = $("#name").val();
 
-        $.ajax({
+        $.ajax ({
             type:"POST",
             url:"ajaxquery.php",
             data:{o:name,q:commtext,s:id,fnc:"commentInsert",k:courseid,r:coursemoduleid,sesskey:skey},
 
             beforeSend: function(){
-                $("#commloading"+id).show();
-                $(".commShow"+id).hide();
+                $("#commloading" + id).show();
+                $(".commShow" + id).hide();
             },
-            
             success: function(){
                 feedbackwall_commsRefresh(id,courseid,coursemoduleid,skey);
             }
 
         });
 
-        $("#emptyCommFieldwarning"+id).hide();
-        
+        $("#emptyCommFieldwarning" + id).hide();
+
         } else {
-            $("#emptyCommFieldwarning"+id).show();
+            $("#emptyCommFieldwarning" + id).show();
         }
 
 }
@@ -166,10 +158,10 @@ makes the comment section of a feedback visible
 */
 
 function feedbackwall_commShow(id) {
-    $("#comments"+id).show();
-    $("#commfield"+id).show();
-    $("#commShow"+id).hide();
-    $("#commHide"+id).show();
+    $("#comments" + id).show();
+    $("#commfield" + id).show();
+    $("#commShow" + id).hide();
+    $("#commHide" + id).show();
 
 }
 
@@ -181,14 +173,14 @@ hides the comment section of a feedback.
 
 */
 function feedbackwall_commHide(id) {
-    $("#comments"+id).hide();
-    $("#commfield"+id).hide();
-    $("#commShow"+id).show();
-    $("#commHide"+id).hide();
+    $("#comments" + id).hide();
+    $("#commfield" + id).hide();
+    $("#commShow" + id).show();
+    $("#commHide" + id).hide();
 }
 
 /*
-gets the newest comments of a feedback and put them into 
+gets the newest comments of a feedback and put them into
 the commentssection of a feedback.
 
 @param int id id of the feedback
@@ -204,18 +196,18 @@ function feedbackwall_commsRefresh(id, courseid, coursemoduleid, skey) {
 
             beforeSend: function(){
 
-                $("#commloading"+id).show();
-                $(".commanShow"+id).hide();
+                $("#commloading" + id).show();
+                $(".commanShow" + id).hide();
             },
 
             success: function(data){
 
-                $(".commanShow"+id).show(500,function(){
-                    $("#commfield"+id).html(data);
+                $(".commanShow" + id).show(500,function(){
+                    $("#commfield" + id).html(data);
                 });
 
-                $("#commloading"+id).hide();
-                $("#commfield"+id).show();
+                $("#commloading" + id).hide();
+                $("#commfield" + id).show();
             }
 
         });
@@ -223,7 +215,7 @@ function feedbackwall_commsRefresh(id, courseid, coursemoduleid, skey) {
 }
 
 /*
-refreshs the feedbackwall with the newest 
+refreshs the feedbackwall with the newest
 feedbacks and comments.
 
 @param int courseid id of the course
@@ -234,11 +226,11 @@ feedbacks and comments.
 function feedbackwall_feedbackwallRefresh(courseid, coursemoduleid, skey) {
     var sort = $("#sortmenu").val();
 
-    $.ajax({
+    $.ajax ({
             url:"ajaxquery.php",
             type:"POST",
             data:{q:sort,fnc:"feedbackwallRefresh",k:courseid, r:coursemoduleid, sesskey:skey},
-            
+
             beforeSend : function() {
                 $(".feedbacks").hide();
                 $("#feedbacksloading").show();

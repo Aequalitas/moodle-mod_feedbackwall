@@ -34,7 +34,7 @@ if (!confirm_sesskey()) {
     die();
 }
 
-$courseid = required_param("k", PARAM_INT);  // Those two params are used in every action
+$courseid = required_param("k", PARAM_INT);  // Those two params are used in every action.
 $coursemoduleid = required_param("r", PARAM_INT);
 
 $checkcourseid = $DB->get_record("feedbackwall", array("course" => $courseid), "*", MUST_EXIST);
@@ -42,20 +42,26 @@ $checkcourseid = $DB->get_record("feedbackwall", array("course" => $courseid), "
 require_login($course, false, $cm);
 
 // AJAX-Querys, "fnc" tells which kind of query it was.
-if($fnc = required_param("fnc", PARAM_ALPHA)) {
-    if($fnc == "feedbackInsert"){
+if ($fnc = required_param("fnc", PARAM_ALPHA)) {
+    if ($fnc == "feedbackInsert") {
         $feedback = required_param("q", PARAM_TEXT);
         $name = required_param("s", PARAM_ALPHAEXT);
 
         $date = usergetdate(time());
 
-        if(strlen($date["mday"]) == 1) {
+        if (strlen($date["mday"]) == 1) {
             $date["mday"] = 0 . $date["mday"];
         }
         if (strlen($date["mon"]) == 1) {
             $date["mon"] = 0 . $date["mon"];
         }
-        $timecreated = $date["mday"] . $date["mon"] . $date["year"];
+        if (strlen($date["hours"]) == 1) {
+            $date["hours"] = 0 . $date["hours"];
+        }
+        if (strlen($date["minutes"]) == 1) {
+            $date["minutes"] = 0 . $date["minutes"];
+        }
+        $timecreated = $date["mday"] . $date["mon"] . $date["year"] . $date["hours"] . $date["minutes"];
 
 
         $entry = new stdClass();
@@ -73,8 +79,7 @@ if($fnc = required_param("fnc", PARAM_ALPHA)) {
         $s = required_param("q", PARAM_ALPHA);
 
         $entry = "";
-        switch ($s)
-        {
+        switch ($s) {
             case "old" :
                 $s = "";
             break;
@@ -106,11 +111,11 @@ if($fnc = required_param("fnc", PARAM_ALPHA)) {
         "coursemoduleid" => $coursemoduleid),
         $sort = $s);
 
-        if(!empty($entry)) {
+        if (!empty($entry)) {
                 global $PAGE;
                 $rend = $PAGE->get_renderer("mod_feedbackwall");
 
-            foreach($entry as $feedback) {
+            foreach ($entry as $feedback) {
                 $comments = $DB->get_records("feedbackwall_comments", array("feedbackid" => $feedback->id));
 
                 $data = new stdclass();
@@ -135,7 +140,7 @@ if($fnc = required_param("fnc", PARAM_ALPHA)) {
                  "style" => 'margin-top:20%;margin-bottom:20%;'));
         }
 
-    } else if($fnc == "rate") {
+    } else if ($fnc == "rate") {
         $feedbackid = required_param("q", PARAM_INT);
         $stars = required_param("h", PARAM_INT);
 
@@ -161,7 +166,7 @@ if($fnc = required_param("fnc", PARAM_ALPHA)) {
 
         $DB->update_record("feedbackwall_feedbacks", $updaterating);
 
-    } else if($fnc == "commentInsert") {
+    } else if ($fnc == "commentInsert") {
         $comment = required_param("q", PARAM_TEXT);
         $feedbackid = required_param("s", PARAM_INT);
         $name = required_param("o", PARAM_ALPHAEXT);
@@ -169,13 +174,19 @@ if($fnc = required_param("fnc", PARAM_ALPHA)) {
 
         $date = usergetdate(time());
 
-        if(strlen($date["mday"]) == 1) {
+        if (strlen($date["mday"]) == 1) {
             $date["mday"] = 0 . $date["mday"];
         }
         if (strlen($date["mon"]) == 1) {
             $date["mon"] = 0 . $date["mon"];
         }
-        $timecreated = $date["mday"] . $date["mon"] . $date["year"];
+        if (strlen($date["hours"]) == 1) {
+            $date["hours"] = 0 . $date["hours"];
+        }
+        if (strlen($date["minutes"]) == 1) {
+            $date["minutes"] = 0 . $date["minutes"];
+        }
+        $timecreated = $date["mday"] . $date["mon"] . $date["year"] . $date["hours"] . $date["minutes"];
 
         $entry = new stdClass();
         $entry->courseid = $courseid;
@@ -206,7 +217,7 @@ if($fnc = required_param("fnc", PARAM_ALPHA)) {
 
         $DB->update_record("feedbackwall_feedbacks", $updaterating);
 
-    } else if($fnc == "commentsRefresh") {
+    } else if ($fnc == "commentsRefresh") {
         $feedbackid = required_param("q", PARAM_INT);
 
         $checkfeedbackid = $DB->get_record("feedbackwall_feedbacks", array("id" => $feedbackid), "*", MUST_EXIST);
