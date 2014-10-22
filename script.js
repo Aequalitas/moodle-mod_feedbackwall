@@ -104,16 +104,6 @@ function courseboard_rate (id, courseid, coursemoduleid, skey) {
 }
 
 /*
-Function which clears the focused textarea
-
-@param int id id of the post
-*/
-function courseboard_clearArea(id) {
-    $("#" + id).val("");
-}
-
-
-/*
     Function which will be called when a user creates a comment.
     Calls a php script which insert the comment into the database
 
