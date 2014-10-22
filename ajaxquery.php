@@ -37,8 +37,6 @@ if (!confirm_sesskey()) {
 $courseid = required_param("k", PARAM_INT);  // Those two params are used in every action.
 $coursemoduleid = required_param("r", PARAM_INT);
 
-$checkcourseid = $DB->get_record("courseboard", array("course" => $courseid), "*", MUST_EXIST);
-
 require_login($course, false, $cm);
 
 // AJAX-Querys, "fnc" tells which kind of query it was.
