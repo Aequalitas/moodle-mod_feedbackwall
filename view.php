@@ -19,7 +19,7 @@
      *
      * @author  Franz Weidmann 
      * @version 10/2014
-     * @package mod/feedbackwall
+     * @package mod/courseboard
      * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
      */
 
@@ -30,19 +30,16 @@ global $DB;
 require_once(dirname(dirname(dirname(__FILE__))).'/config.php');
 require_once(dirname(__FILE__).'/lib.php');
 
-
-
-
 $PAGE->requires->jquery();
 $PAGE->requires->jquery_plugin('ui');
 $PAGE->requires->jquery_plugin('ui-css');
-$PAGE->requires->js(new moodle_url($CFG->wwwroot . '/mod/feedbackwall/script.js') );
+$PAGE->requires->js(new moodle_url($CFG->wwwroot . '/mod/courseboard/script.js') );
 
 $id = optional_param('id', 0, PARAM_INT); // Course_module ID, or
-$a  = optional_param('a', 0, PARAM_INT);  // Feedbackwall instance ID.
+$a  = optional_param('a', 0, PARAM_INT);  // courseboard instance ID.
 
 if ($id) {
-    if (! $cm = get_coursemodule_from_id('feedbackwall', $id)) {
+    if (! $cm = get_coursemodule_from_id('courseboard', $id)) {
         error('Course Module ID was incorrect');
     }
 
@@ -50,18 +47,18 @@ if ($id) {
         error('Course is misconfigured');
     }
 
-    if (! $feedbackwall = $DB->get_record('feedbackwall', array('id' => $cm->instance))) {
+    if (! $courseboard = $DB->get_record('courseboard', array('id' => $cm->instance))) {
         error('Course module is incorrect');
     }
 
 } else if ($a) {
-    if (! $feedbackwall = $DB->get_record('feedbackwall', array('id' => $a))) {
+    if (! $courseboard = $DB->get_record('courseboard', array('id' => $a))) {
         error('Course module is incorrect');
     }
-    if (! $course = $DB->get_record('course', array('id' => $feedbackwall->course))) {
+    if (! $course = $DB->get_record('course', array('id' => $courseboard->course))) {
         error('Course is misconfigured');
     }
-    if (! $cm = get_coursemodule_from_instance('feedbackwall', $feedbackwall->id, $course->id)) {
+    if (! $cm = get_coursemodule_from_instance('courseboard', $courseboard->id, $course->id)) {
         error('Course Module ID was incorrect');
     }
 
@@ -73,9 +70,9 @@ require_login($course, true, $cm);
 
 // Show some info for guests.
 if (isguestuser()) {
-    $PAGE->set_title($feedbackwall->name);
+    $PAGE->set_title($courseboard->name);
     echo $OUTPUT->header();
-    echo $OUTPUT->confirm('<p>' . get_string('noguests', 'feedbackwall') . '</p>' . get_string('liketologin'),
+    echo $OUTPUT->confirm('<p>' . get_string('noguests', 'courseboard') . '</p>' . get_string('liketologin'),
         get_login_url(), $CFG->wwwroot . '/course/view.php?id=' . $course->id);
 
     echo $OUTPUT->footer();
@@ -84,62 +81,62 @@ if (isguestuser()) {
 
 // Initialise site.
 $courseshortname = format_string($course->shortname, true, array('context' => context_course::instance($course->id)));
-$title = $courseshortname . ': ' . format_string($feedbackwall->name);
+$title = $courseshortname . ': ' . format_string($courseboard->name);
 
-$rend = $PAGE->get_renderer('mod_feedbackwall');
-$PAGE->set_url('/mod/feedbackwall/view.php', array('id' => $cm->id));
+$rend = $PAGE->get_renderer('mod_courseboard');
+$PAGE->set_url('/mod/courseboard/view.php', array('id' => $cm->id));
 $PAGE->set_title($title);
 $PAGE->set_heading($course->fullname);
 
 // Print the page header.
-$strnewmodules = get_string('modulenameplural', 'feedbackwall');
-$strnewmodule = get_string('modulename', 'feedbackwall');
+$strnewmodules = get_string('modulenameplural', 'courseboard');
+$strnewmodule = get_string('modulename', 'courseboard');
 
 echo $OUTPUT->header();
-echo $OUTPUT->heading(format_string($feedbackwall->name), 2);
+echo $OUTPUT->heading(format_string($courseboard->name), 2);
 
 // Print the main part of the page.
 
 // Topdiv,where you choose name and way of sort.
 
 $topdiv = new stdclass();
-$topdiv->sesskey = $USER->sesskey;
+$topdiv->sesskey = sesskey();
 $topdiv->courseid = $course->id;
 $topdiv->coursemoduleid = $cm->id;
 $topdiv->firstname = $USER->firstname;
 $topdiv->lastname = $USER->lastname;
-$topdiv->intro = $feedbackwall->intro;
+$topdiv->intro = $courseboard->intro;
 
 echo $rend->render_topdiv($topdiv);
 
-// Maindiv, show Feedbacks and its comments.
+// Maindiv, show posts and its comments.
 
 echo "<br/>";
 echo "<hr>";
 
 echo $OUTPUT->box_start("", "maindiv", array("style" => "overflow:auto;"));
 
-// Getting all feedbacks of this module from the database.
-$entry = $DB->get_records('feedbackwall_feedbacks',
+// Getting all posts of this module from the database.
+$entry = $DB->get_records('courseboard_posts',
 array('courseid' => $course->id, "coursemoduleid" => $cm->id),
 $sort = 'id DESC');
 
 if (!empty($entry)) {
-    foreach ($entry as $feedback) {
-        $comments = $DB->get_records("feedbackwall_comments", array("feedbackid" => $feedback->id));
+    foreach ($entry as $post) {
+        $comments = $DB->get_records("courseboard_comments", array("postid" => $post->id));
         $data = new stdclass();
-        $data->feedback = $feedback;
+        $data->post = $post;
         $data->comments = $comments;
         $data->courseid = $course->id;
         $data->coursemoduleid = $cm->id;
         $data->userid = $USER->id;
-        $data->sesskey = $USER->sesskey;
+        $data->sesskey = sesskey();
 
-        echo $rend->render_feedback($data);
+        echo $rend->render_post($data);
     }
 } else {
-    echo $OUTPUT->heading(get_string("noFeedbacks", "feedbackwall"), 2, "", "",
-    array("class" => 'feedbacks', "style" => 'margin-top:10%;')
+    echo $OUTPUT->heading(get_string("noposts", "courseboard"), 2, "", "",
+    array("class" => 'posts', "style" => 'margin-top:10%;')
     );
 }
 echo $OUTPUT->box_end();

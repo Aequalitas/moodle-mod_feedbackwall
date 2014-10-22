@@ -27,17 +27,17 @@ if (!defined('MOODLE_INTERNAL')) {
  * will create a new instance and return the id number
  * of the new instance.
  *
- * @param object $feedbackwall An object from the form in mod_form.php
+ * @param object $courseboard An object from the form in mod_form.php
  * @return int The id of the newly inserted newmodule record
  */
-function feedbackwall_add_instance($feedbackwall) {
+function courseboard_add_instance($courseboard) {
 
 	global $DB;
 	
-    $feedbackwall->timecreated = time();
+    $courseboard->timecreated = time();
 
     # You may have to add extra stuff in here #
-	$returnid = $DB->insert_record('feedbackwall', $feedbackwall);
+	$returnid = $DB->insert_record('courseboard', $courseboard);
     return $returnid;
 }
 
@@ -47,19 +47,19 @@ function feedbackwall_add_instance($feedbackwall) {
  * (defined by the form in mod_form.php) this function
  * will update an existing instance with new data.
  *
- * @param object $feedbackwall An object from the form in mod_form.php
+ * @param object $courseboard An object from the form in mod_form.php
  * @return boolean Success/Fail
  */
-function feedbackwall_update_instance($feedbackwall) {
+function courseboard_update_instance($courseboard) {
 
 	global $DB;
 	
-    $feedbackwall->timemodified = time();
-    $feedbackwall->id = $feedbackwall->instance;
+    $courseboard->timemodified = time();
+    $courseboard->id = $courseboard->instance;
 
     # You may have to add extra stuff in here #
 
-    $DB->update_record('feedbackwall', $feedbackwall);
+    $DB->update_record('courseboard', $courseboard);
 	return true;
 	
 }
@@ -73,11 +73,11 @@ function feedbackwall_update_instance($feedbackwall) {
  * @param int $id Id of the module instance
  * @return boolean Success/Failure
  */
-function feedbackwall_delete_instance($id) {
+function courseboard_delete_instance($id) {
 	
 	global $DB;
 
-    if (! $feedbackwall =$DB->get_record('feedbackwall', array("id"=>$id), $id)) {
+    if (! $courseboard =$DB->get_record('courseboard', array("id"=>$id), $id)) {
         return false;
     }
 
@@ -85,7 +85,7 @@ function feedbackwall_delete_instance($id) {
 
     # Delete any dependent records here #
 
-    if (! $DB->delete_records('feedbackwall', array("id"=>$id), $feedbackwall->id)) {
+    if (! $DB->delete_records('courseboard', array("id"=>$id), $courseboard->id)) {
         $result = false;
     }
 
@@ -103,7 +103,7 @@ function feedbackwall_delete_instance($id) {
  * @return null
  * @todo Finish documenting this function
  */
-function feedbackwall_user_outline($course, $user, $mod, $feedbackwall) {
+function courseboard_user_outline($course, $user, $mod, $courseboard) {
     return $return;
 }
 
@@ -115,7 +115,7 @@ function feedbackwall_user_outline($course, $user, $mod, $feedbackwall) {
  * @return boolean
  * @todo Finish documenting this function
  */
-function feedbackwall_user_complete($course, $user, $mod, $feedbackwall) {
+function courseboard_user_complete($course, $user, $mod, $courseboard) {
     return true;
 }
 
@@ -128,7 +128,7 @@ function feedbackwall_user_complete($course, $user, $mod, $feedbackwall) {
  * @return boolean
  * @todo Finish documenting this function
  */
-function feedbackwall_print_recent_activity($course, $isteacher, $timestart) {
+function courseboard_print_recent_activity($course, $isteacher, $timestart) {
     return false;  //  True if anything was printed, otherwise false
 }
 
@@ -141,7 +141,7 @@ function feedbackwall_print_recent_activity($course, $isteacher, $timestart) {
  * @return boolean
  * @todo Finish documenting this function
  **/
-function feedbackwall_cron () {
+function courseboard_cron () {
     return true;
 }
 
@@ -152,10 +152,10 @@ function feedbackwall_cron () {
  * in the instance, independient of his role (student, teacher, admin...)
  * See other modules as example.
  *
- * @param int $feedbackwallid ID of an instance of this module
+ * @param int $courseboardid ID of an instance of this module
  * @return mixed boolean/array of students
  */
-function feedbackwall_get_participants($feedbackwallid) {
+function courseboard_get_participants($courseboardid) {
     return false;
 }
 
@@ -166,14 +166,14 @@ function feedbackwall_get_participants($feedbackwallid) {
  * modified if necessary. See forum, glossary or journal modules
  * as reference.
  *
- * @param int $feedbackwallid ID of an instance of this module
+ * @param int $courseboardid ID of an instance of this module
  * @return mixed
  * @todo Finish documenting this function
  */
-function feedbackwall_scale_used($feedbackwallid, $scaleid) {
+function courseboard_scale_used($courseboardid, $scaleid) {
     $return = false;
 
-    //$rec = get_record("newmodule","id","$feedbackwallid","scale","-$scaleid");
+    //$rec = get_record("newmodule","id","$courseboardid","scale","-$scaleid");
     //
     //if (!empty($rec) && !empty($scaleid)) {
     //    $return = true;
@@ -191,8 +191,8 @@ function feedbackwall_scale_used($feedbackwallid, $scaleid) {
  * @param $scaleid int
  * @return boolean True if the scale is used by any newmodule
  */
-function feedbackwall_scale_used_anywhere($scaleid) {
-    if ($scaleid and record_exists('feedbackwall', 'grade', -$scaleid)) {
+function courseboard_scale_used_anywhere($scaleid) {
+    if ($scaleid and record_exists('courseboard', 'grade', -$scaleid)) {
         return true;
     } else {
         return false;
@@ -206,7 +206,7 @@ function feedbackwall_scale_used_anywhere($scaleid) {
  *
  * @return boolean true if success, false on error
  */
-function feedbackwall_install() {
+function courseboard_install() {
     return true;
 }
 
@@ -217,7 +217,7 @@ function feedbackwall_install() {
  *
  * @return boolean true if success, false on error
  */
-function feedbackwall_uninstall() {
+function courseboard_uninstall() {
     return true;
 }
 

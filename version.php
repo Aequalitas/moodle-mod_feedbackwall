@@ -15,17 +15,17 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
  
 /**
- * Code fragment to define the version of newmodule
+ * Code fragment to define the version of courseboard
  * This fragment is called by moodle_needs_upgrading() and /admin/index.php
  *
  * @author  Franz Weidmann 
- * @package mod/feedbackwall
+ * @package mod/courseboard
  * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-$plugin -> version  = 2014101500;  
-$plugin -> requires = 2014041100;          
-$plugin -> component = 'mod_feedbackwall';
-$plugin -> release = "0.84";
-$plugin -> maturity = "BETA";
+$plugin->version  = 2014101500;
+$plugin->requires = 2014041100;
+$plugin->component = 'mod_courseboard';
+$plugin->release = "0.80";
+$plugin->maturity = "BETA";
 ?>

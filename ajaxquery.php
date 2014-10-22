@@ -19,7 +19,7 @@
  *
  * @author  Franz Weidmann 
  * @version 10/2014
- * @package mod/feedbackwall
+ * @package mod/courseboard
  * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
@@ -37,14 +37,14 @@ if (!confirm_sesskey()) {
 $courseid = required_param("k", PARAM_INT);  // Those two params are used in every action.
 $coursemoduleid = required_param("r", PARAM_INT);
 
-$checkcourseid = $DB->get_record("feedbackwall", array("course" => $courseid), "*", MUST_EXIST);
+$checkcourseid = $DB->get_record("courseboard", array("course" => $courseid), "*", MUST_EXIST);
 
 require_login($course, false, $cm);
 
 // AJAX-Querys, "fnc" tells which kind of query it was.
 if ($fnc = required_param("fnc", PARAM_ALPHA)) {
-    if ($fnc == "feedbackInsert") {
-        $feedback = required_param("q", PARAM_TEXT);
+    if ($fnc == "postInsert") {
+        $post = required_param("q", PARAM_TEXT);
         $name = required_param("s", PARAM_ALPHAEXT);
 
         $date = usergetdate(time());
@@ -67,15 +67,15 @@ if ($fnc = required_param("fnc", PARAM_ALPHA)) {
         $entry = new stdClass();
         $entry->courseid = $courseid;
         $entry->coursemoduleid = $coursemoduleid;
-        $entry->feedback = $feedback;
+        $entry->post = $post;
         $entry->name = $name;
         $entry->didrate = "0";
         $entry->timecreated = $timecreated;
         $entry->timemodified = $timecreated;
 
-        $DB->insert_record("feedbackwall_feedbacks", $entry, false);
+        $DB->insert_record("courseboard_posts", $entry, false);
 
-    } else if ($fnc == "feedbackwallRefresh") {
+    } else if ($fnc == "courseboardRefresh") {
         $s = required_param("q", PARAM_ALPHA);
 
         $entry = "";
@@ -106,50 +106,50 @@ if ($fnc = required_param("fnc", PARAM_ALPHA)) {
 
         }
 
-        $entry = $DB->get_records('feedbackwall_feedbacks', array(
+        $entry = $DB->get_records('courseboard_posts', array(
         'courseid' => $courseid,
         "coursemoduleid" => $coursemoduleid),
         $sort = $s);
 
         if (!empty($entry)) {
                 global $PAGE;
-                $rend = $PAGE->get_renderer("mod_feedbackwall");
+                $rend = $PAGE->get_renderer("mod_courseboard");
 
-            foreach ($entry as $feedback) {
-                $comments = $DB->get_records("feedbackwall_comments", array("feedbackid" => $feedback->id));
+            foreach ($entry as $post) {
+                $comments = $DB->get_records("courseboard_comments", array("postid" => $post->id));
 
                 $data = new stdclass();
-                $data->feedback = $feedback;
+                $data->post = $post;
                 $data->comments = $comments;
                 $data->courseid = $courseid;
                 $data->coursemoduleid = $coursemoduleid;
                 $data->userid = $USER->id;
-                $data->sesskey = $USER->sesskey;
+                $data->sesskey = sesskey();
 
-                echo $rend->render_feedback ($data);
+                echo $rend->render_post ($data);
 
             }
 
-                echo html_writer::tag("h3", get_string("loadingpleasewait", "feedbackwall"), array(
-                "id" => 'feedbacksloading',
+                echo html_writer::tag("h3", get_string("loadingpleasewait", "courseboard"), array(
+                "id" => 'postsloading',
                 "style" => 'display:none;')
                  );
 
         } else {
-            echo html_writer::tag("h2", get_string("noFeedbacks", "feedbackwall"), array(
+            echo html_writer::tag("h2", get_string("noposts", "courseboard"), array(
                  "style" => 'margin-top:20%;margin-bottom:20%;'));
         }
 
     } else if ($fnc == "rate") {
-        $feedbackid = required_param("q", PARAM_INT);
+        $postid = required_param("q", PARAM_INT);
         $stars = required_param("h", PARAM_INT);
 
-        $checkfeedbackid = $DB->get_record("feedbackwall_feedbacks", array("id" => $feedbackid), "*", MUST_EXIST);
+        $checkpostid = $DB->get_record("courseboard_posts", array("id" => $postid), "*", MUST_EXIST);
 
-        $entry = $DB->get_record("feedbackwall_feedbacks", array(
+        $entry = $DB->get_record("courseboard_posts", array(
         "courseid" => $courseid,
         "coursemoduleid" => $coursemoduleid,
-        "id" => $feedbackid)
+        "id" => $postid)
          );
 
         $newamountrating = 1 + $entry->rating;
@@ -157,18 +157,18 @@ if ($fnc = required_param("fnc", PARAM_ALPHA)) {
         $newstringdidrate .= $USER->id . "," . $entry->didrate;
 
         $updaterating = new stdClass();
-        $updaterating->id = $feedbackid;
+        $updaterating->id = $postid;
         $updaterating->courseid = $courseid;
         $updaterating->coursemoduleid = $coursemoduleid;
         $updaterating->rating = $newamountrating;
         $updaterating->ratingaverage = $newaverage;
         $updaterating->didrate = $newstringdidrate;
 
-        $DB->update_record("feedbackwall_feedbacks", $updaterating);
+        $DB->update_record("courseboard_posts", $updaterating);
 
     } else if ($fnc == "commentInsert") {
         $comment = required_param("q", PARAM_TEXT);
-        $feedbackid = required_param("s", PARAM_INT);
+        $postid = required_param("s", PARAM_INT);
         $name = required_param("o", PARAM_ALPHAEXT);
 
 
@@ -192,57 +192,57 @@ if ($fnc = required_param("fnc", PARAM_ALPHA)) {
         $entry->courseid = $courseid;
         $entry->coursemoduleid = $coursemoduleid;
         $entry->comment = $comment;
-        $entry->feedbackid = $feedbackid;
+        $entry->postid = $postid;
         $entry->name = $name;
         $entry->timecreated = $timecreated;
         $entry->timemodified = $timecreated;
 
-        $DB->insert_record("feedbackwall_comments", $entry, false);
+        $DB->insert_record("courseboard_comments", $entry, false);
 
-        $checkfeedbackid = $DB->get_record("feedbackwall_feedbacks", array("id" => $feedbackid), "*", MUST_EXIST);
+        $checkpostid = $DB->get_record("courseboard_posts", array("id" => $postid), "*", MUST_EXIST);
 
-        $entry = $DB->get_record("feedbackwall_feedbacks", array(
+        $entry = $DB->get_record("courseboard_posts", array(
         "courseid" => $courseid,
         "coursemoduleid" => $coursemoduleid,
-        "id" => $feedbackid)
+        "id" => $postid)
         );
 
         $newamountrating = 1 + $entry->amountcomments;
 
         $updaterating = new stdClass();
-        $updaterating->id = $feedbackid;
+        $updaterating->id = $postid;
         $updaterating->courseid = $courseid;
         $updaterating->coursemoduleid = $coursemoduleid;
         $updaterating->amountcomments = $newamountrating;
 
-        $DB->update_record("feedbackwall_feedbacks", $updaterating);
+        $DB->update_record("courseboard_posts", $updaterating);
 
     } else if ($fnc == "commentsRefresh") {
-        $feedbackid = required_param("q", PARAM_INT);
+        $postid = required_param("q", PARAM_INT);
 
-        $checkfeedbackid = $DB->get_record("feedbackwall_feedbacks", array("id" => $feedbackid), "*", MUST_EXIST);
+        $checkpostid = $DB->get_record("courseboard_posts", array("id" => $postid), "*", MUST_EXIST);
 
-        $feedback = $DB->get_record('feedbackwall_feedbacks', array(
+        $post = $DB->get_record('courseboard_posts', array(
         'courseid' => $courseid,
         "coursemoduleid" => $coursemoduleid,
-        "id" => $feedbackid)
+        "id" => $postid)
         );
 
-        $comments = $DB->get_records('feedbackwall_comments', array(
+        $comments = $DB->get_records('courseboard_comments', array(
         'courseid' => $courseid,
         "coursemoduleid" => $coursemoduleid,
-        "feedbackid" => $feedbackid)
+        "postid" => $postid)
         );
 
         global $PAGE;
-        $rend = $PAGE->get_renderer("mod_feedbackwall");
+        $rend = $PAGE->get_renderer("mod_courseboard");
 
         $data = new stdclass();
-        $data->feedback = $feedback;
+        $data->post = $post;
         $data->comments = $comments;
         $data->courseid = $courseid;
         $data->coursemoduleid = $coursemoduleid;
-        $data->sesskey = $USER->sesskey;
+        $data->sesskey = sesskey();
 
         echo $rend->render_comment($data);
     }

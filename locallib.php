@@ -19,7 +19,7 @@
 //
 // @author  Franz Weidmann 
 // @version 9/2014
-// @package mod/feedbackwall
+// @package mod/courseboard
 // @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  
 

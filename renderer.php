@@ -17,14 +17,14 @@
  /**
   * Chat module rendering methods
   * 
-  * @package    mod_feedbackwall
+  * @package    mod_courseboard
   * @copyright  10/2014 Franz Weidmann
   * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
   */
 
 defined('MOODLE_INTERNAL') || die();
 
-class mod_feedbackwall_renderer extends plugin_renderer_base {
+class mod_courseboard_renderer extends plugin_renderer_base {
 
     /**
      * This function loads the top component of the mainpage 
@@ -48,29 +48,29 @@ class mod_feedbackwall_renderer extends plugin_renderer_base {
 
         $inputdesc = html_writer::tag("label",
         get_string("nameinputdescription",
-        "feedbackwall"),
+        "courseboard"),
         array("style" => 'font-size:11.9px;color:#999;')
         );
 
         $textarea = html_writer::tag('textarea', "", array(
             "style" => "margin-top:1%;",
-            "id" => "feedbackinputfield",
+            "id" => "postinputfield",
             "rows" => "4",
             "cols" => "90",
-            "placeholder" => get_string("writeaFeedback", "feedbackwall"))
+            "placeholder" => get_string("writeapost", "courseboard"))
         );
 
         $inputsend = html_writer::tag('input', "", array(
            "type" => "button",
-           "id" => "feedbackbutton",
-           "onClick" => "feedbackwall_feedbackInsert(" .
+           "id" => "postbutton",
+           "onClick" => "courseboard_postInsert(" .
                     $data->courseid  .','.
                     $data->coursemoduleid  . ',' .
                     $sesskey . ");",
-            "value" => get_string("send", "feedbackwall")
+            "value" => get_string("send", "courseboard")
         ));
 
-        $warnlabel = html_writer::tag('label', get_string("emptyFeedbackinput", "feedbackwall"), array(
+        $warnlabel = html_writer::tag('label', get_string("emptypostinput", "courseboard"), array(
             "style" => "display:none;color:red;",
             "id" => "emptyFieldWarning"
         ));
@@ -81,7 +81,7 @@ class mod_feedbackwall_renderer extends plugin_renderer_base {
                $data->intro
         ),
         array(html_writer::select(array(
-               get_string("anonymous", "feedbackwall") => get_string("anonymous", "feedbackwall"),
+               get_string("anonymous", "courseboard") => get_string("anonymous", "courseboard"),
                $data->firstname . "_" . $data->lastname => $data->firstname . "_" . $data->lastname
             ), "" , 0, "", array("id" => "name")) . $inputdesc
         ),
@@ -93,19 +93,19 @@ class mod_feedbackwall_renderer extends plugin_renderer_base {
 
         $sesskey = '"' . $data->sesskey . '"';
         $topdiv .= $this->box_start();
-        $topdiv .= get_string("sortfor", "feedbackwall") . "&nbsp&nbsp";
+        $topdiv .= get_string("sortfor", "courseboard") . "&nbsp&nbsp";
 
             // Selectmenu to sort.
             $topdiv .= html_writer::select(array(
-            'new' => get_string("newsortdescription", "feedbackwall"),
-            'old' => get_string("oldsortdescription", "feedbackwall"),
-            'averagedescending' => get_string("ratingdescending" , "feedbackwall"),
-            'averageascending' => get_string("ratingascending" , "feedbackwall"),
-            'amountdescending' => get_string("amountdescending" , "feedbackwall"),
-            'amountascending' => get_string("amountascending" , "feedbackwall"),
+            'new' => get_string("newsortdescription", "courseboard"),
+            'old' => get_string("oldsortdescription", "courseboard"),
+            'averagedescending' => get_string("ratingdescending" , "courseboard"),
+            'averageascending' => get_string("ratingascending" , "courseboard"),
+            'amountdescending' => get_string("amountdescending" , "courseboard"),
+            'amountascending' => get_string("amountascending" , "courseboard"),
         ), 'sort', 0, "", array(
             "id" => "sortmenu",
-            "onchange" => "feedbackwall_feedbackwallRefresh(" .
+            "onchange" => "courseboard_courseboardRefresh(" .
                         $data->courseid . "," .
                         $data->coursemoduleid  . "," .
                         $sesskey . ");"
@@ -118,104 +118,112 @@ class mod_feedbackwall_renderer extends plugin_renderer_base {
 
 
     /**
-     * This function loads all comments of a feedback 
+     * This function loads all comments of a post 
      * into its comment section 
      *
      * @param stdclass $data has this data->
-     * object feedback database entry of a feedback
-     * object commentsentry database entry of the comments of the feedback
+     * object post database entry of a post
+     * object commentsentry database entry of the comments of the post
      * int $courseid courseid
      * int coursemoduleid moduleid of the plugin within the course
      * String sesskey Sessionkey
      *
-     * @return string $comments all the comments of a feedback as HTML-Code
+     * @return string $comments all the comments of a post as HTML-Code
      */
 
 
     public function render_comment(stdclass $data) {
 
-        $date = $data->feedback->timecreated;
+        $date = $data->post->timecreated;
 
         $datestring = $date[0] . $date[1] . "." . $date[2] . $date[3] . "."
         . $date[4] . $date[5] . $date[6] . $date[7] . "&nbsp"
         . $date[8] . $date[9] . ":" . $date[10] . $date[11];
 
-        $fid = $data->feedback->id;
+        $pid = $data->post->id;
         $comments = "";
 
-        if ($data->feedback->amountcomments > 0) {
+        if ($data->post->amountcomments > 0) {
             foreach ($data->comments as $comment) {
-                $comments .= $this->box_start("", s($comment->id) . "comment" . $fid );
-                
+                $comments .= $this->box_start("", s($comment->id) . "comment" . $pid );
+
                 $comments .= format_text($comment->comment, $format = FORMAT_MOODLE) . "</br>";
-                $comments .= html_writer::tag("p",
-                s($comment->name)
-                . " - " .
-                $datestring
-                );
-                $comments .= $this->box_end() . "<hr></br>";
+                $comments .= html_writer::tag("p", s($comment->name) . " - " . $datestring);
+                $comments .= $this->box_end() . "<hr>";
             }
 
         } else {
-               $comments .= $this->box(get_string("noComments", "feedbackwall"), "", array("class" => 'commShow' . $fid));
+               $comments .= $this->box(get_string("noComments", "courseboard") . "<hr>");
 
         }
-            $comments .= $this->container_start('commanShow'. $fid, "", array("style" => 'margin-top:3%;'));
-            $areaid = "'commtxtarea" . $fid . "'";
+            $comments .= $this->box_start('commanShow'. $pid, "", array("style" => 'margin-top:3%;'));
+            $areaid = "'commtxtarea" . $pid . "'";
 
             $comments .= html_writer::tag("textarea", "", array(
-                "onclick" => "feedbackwall_clearArea(" . $areaid . ");",
-                "id" => 'commtxtarea' . $fid,
+                "onclick" => "courseboard_clearArea(" . $areaid . ");",
+                "id" => 'commtxtarea' . $pid,
                 "cols" => '90',
                 "rows" => '3',
-                "placeholder" => get_string("writeaComment", "feedbackwall"))
+                "placeholder" => get_string("writeaComment", "courseboard"))
             );
 
             $sesskey = '"' .  $data->sesskey . '"';
             // Button to send a comment.
             $comments .= html_writer::tag("input", "", array(
                 "type" => 'button',
-                "onClick" => 'feedbackwall_commInsert('
-                    . $fid . "," .
+                "onClick" => 'courseboard_commInsert('
+                    . $pid . "," .
                     s($data->courseid) . "," .
                     s($data->coursemoduleid) . "," .
                     $sesskey . ');',
                 "class" => 'commentarbtn',
-                "id" => 'commbtn' . $fid,
-                "value" => get_string("send", "feedbackwall"))
+                "id" => 'commbtn' . $pid,
+                "value" => get_string("send", "courseboard"))
             );
 
-            $comments .= html_writer::tag('label', get_string("emptyCommentinput", "feedbackwall"), array(
+            $comments .= html_writer::tag('label', get_string("emptyCommentinput", "courseboard"), array(
                 "style" => "display:none; color:red;",
-                "id" => "emptyCommFieldwarning". $fid
+                "id" => "emptyCommFieldwarning". $pid
             ));
 
-            $comments .= $this->container_end();
+            // If there are more than 6 comments then there is 
+            // a button,next to the sendbutton, which hides the comments.
+            if ($data->post->amountcomments > 5) {
+                
+                $comments .= html_writer::tag("input", "", array(
+                    "onClick" => 'courseboard_commHide(' . $pid . ');',
+                    "class" => 'commHide',
+                    "type" => 'button',
+                    "id" => 'commHide' . $pid,
+                    "value" => get_string("hideComments", "courseboard"))
+                );
+            }
+            $comments .= $this->box_end();
 
             return $comments;
     }
 
 
     /**
-     * This function loads a feedback which belongs to 
+     * This function loads a post which belongs to 
      * this module from the database. 
      *
      * @param stdclass $data has this data->
-     * object feedback database entry of a feedback
-     * object comments database entry of the comments of the feedback
+     * object post database entry of a post
+     * object comments database entry of the comments of the post
      * int courseid courseid
      * int coursemoduleid moduleid of the plugin within the course
      * int userid userid
      * String sesskey Sessionkey
      *
-     * @return string $feedbacks all the feedbacks of the module, with its comments, as HTML-Code
+     * @return string $posts all the posts of the module, with its comments, as HTML-Code
      */
 
-    public function render_feedback(stdclass $data) {
+    public function render_post(stdclass $data) {
 
-        $fid = $data->feedback->id;
-        $ratingaverage = $data->feedback->ratingaverage;
-        $alreadyrated = $data->feedback->didrate;
+        $pid = $data->post->id;
+        $ratingaverage = $data->post->ratingaverage;
+        $alreadyrated = $data->post->didrate;
         $alreadyratedarray = explode(",", $alreadyrated);
         $canrate = 1;
         $i = 0;
@@ -229,26 +237,21 @@ class mod_feedbackwall_renderer extends plugin_renderer_base {
             $i++;
         }
 
-        $feedback = $this->output->box_start("feedbacks", $fid);
-        
+        $post = $this->output->box_start("posts", $pid);
 
-        $feedback .= $this->output->box(
-        format_text($data->feedback->feedback,
+        $post .= $this->output->box(
+        format_text($data->post->post,
         $format = FORMAT_MOODLE),
-        "", "", array("style" => 'margin-left:5%;margin-top:2%;')
+        "", "", array("style" => 'margin-top:2%;')
         ) . "</br>";
 
-        $date = $data->feedback->timecreated;
+        $date = $data->post->timecreated;
 
         $datestring = $date[0] . $date[1] . "." . $date[2] . $date[3] . "."
         . $date[4] . $date[5] . $date[6] . $date[7] . "&nbsp"
         . $date[8] . $date[9] . ":" . $date[10] . $date[11];
 
-        $feedback .= html_writer::tag("p",
-        s($data->feedback->name)
-        . " - " . 
-        $datestring
-        );
+        $post .= html_writer::tag("p", s($data->post->name) . " - " . $datestring);
 
         $startable = new html_table();
 
@@ -267,90 +270,93 @@ class mod_feedbackwall_renderer extends plugin_renderer_base {
         }
 
         $startable->data[0][5] = html_writer::tag("label",
-        "(" . s($data->feedback->rating) .  ")",
-        array("title" => get_string("rating", "feedbackwall"))
+        "(" . s($data->post->rating) .  ")",
+        array("title" => get_string("rating", "courseboard"))
         );
 
         $startable->attributes["class"] = "empty"; // Otherwise the cells are too big.
-        $feedback .= html_writer::table($startable);
+        $post .= html_writer::table($startable);
 
         if ($canrate == 1) {
-            $feedback .= html_writer::select(array(
-                "noStar" => get_string("rateFeedback" , "feedbackwall"),
-                "oneStar" => get_string("rateoneStar" , "feedbackwall"),
-                "twoStars" => get_string("ratetwoStars" , "feedbackwall"),
-                "threeStars" => get_string("ratethreeStars" , "feedbackwall"),
-                "fourStars" => get_string("ratefourStars", "feedbackwall"),
-                "fiveStars" => get_string("ratefiveStars", "feedbackwall")
-            ), "", 0, "", array("id" => "selectStar"  . $fid));
+            $post .= html_writer::select(array(
+                "noStar" => get_string("ratepost" , "courseboard"),
+                "oneStar" => get_string("rateoneStar" , "courseboard"),
+                "twoStars" => get_string("ratetwoStars" , "courseboard"),
+                "threeStars" => get_string("ratethreeStars" , "courseboard"),
+                "fourStars" => get_string("ratefourStars", "courseboard"),
+                "fiveStars" => get_string("ratefiveStars", "courseboard")
+            ), "", 0, "", array("id" => "selectStar"  . $pid));
 
             $sesskeyoutput = '"' . $data->sesskey . '"';
 
-            $feedback .= html_writer::tag("input", "", array(
+            $post .= html_writer::tag("input", "", array(
                 "type" => 'button',
-                "onClick" => 'feedbackwall_rate('
-                    . $fid . "," .
+                "onClick" => 'courseboard_rate('
+                    . $pid . "," .
                     s($data->courseid) . "," .
                     s($data->coursemoduleid) . "," .
                     $sesskeyoutput . ');',
-            "id" => 'rate' . $fid,
-            "value" => get_string("rate", "feedbackwall"))
+            "id" => 'rate' . $pid,
+            "value" => get_string("rate", "courseboard"))
             );
 
-            $feedback .= "</br>";
+            $post .= "</br>";
         } else {
-            $feedback .= html_writer::tag('label', get_string("alreadyrated", "feedbackwall"), array("id" => "alreadyrated"));
+            $post .= html_writer::tag('label', get_string("alreadyrated", "courseboard"), array("id" => "alreadyrated"));
 
         }
 
-        $combtn = "";
-
-        if ($data->feedback->amountcomments > 0) {
-            $combtn .= $data->feedback->amountcomments . " ". get_string("showComments", "feedbackwall");
+        $combtn = "";     // Text for the commentbutton which shows the comment                    
+        if ($data->post->amountcomments > 0) {
+            $combtn .= get_string("showComments", "courseboard") . " (" . $data->post->amountcomments . ")";
         } else {
-            $combtn .= get_string("writeaComment", "feedbackwall");
-
+            $combtn .= get_string("writeaComment", "courseboard");
         }
+
+        // Will be used when someone writes a comment and there was no comment before. 
+        // Then the text will be taken from the attribute data.
+        // Otherwise it will be used to increase the number in the brackets(number of comments).
+        $combtndata = get_string("showComments", "courseboard");
 
         // Button which shows the comments.
 
-        $feedback .= html_writer::tag("input", "", array(
-
+        $post .= html_writer::tag("input", "", array(
             "type" => 'button',
-            "onClick" => 'feedbackwall_commShow(' . $fid . ');',
+            "onClick" => 'courseboard_commShow(' . $pid . ');',
             "class" => 'commShow',
-            "id" => 'commShow' . $fid,
+            "id" => 'commShow' . $pid,
+            "data" => $combtndata,
+            "cn" => $data->post->amountcomments,
             "value" => $combtn )
         );
 
         // Button which hides the comments.
-        $feedback .= html_writer::tag("input", "", array(
-
+        $post .= html_writer::tag("input", "", array(
             "style" => 'display:none;',
-            "onClick" => 'feedbackwall_commHide(' . $fid . ');',
+            "onClick" => 'courseboard_commHide(' . $pid . ');',
             "class" => 'commHide',
             "type" => 'button',
-            "id" => 'commHide' . $fid,
-            "value" => get_string("hideComments", "feedbackwall"))
+            "id" => 'commHide' . $pid,
+            "value" => get_string("hideComments", "courseboard"))
         );
 
-        $feedback .= "<hr>";
-        $feedback .= $this->output->box_start("comments", 'commfield'. $fid, array("style" => 'display:none;margin-left:15%;'));
+        $post .= "<hr>";
+        $post .= $this->output->box_start("comments", 'commfield'. $pid, array("style" => 'display:none;margin-left:15%;'));
 
         $commentdata = new stdclass();
-        $commentdata->feedback = $data->feedback;
+        $commentdata->post = $data->post;
         $commentdata->comments = $data->comments;
         $commentdata->courseid = $data->courseid;
         $commentdata->coursemoduleid = $data->coursemoduleid;
         $commentdata->sesskey = $data->sesskey;
 
         global $PAGE;
-        $rend = $PAGE->get_renderer("mod_feedbackwall");
-        $feedback .= $rend->render_comment($commentdata);
+        $rend = $PAGE->get_renderer("mod_courseboard");
+        $post .= $rend->render_comment($commentdata);
 
-        $feedback .= $this->output->box_end();
-        $feedback .= $this->output->box_end();
+        $post .= $this->output->box_end();
+        $post .= $this->output->box_end();
 
-        return $feedback;
+        return $post;
     }
 }

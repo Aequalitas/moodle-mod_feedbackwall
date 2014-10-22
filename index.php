@@ -19,7 +19,7 @@
  * This page lists all the instances of newmodule in a particular course
  *
  * @author  Franz Weidmann
- * @package mod/feedbackwall
+ * @package mod/courseboard
  * @copyright ""
  * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -39,13 +39,13 @@ if (! $course = $DB->get_record('course', 'id', $id)) {
 
 require_course_login($course);
 
-add_to_log($course->id, 'feedbackwall', 'view all', "index.php?id=$course->id", '');
+add_to_log($course->id, 'courseboard', 'view all', "index.php?id=$course->id", '');
 
 
 // Get all required stringsnewmodule
 
-$strnewmodules = get_string('modulenameplural', 'feedbackwall');
-$strnewmodule  = get_string('modulename', 'feedbackwall');
+$strnewmodules = get_string('modulenameplural', 'courseboard');
+$strnewmodule  = get_string('modulename', 'courseboard');
 
 
 // Print the header
@@ -58,7 +58,7 @@ print_header_simple($strnewmodules, '', $navigation, '', '', true, '', navmenu($
 
 // Get all the appropriate data
 
-if (! $newmodules = get_all_instances_in_course('feedbackwall', $course)) {
+if (! $newmodules = get_all_instances_in_course('courseboard', $course)) {
     notice('There are no instances of newmodule', "../../course/view.php?id=$course->id");
     die;
 }
@@ -81,17 +81,17 @@ if ($course->format == 'weeks') {
     $table->align = array ('left', 'left', 'left');
 }
 
-foreach ($newmodules as $feedbackwall) {
-    if (!$feedbackwall->visible) {
+foreach ($newmodules as $courseboard) {
+    if (!$courseboard->visible) {
         //Show dimmed if the mod is hidden
-        $link = '<a class="dimmed" href="view.php?id='.$feedbackwall->coursemodule.'">'.format_string($feedbackwall->name).'</a>';
+        $link = '<a class="dimmed" href="view.php?id='.$courseboard->coursemodule.'">'.format_string($courseboard->name).'</a>';
     } else {
         //Show normal if the mod is visible
-        $link = '<a href="view.php?id='.$feedbackwall->coursemodule.'">'.format_string($feedbackwall->name).'</a>';
+        $link = '<a href="view.php?id='.$courseboard->coursemodule.'">'.format_string($courseboard->name).'</a>';
     }
 
     if ($course->format == 'weeks' or $course->format == 'topics') {
-        $table->data[] = array ($feedbackwall->section, $link);
+        $table->data[] = array ($courseboard->section, $link);
     } else {
         $table->data[] = array ($link);
     }

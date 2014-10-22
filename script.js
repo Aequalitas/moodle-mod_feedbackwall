@@ -1,39 +1,39 @@
-/* Javascript for the feedbackwall mainpage.
+/* Javascript for the courseboard mainpage.
 Author: Franz Weidmann
 10/2014
 */
 /*
-Calls a php script which creates the feedback.
+Calls a php script which creates the post.
 
 @param int courseid id of the course
 @param int moduleid of the plugin in the course
 @param String skey the sessionkey as a string
 
 */
-function feedbackwall_feedbackInsert(courseid, coursemoduleid, skey) {
-    if ($.trim($("#feedbackinputfield").val()).length != 0) {
-        var feedback = $("#feedbackinputfield").val().replace(/</g, "&lt;").replace(/>/g, "&gt;");
+function courseboard_postInsert(courseid, coursemoduleid, skey) {
+    if ($.trim($("#postinputfield").val()).length != 0) {
+        var post = $("#postinputfield").val().replace(/</g, "&lt;").replace(/>/g, "&gt;");
         var name = $("#name").val();
 
         $.ajax({
 
             url:"ajaxquery.php",
             type:"POST",
-            data:{fnc : "feedbackInsert" , q:feedback , s:name, k:courseid, r:coursemoduleid, sesskey:skey},
+            data:{fnc : "postInsert" , q:post , s:name, k:courseid, r:coursemoduleid, sesskey:skey},
 
             beforeSend : function() {
-                $(".feedbacks").hide();
-                $("#feedbacksloading").show();
+                $(".posts").hide();
+                $("#postsloading").show();
 
             },
             success : function(data) {
-                feedbackwall_feedbackwallRefresh(courseid, coursemoduleid, skey);
+                courseboard_courseboardRefresh(courseid, coursemoduleid, skey);
 
             }
         });
 
         $("#emptyFieldWarning").hide();
-        $("#feedbackinputfield").val("");
+        $("#postinputfield").val("");
 
     } else {
         $("#emptyFieldWarning").show();
@@ -44,18 +44,18 @@ function feedbackwall_feedbackInsert(courseid, coursemoduleid, skey) {
 
 /*
 
-Function which will be called when a user rates a feedback.
+Function which will be called when a user rates a post.
 This function the calls a php script which calculates the new
-rating of the feedback.
+rating of the post.
 
-@param int id id of the feedback
+@param int id id of the post
 @param int courseid id of the course
 @param int moduleid of the plugin in the course
 @param String skey the sessionkey as a string
 
 */
 
-function feedbackwall_rate (id, courseid, coursemoduleid, skey) {
+function courseboard_rate (id, courseid, coursemoduleid, skey) {
     var stars = $("#selectStar" + id).val();
 
     if (stars != "noStar") {
@@ -88,13 +88,13 @@ function feedbackwall_rate (id, courseid, coursemoduleid, skey) {
             data:{q:id,fnc:"rate",k:courseid,r:coursemoduleid,h:stars,sesskey:skey},
 
             beforeSend:function() {
-                $(".feedbacks").hide();
-                $("#feedbacksloading").show();
+                $(".posts").hide();
+                $("#postsloading").show();
 
             },
 
             success : function(){
-                feedbackwall_feedbackwallRefresh(courseid,coursemoduleid,skey);
+                courseboard_courseboardRefresh(courseid,coursemoduleid,skey);
 
             }
 
@@ -106,9 +106,9 @@ function feedbackwall_rate (id, courseid, coursemoduleid, skey) {
 /*
 Function which clears the focused textarea
 
-@param int id id of the feedback
+@param int id id of the post
 */
-function feedbackwall_clearArea(id) {
+function courseboard_clearArea(id) {
     $("#" + id).val("");
 }
 
@@ -117,13 +117,13 @@ function feedbackwall_clearArea(id) {
     Function which will be called when a user creates a comment.
     Calls a php script which insert the comment into the database
 
-@param int id  id of the feedback
+@param int id  id of the post
 @param int courseid id of the course
 @param int moduleid of the plugin in the course
 @param String skey the sessionkey as a string
 
 */
-function feedbackwall_commInsert(id, courseid, coursemoduleid, skey) {
+function courseboard_commInsert(id, courseid, coursemoduleid, skey) {
     if ($.trim($("#commtxtarea" + id).val()).length != 0) {
         var commtext = $("#commtxtarea" + id).val().replace(/</g, "&lt;").replace(/>/g, "&gt;");
         var name = $("#name").val();
@@ -138,26 +138,41 @@ function feedbackwall_commInsert(id, courseid, coursemoduleid, skey) {
                 $(".commShow" + id).hide();
             },
             success: function(){
-                feedbackwall_commsRefresh(id,courseid,coursemoduleid,skey);
+                // This changes the text when the first comment was written, that is the case when the attribute "cn" 
+                // is equal 0.Change is like : "Write a comment" to "Show comments (1)".
+                // Otherwise the amount of comments will be increased with 1.
+                if($("#commShow" + id).attr("cn") == 0) {
+                    $("#commShow" + id).val($("#commShow" + id).attr("data") + " (1)");
+                    $("#commShow" + id).attr("cn","1");
+
+                } else {
+                    var commbtnval = $("#commShow" + id).val();
+                    var amountcomments = parseInt($("#commShow" + id).attr("cn")) + 1;
+                    $("#commShow" +  id).val($("#commShow" + id).attr("data") + " (" + amountcomments + ")");
+                    $("#commShow" + id).attr("cn",amountcomments);
+
+                }
+
+                courseboard_commsRefresh(id,courseid,coursemoduleid,skey);
             }
 
         });
 
         $("#emptyCommFieldwarning" + id).hide();
 
-        } else {
-            $("#emptyCommFieldwarning" + id).show();
-        }
+    } else {
+        $("#emptyCommFieldwarning" + id).show();
+    }
 
 }
 
 /*
-makes the comment section of a feedback visible
+makes the comment section of a post visible
 
-@param int id id of the feedback
+@param int id id of the post
 */
 
-function feedbackwall_commShow(id) {
+function courseboard_commShow(id) {
     $("#comments" + id).show();
     $("#commfield" + id).show();
     $("#commShow" + id).hide();
@@ -167,12 +182,12 @@ function feedbackwall_commShow(id) {
 
 
 /*
-hides the comment section of a feedback.
+hides the comment section of a post.
 
-@param int id id of the feedback
+@param int id id of the post
 
 */
-function feedbackwall_commHide(id) {
+function courseboard_commHide(id) {
     $("#comments" + id).hide();
     $("#commfield" + id).hide();
     $("#commShow" + id).show();
@@ -180,15 +195,15 @@ function feedbackwall_commHide(id) {
 }
 
 /*
-gets the newest comments of a feedback and put them into
-the commentssection of a feedback.
+gets the newest comments of a post and put them into
+the commentssection of a post.
 
-@param int id id of the feedback
+@param int id id of the post
 @param int courseid id of the course
 @param int moduleid of the plugin in the course
 @param String skey the sessionkey as a string
 */
-function feedbackwall_commsRefresh(id, courseid, coursemoduleid, skey) {
+function courseboard_commsRefresh(id, courseid, coursemoduleid, skey) {
     $.ajax({
             type:"POST",
             url:"ajaxquery.php",
@@ -215,30 +230,30 @@ function feedbackwall_commsRefresh(id, courseid, coursemoduleid, skey) {
 }
 
 /*
-refreshs the feedbackwall with the newest
-feedbacks and comments.
+refreshs the courseboard with the newest
+posts and comments.
 
 @param int courseid id of the course
 @param int moduleid of the plugin in the course
 @param String skey the sessionkey as a string
 */
 
-function feedbackwall_feedbackwallRefresh(courseid, coursemoduleid, skey) {
+function courseboard_courseboardRefresh(courseid, coursemoduleid, skey) {
     var sort = $("#sortmenu").val();
 
     $.ajax ({
             url:"ajaxquery.php",
             type:"POST",
-            data:{q:sort,fnc:"feedbackwallRefresh",k:courseid, r:coursemoduleid, sesskey:skey},
+            data:{q:sort,fnc:"courseboardRefresh",k:courseid, r:coursemoduleid, sesskey:skey},
 
             beforeSend : function() {
-                $(".feedbacks").hide();
-                $("#feedbacksloading").show();
+                $(".posts").hide();
+                $("#postsloading").show();
 
             },
 
             success : function(data) {
-                $("#feedbacksloading").hide();
+                $("#postsloading").hide();
                 $("#maindiv").html(data);
 
             }

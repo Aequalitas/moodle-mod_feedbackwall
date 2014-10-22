@@ -21,7 +21,7 @@ if (!defined('MOODLE_INTERNAL')) {
 
 $capabilities = array(
 
-	'mod/feedbackwall:addinstance' => array(
+	'mod/courseboard:addinstance' => array(
         'riskbitmask' => RISK_XSS,
         'captype' => 'write',
         'contextlevel' => CONTEXT_COURSE,
@@ -33,7 +33,7 @@ $capabilities = array(
        
     ),
 	
-    'mod/feedbackwall:view' => array(
+    'mod/courseboard:view' => array(
         'riskbitmask'  => RISK_PERSONAL,
         'captype'      => 'read',
         'contextlevel' => CONTEXT_MODULE,
@@ -45,7 +45,7 @@ $capabilities = array(
         )
     ),
 	
-    'mod/feedbackwall:write' => array(
+    'mod/courseboard:write' => array(
         'riskbitmask'  => RISK_SPAM,
         'captype'      => 'write',
         'contextlevel' => CONTEXT_MODULE,

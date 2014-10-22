@@ -29,7 +29,7 @@ if (!defined('MOODLE_INTERNAL')) {
  
 require_once($CFG->dirroot.'/course/moodleform_mod.php');
 
-class mod_feedbackwall_mod_form extends moodleform_mod {
+class mod_courseboard_mod_form extends moodleform_mod {
     function definition() {
         global $COURSE;
         $mform =& $this->_form;
@@ -39,13 +39,13 @@ class mod_feedbackwall_mod_form extends moodleform_mod {
         $mform->addElement('header', 'general', get_string('general', 'form'));
 
     // Adding the standard "name" field
-        $mform->addElement('text', 'name', get_string('newmodulename', 'feedbackwall'), array('size'=>'64'));
+        $mform->addElement('text', 'name', get_string('newmodulename', 'courseboard'), array('size'=>'64'));
         $mform->setType('name', PARAM_TEXT);
         $mform->addRule('name', null, 'required', null, 'client');
         $mform->addRule('name', get_string('maximumchars', '', 255), 'maxlength', 255, 'client');
 
     // Adding the required "intro" field to hold the description of the instance
-        $mform->addElement('htmleditor', 'intro', get_string('newmoduleintro', 'feedbackwall'));
+        $mform->addElement('htmleditor', 'intro', get_string('newmoduleintro', 'courseboard'));
         $mform->setType('intro', PARAM_RAW);
         $mform->addRule('intro', get_string('required'), 'required', null, 'client');
       
