@@ -160,7 +160,6 @@ class mod_courseboard_renderer extends plugin_renderer_base {
             $areaid = "'commtxtarea" . $pid . "'";
 
             $comments .= html_writer::tag("textarea", "", array(
-                "onclick" => "courseboard_clearArea(" . $areaid . ");",
                 "id" => 'commtxtarea' . $pid,
                 "cols" => '90',
                 "rows" => '3',
