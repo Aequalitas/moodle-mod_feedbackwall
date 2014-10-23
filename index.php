@@ -103,5 +103,3 @@ print_table($table);
 // Finish the page
 
 print_footer($course);
-
-

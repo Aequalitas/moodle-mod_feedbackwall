@@ -227,6 +227,3 @@ function courseboard_uninstall() {
 // starts with newmodule_
 // Remember (see note in first lines) that, if this section grows, it's HIGHLY
 // recommended to move all funcions below to a new "localib.php" file.
-
-
-

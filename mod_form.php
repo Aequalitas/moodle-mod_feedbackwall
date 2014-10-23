@@ -62,5 +62,3 @@ class mod_courseboard_mod_form extends moodleform_mod {
 
     }
 }
-
-

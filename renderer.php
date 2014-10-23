@@ -268,7 +268,7 @@ class mod_courseboard_renderer extends plugin_renderer_base {
             }
         }
 
-        $startable->data[0][5] = html_writer::tag("label",
+        $startable->data[0][5] = html_writer::tag("p",
         "(" . s($data->post->rating) .  ")",
         array("title" => get_string("rating", "courseboard"))
         );
@@ -301,7 +301,7 @@ class mod_courseboard_renderer extends plugin_renderer_base {
 
             $post .= "</br>";
         } else {
-            $post .= html_writer::tag('label', get_string("alreadyrated", "courseboard"), array("id" => "alreadyrated"));
+            $post .= html_writer::tag('p', get_string("alreadyrated", "courseboard"), array("id" => "alreadyrated"));
 
         }
 

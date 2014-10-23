@@ -13,7 +13,7 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
- 
+
 /**
  * Code fragment to define the version of courseboard
  * This fragment is called by moodle_needs_upgrading() and /admin/index.php
@@ -28,4 +28,3 @@ $plugin->requires = 2014041100;
 $plugin->component = 'mod_courseboard';
 $plugin->release = "0.80";
 $plugin->maturity = "BETA";
-?>
