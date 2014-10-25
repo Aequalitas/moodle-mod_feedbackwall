@@ -6,7 +6,9 @@ $string["modulenameplural"] = "Courseboards";
 $string['modulename_help'] = "This plugin gives the students an opportunity to give the course a post,
 which is displayed on a 'wall' and if the student decides so, anonymously.
 With the option to comment a post this eventually leads to a little discussion about the post/course. This plugin
-should improve the communication between students and students and their teacher."; 
+should improve the communication between students and students and their teacher.
+
+This Plugin has been developed as a Feedback from students for preparing for classes like Online-sessions in Adobe Connect. "; 
 $string["newmodulename"] = "New modulename";
 $string["newmoduleintro"] = "Description";
 $string['pluginadministration'] = "Pluginadministration";

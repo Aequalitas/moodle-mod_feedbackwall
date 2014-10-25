@@ -6,7 +6,9 @@ $string["modulenameplural"] = "Courseboards";
 $string['modulename_help'] = "Dieses Plugin ermöglicht den Studenten schnell und einfach dem Kurs oder dem Lehrenden Rückmeldung,in Form von einem kleinen Text, zu geben.
 Ein Eintrag kann man ohne das sein Name mitgesendet wird schreiben, das heißt die Studenten haben eine höhere Motivation mitzumachen.
 Diese Einträge werden auf eine 'Wand' dargestellt, so kann man sich schnell und einfach einen Überblick über die Situation verschaffen. 
-Mit der Option ein Eintrag, zu kommentieren kann man auf ein Eintrag reagieren und zum Beispiel eine Frage beantworten."; 
+Mit der Option ein Eintrag, zu kommentieren kann man auf ein Eintrag reagieren und zum Beispiel eine Frage beantworten.
+
+Dieses Plugin wurde als Feedback der Studierenden als Themenvorbereitung z.B. zu Online-Veranstaltungen mit Adobe Connect entwickelt."; 
 $string["newmodulename"] = "Neuer Modulname";
 $string["newmoduleintro"] = "Beschreibung";
 $string['pluginadministration'] = "Pluginadministration";

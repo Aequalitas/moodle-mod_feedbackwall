@@ -23,8 +23,10 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-$plugin->version  = 2014101500;
+defined('MOODLE_INTERNAL') || die();
+
+$plugin->version  = 2014102400;
 $plugin->requires = 2014041100;
 $plugin->component = 'mod_courseboard';
-$plugin->release = "0.80";
-$plugin->maturity = "BETA";
+$plugin->release = "0.81";
+$plugin->maturity = MATURITY_BETA;
