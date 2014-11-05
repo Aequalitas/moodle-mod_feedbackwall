@@ -15,9 +15,6 @@ function courseboard_postInsert(courseid, coursemoduleid, courseboardid, skey) {
         var post = $("#postinputfield").val().replace(/</g, "&lt;").replace(/>/g, "&gt;");
         var name = $("#name").val();
 
-        alert("1");
-        alert(post + name + courseid + courseboardid + coursemoduleid + skey);
-
         $.ajax({
 
             url:"courseboard_ajax.php",
@@ -209,7 +206,6 @@ function courseboard_commsRefresh(id, courseid, coursemoduleid, courseboardid, s
             },
 
             success: function(data){
-                alert(data);
 
                 $(".commanShow" + id).show(500,function(){
                     $("#commfield" + id).html(data);
@@ -247,7 +243,6 @@ function courseboard_courseboardRefresh(courseid, coursemoduleid, courseboardid,
             },
 
             success : function(data) {
-                alert(data);
                 $("#postsloading").hide();
                 $("#maindiv").html(data);
 

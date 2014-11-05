@@ -28,12 +28,12 @@
 	     	<FIELD NAME="courseid" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" ENUM="false" COMMENT="courseid"  PREVIOUS="id" NEXT="coursemoduleid"/>
 	     	<FIELD NAME="coursemoduleid" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" ENUM="false" COMMENT="moduleid in the course" PREVIOUS="courseid" NEXT="courseboardid"/>
         <FIELD NAME="courseboardid" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" ENUM="false" COMMENT="Pluginid" PREVIOUS="coursemoduleid" NEXT="post"/>
-        <FIELD NAME="post" TYPE="text" LENGTH="65535" NOTNULL="true" DEFAULT="0" SEQUENCE="false" ENUM="false" COMMENT="post"  PREVIOUS="coursemoduleid" NEXT="amountcomments"/>
+        <FIELD NAME="post" TYPE="text" LENGTH="65535" NOTNULL="true" DEFAULT="" SEQUENCE="false" ENUM="false" COMMENT="post"  PREVIOUS="coursemoduleid" NEXT="amountcomments"/>
 	     	<FIELD NAME="amountcomments" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" ENUM="false" COMMENT="Amount of comments which exist for this post" PREVIOUS="post" NEXT="name"/>
 	     	<FIELD NAME="name" TYPE="char" LENGTH="255" NOTNULL="true" DEFAULT="0" SEQUENCE="false" ENUM="false" COMMENT="Name des Verfassers" PREVIOUS="amountcomments" NEXT="rating"/>
 		    <FIELD NAME="rating" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" ENUM="false" COMMENT="Amount of ratings for this post" PREVIOUS="name" NEXT="ratingaverage"/>
 	     	<FIELD NAME="ratingaverage" TYPE="float" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" ENUM="false" COMMENT="all ratings / 5 * amount of ratings"  PREVIOUS="rating" NEXT="didrate"/>
-	     	<FIELD NAME="didrate" TYPE="text" LENGTH="65500" NOTNULL="true" DEFAULT="0" SEQUENCE="false" ENUM="false" COMMENT="User who already rated this post" PREVIOUS="ratingaverage" NEXT="timecreated"/>
+	     	<FIELD NAME="didrate" TYPE="text" LENGTH="65500" NOTNULL="true" DEFAULT="" SEQUENCE="false" ENUM="false" COMMENT="User who already rated this post" PREVIOUS="ratingaverage" NEXT="timecreated"/>
 	     	<FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" ENUM="false" COMMENT="created with usergetdate(), ignore the 1 at the beginning" PREVIOUS="didrate" NEXT="timemodified"/>
         <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" ENUM="false" COMMENT="" PREVIOUS="timecreated"/>
       </FIELDS>
@@ -48,7 +48,7 @@
 		    <FIELD NAME="postid" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" ENUM="false" COMMENT="postid to which the comment belongs" NEXT="courseid"/>
         <FIELD NAME="courseid" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" ENUM="false" COMMENT="courseid"  PREVIOUS="postid" NEXT="coursemoduleid"/>
 		    <FIELD NAME="coursemoduleid" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" ENUM="false" COMMENT="moduleid in the course" PREVIOUS="courseid" NEXT="comment"/>
-       	<FIELD NAME="comment" TYPE="text" LENGTH="65535" NOTNULL="true" DEFAULT="0" SEQUENCE="false" ENUM="false" COMMENT="comment itself" PREVIOUS="courseid" NEXT="name"/>
+       	<FIELD NAME="comment" TYPE="text" LENGTH="65535" NOTNULL="true" DEFAULT="" SEQUENCE="false" ENUM="false" COMMENT="comment itself" PREVIOUS="courseid" NEXT="name"/>
 		    <FIELD NAME="name" TYPE="char" LENGTH="255" NOTNULL="true" DEFAULT="0" SEQUENCE="false" ENUM="false" COMMENT="Name of the creator of the comment" PREVIOUS="comment" NEXT="timecreated"/>
 		    <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" ENUM="false" COMMENT="created with usergetdate(), ignore the 1 at the beginning" PREVIOUS="name" NEXT="timemodified"/>
         <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" ENUM="false" COMMENT="" PREVIOUS="timecreated"/>
