@@ -1,25 +1,18 @@
-<?php  
-// $Id: lib.php,v 1.7.2.5 2009/04/22 21:30:57 skodak Exp $
-if (!defined('MOODLE_INTERNAL')) {
-    die('Direct access to this script is forbidden.'); // It must be included from a Moodle page
-}
-
-/**
- * Library of functions and constants for module newmodule
- * This file should have two well differenced parts:
- *   - All the core Moodle functions, neeeded to allow
- *     the module to work integrated in Moodle.
- *   - All the newmodule specific functions, needed
- *     to implement all the module logic. Please, note
- *     that, if the module become complex and this lib
- *     grows a lot, it's HIGHLY recommended to move all
- *     these module specific functions to a new php file,
- *     called "locallib.php" (see forum, quiz...). This will
- *     help to save some memory when Moodle is performing
- *     actions across all modules.
- */
-
-
+<?php
+// This file is part of Moodle - http://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
  * Given an object containing all the necessary data,
@@ -28,16 +21,21 @@ if (!defined('MOODLE_INTERNAL')) {
  * of the new instance.
  *
  * @param object $courseboard An object from the form in mod_form.php
- * @return int The id of the newly inserted newmodule record
+ * @return int The id of the newly inserted courseboard record
  */
+
+// ...$Id: lib.php,v 1.7.2.5 2009/04/22 21:30:57 skodak Exp $.
+if (!defined('MOODLE_INTERNAL')) {
+    die('Direct access to this script is forbidden.'); // It must be included from a Moodle page.
+}
 function courseboard_add_instance($courseboard) {
 
-	global $DB;
-	
+    global $DB;
+
     $courseboard->timecreated = time();
 
-    # You may have to add extra stuff in here #
-	$returnid = $DB->insert_record('courseboard', $courseboard);
+    // You may have to add extra stuff in here.
+    $returnid = $DB->insert_record('courseboard', $courseboard);
     return $returnid;
 }
 
@@ -47,21 +45,21 @@ function courseboard_add_instance($courseboard) {
  * (defined by the form in mod_form.php) this function
  * will update an existing instance with new data.
  *
- * @param object $courseboard An object from the form in mod_form.php
- * @return boolean Success/Fail
+ * @param object $courseboard An object from the form in mod_form.php.
+ * @return boolean Success/Fail.
  */
 function courseboard_update_instance($courseboard) {
 
-	global $DB;
-	
+    global $DB;
+
     $courseboard->timemodified = time();
     $courseboard->id = $courseboard->instance;
 
-    # You may have to add extra stuff in here #
+    // You may have to add extra stuff in here.
 
     $DB->update_record('courseboard', $courseboard);
-	return true;
-	
+    return true;
+
 }
 
 
@@ -74,18 +72,18 @@ function courseboard_update_instance($courseboard) {
  * @return boolean Success/Failure
  */
 function courseboard_delete_instance($id) {
-	
-	global $DB;
 
-    if (! $courseboard =$DB->get_record('courseboard', array("id"=>$id), $id)) {
+    global $DB;
+
+    if (! $courseboard = $DB->get_record('courseboard', array("id" => $id), $id)) {
         return false;
     }
 
     $result = true;
 
-    # Delete any dependent records here #
+    // Delete any dependent records here.
 
-    if (! $DB->delete_records('courseboard', array("id"=>$id), $courseboard->id)) {
+    if (! $DB->delete_records('courseboard', array("id" => $id), $courseboard->id)) {
         $result = false;
     }
 
@@ -122,14 +120,14 @@ function courseboard_user_complete($course, $user, $mod, $courseboard) {
 
 /**
  * Given a course and a time, this module should find recent activity
- * that has occurred in newmodule activities and print it out.
+ * that has occurred in courseboard activities and print it out.
  * Return true if there was output, or false is there was none.
  *
  * @return boolean
  * @todo Finish documenting this function
  */
 function courseboard_print_recent_activity($course, $isteacher, $timestart) {
-    return false;  //  True if anything was printed, otherwise false
+    return false;  // True if anything was printed, otherwise false.
 }
 
 
@@ -148,7 +146,7 @@ function courseboard_cron () {
 
 /**
  * Must return an array of user records (all data) who are participants
- * for a given instance of newmodule. Must include every user involved
+ * for a given instance of courseboard. Must include every user involved
  * in the instance, independient of his role (student, teacher, admin...)
  * See other modules as example.
  *
@@ -159,37 +157,13 @@ function courseboard_get_participants($courseboardid) {
     return false;
 }
 
-
 /**
- * This function returns if a scale is being used by one newmodule
- * if it has support for grading and scales. Commented code should be
- * modified if necessary. See forum, glossary or journal modules
- * as reference.
- *
- * @param int $courseboardid ID of an instance of this module
- * @return mixed
- * @todo Finish documenting this function
- */
-function courseboard_scale_used($courseboardid, $scaleid) {
-    $return = false;
-
-    //$rec = get_record("newmodule","id","$courseboardid","scale","-$scaleid");
-    //
-    //if (!empty($rec) && !empty($scaleid)) {
-    //    $return = true;
-    //}
-
-    return $return;
-}
-
-
-/**
- * Checks if scale is being used by any instance of newmodule.
+ * Checks if scale is being used by any instance of courseboard.
  * This function was added in 1.9
  *
  * This is used to find out if scale used anywhere
  * @param $scaleid int
- * @return boolean True if the scale is used by any newmodule
+ * @return boolean True if the scale is used by any courseboard
  */
 function courseboard_scale_used_anywhere($scaleid) {
     if ($scaleid and record_exists('courseboard', 'grade', -$scaleid)) {
@@ -223,7 +197,7 @@ function courseboard_uninstall() {
 
 
 
-// Any other newmodule functions go here.  Each of them must have a name that
-// starts with newmodule_
+// Any other courseboard functions go here.  Each of them must have a name that
+// starts with courseboard_
 // Remember (see note in first lines) that, if this section grows, it's HIGHLY
 // recommended to move all funcions below to a new "localib.php" file.

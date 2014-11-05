@@ -9,4 +9,3 @@ enhance the communication between student and teacher, but student to student to
 
 Anonymously means that the author of a post would be Anonymous.
 Rating a post isnt anonymous.
-

@@ -1,5 +1,4 @@
-<?php 
-
+<?php
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -16,10 +15,10 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * This page lists all the instances of newmodule in a particular course
+ * This page lists all the instances of courseboard in a particular course
  *
  * @author  Franz Weidmann
- * @package mod/courseboard
+ * @package mod_courseboard
  * @copyright ""
  * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -29,7 +28,7 @@ require_once(dirname(dirname(dirname(__FILE__))).'/config.php');
 require_once(dirname(__FILE__).'/lib.php');
 require_once(dirname(__FILE__).'/locallib.php');
 
-$id = required_param('id', PARAM_INT);   // course
+$id = required_param('id', PARAM_INT);   // Course.
 
 global $DB;
 
@@ -42,28 +41,28 @@ require_course_login($course);
 add_to_log($course->id, 'courseboard', 'view all', "index.php?id=$course->id", '');
 
 
-// Get all required stringsnewmodule
+// Get all required strings.
 
-$strnewmodules = get_string('modulenameplural', 'courseboard');
-$strnewmodule  = get_string('modulename', 'courseboard');
+$strcoursemodules = get_string('modulenameplural', 'courseboard');
+$strcoursemodule  = get_string('modulename', 'courseboard');
 
 
-// Print the header
+// Print the header.
 
 $navlinks = array();
-$navlinks[] = array('name' => $strnewmodules, 'link' => '', 'type' => 'activity');
+$navlinks[] = array('name' => $strcoursemodules, 'link' => '', 'type' => 'activity');
 $navigation = build_navigation($navlinks);
 
-print_header_simple($strnewmodules, '', $navigation, '', '', true, '', navmenu($course));
+print_header_simple($strcoursemodules, '', $navigation, '', '', true, '', navmenu($course));
 
-// Get all the appropriate data
+// Get all the appropriate data.
 
-if (! $newmodules = get_all_instances_in_course('courseboard', $course)) {
-    notice('There are no instances of newmodule', "../../course/view.php?id=$course->id");
+if (! $coursemodules = get_all_instances_in_course('courseboard', $course)) {
+    notice('There are no instances of coursemodule', "../../course/view.php?id=$course->id");
     die;
 }
 
-// Print the list of instances (your module will probably extend this)
+// Print the list of instances (your module will probably extend this).
 
 $timenow  = time();
 $strname  = get_string('name');
@@ -81,12 +80,12 @@ if ($course->format == 'weeks') {
     $table->align = array ('left', 'left', 'left');
 }
 
-foreach ($newmodules as $courseboard) {
+foreach ($coursemodules as $courseboard) {
     if (!$courseboard->visible) {
-        //Show dimmed if the mod is hidden
+        // Show dimmed if the mod is hidden.
         $link = '<a class="dimmed" href="view.php?id='.$courseboard->coursemodule.'">'.format_string($courseboard->name).'</a>';
     } else {
-        //Show normal if the mod is visible
+        // Show normal if the mod is visible.
         $link = '<a href="view.php?id='.$courseboard->coursemodule.'">'.format_string($courseboard->name).'</a>';
     }
 
@@ -97,9 +96,9 @@ foreach ($newmodules as $courseboard) {
     }
 }
 
-print_heading($strnewmodules);
+print_heading($strcourseboards);
 print_table($table);
 
-// Finish the page
+// Finish the page.
 
 print_footer($course);

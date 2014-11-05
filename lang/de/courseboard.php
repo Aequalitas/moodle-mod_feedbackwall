@@ -1,4 +1,28 @@
 <?php
+// This file is part of Moodle - http://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+
+/**
+ * Language translations for german.
+ *
+ * @author  Franz Weidmann
+ * @package mod/courseboard
+ * @copyright ""
+ * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+
 $string['pluginname'] = 'Courseboard';
 $string['userpreferences'] = 'Einstellungen';
 $string["modulename"] = "Courseboard";
@@ -7,19 +31,19 @@ $string['modulename_help'] = "Dieses Plugin macht es den Lernenden möglich, dem
  kleinen Textes schnell und einfach eine Rückmeldung zu geben. Die Hemmschwelle sollte niedrig, die Motivation entsprechend hoch sein,
  da Einträge als auch Kommentare  anonym erstellt werden können. Durch die umfassende Darstellung der Einträge und die Aufklappbarkeit
  der zugehörigen Kommentare (Antworten), kann man sich schnell und einfach einen Überblick über die aktuelle Situation verschaffen";
-$string["newmodulename"] = "Neuer Modulname";
-$string["newmoduleintro"] = "Beschreibung";
+$string["setmodulename"] = "Name des Courseboards";
+$string["intro"] = "Beschreibung";
 $string['pluginadministration'] = "Pluginadministration";
 $string["nameinputdescription"] = 'Wenn nicht dein Name ausgewählt ist, wird Anonymus als dein Name abgesendet.';
 $string["oldsortdescription"] = "Datum: älteste zuerst";
 $string["newsortdescription"] = "Datum: neueste zuerst";
 $string["ratingdescending"] = "Bewertung: absteigend";
 $string["ratingascending"] = "Bewertung: aufsteigend";
-$string["amountdescending"] ="Bewertungsanzahl: absteigend";
-$string["amountascending"] ="Bewertungsanzahl: aufsteigend";
+$string["amountdescending"] = "Bewertungsanzahl: absteigend";
+$string["amountascending"] = "Bewertungsanzahl: aufsteigend";
 $string["postwall"] = "Courseboard";
 $string["noComments"] = "Es gibt noch kein Kommentar zu diesem Eintrag";
-$string["noposts"] ="Es gibt noch keinen Eintrag";
+$string["noposts"] = "Es gibt noch keinen Eintrag";
 $string["send"] = "Senden";
 $string["name"] = "Name";
 $string["rating"] = "Anzahl der Bewertungen";

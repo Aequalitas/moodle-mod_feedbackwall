@@ -1,0 +1,47 @@
+/* Styles in view.php */
+#main{
+    overflow:auto;
+}
+.noposts{
+    margin-top:10%;
+    margin-bottom:20%;
+}
+/* Styles in renderer.php */
+
+.nameinputdescription{
+    font-size:11.9px; 
+    color:#999;
+    cursor:default;
+}
+
+#postinputfield{
+    margin-top:1%;
+}
+
+.emptyFieldWarning{
+    display:none;
+    color:red;
+}
+
+.commShowbtns{
+    margin-top:3%;
+}
+
+#post{
+    margin-top:2%;
+}
+
+.commHidebtns{
+    display:none;
+}
+
+.comments{
+    display:none;
+    margin-left:15%;
+}
+
+/* Styles in courseboard_ajax.php */
+
+#postsloading{
+    display:none;
+}

@@ -10,16 +10,19 @@ Calls a php script which creates the post.
 @param String skey the sessionkey as a string
 
 */
-function courseboard_postInsert(courseid, coursemoduleid, skey) {
+function courseboard_postInsert(courseid, coursemoduleid, courseboardid, skey) {
     if ($.trim($("#postinputfield").val()).length != 0) {
         var post = $("#postinputfield").val().replace(/</g, "&lt;").replace(/>/g, "&gt;");
         var name = $("#name").val();
 
+        alert("1");
+        alert(post + name + courseid + courseboardid + coursemoduleid + skey);
+
         $.ajax({
 
-            url:"ajaxquery.php",
+            url:"courseboard_ajax.php",
             type:"POST",
-            data:{fnc : "postInsert" , q:post , s:name, k:courseid, r:coursemoduleid, sesskey:skey},
+            data:{fnc : "postInsert" , q:post , s:name, b:courseboardid, k:courseid, r:coursemoduleid, sesskey:skey},
 
             beforeSend : function() {
                 $(".posts").hide();
@@ -27,7 +30,7 @@ function courseboard_postInsert(courseid, coursemoduleid, skey) {
 
             },
             success : function(data) {
-                courseboard_courseboardRefresh(courseid, coursemoduleid, skey);
+                courseboard_courseboardRefresh(courseid, coursemoduleid,courseboardid, skey);
 
             }
         });
@@ -55,7 +58,7 @@ rating of the post.
 
 */
 
-function courseboard_rate (id, courseid, coursemoduleid, skey) {
+function courseboard_rate (id, courseid, coursemoduleid, courseboardid, skey) {
     var stars = $("#selectStar" + id).val();
 
     if (stars != "noStar") {
@@ -83,9 +86,9 @@ function courseboard_rate (id, courseid, coursemoduleid, skey) {
         }
 
         $.ajax ({
-            url:"ajaxquery.php",
+            url:"courseboard_ajax.php",
             type:"POST",
-            data:{q:id,fnc:"rate",k:courseid,r:coursemoduleid,h:stars,sesskey:skey},
+            data:{q:id,fnc:"rate",k:courseid,r:coursemoduleid,b:courseboardid, h:stars,sesskey:skey},
 
             beforeSend:function() {
                 $(".posts").hide();
@@ -94,7 +97,7 @@ function courseboard_rate (id, courseid, coursemoduleid, skey) {
             },
 
             success : function(){
-                courseboard_courseboardRefresh(courseid,coursemoduleid,skey);
+                courseboard_courseboardRefresh(courseid, coursemoduleid, courseboardid, skey);
 
             }
 
@@ -113,22 +116,22 @@ function courseboard_rate (id, courseid, coursemoduleid, skey) {
 @param String skey the sessionkey as a string
 
 */
-function courseboard_commInsert(id, courseid, coursemoduleid, skey) {
+function courseboard_commInsert(id, courseid, coursemoduleid, courseboardid, skey) {
     if ($.trim($("#commtxtarea" + id).val()).length != 0) {
         var commtext = $("#commtxtarea" + id).val().replace(/</g, "&lt;").replace(/>/g, "&gt;");
         var name = $("#name").val();
 
         $.ajax ({
             type:"POST",
-            url:"ajaxquery.php",
-            data:{o:name,q:commtext,s:id,fnc:"commentInsert",k:courseid,r:coursemoduleid,sesskey:skey},
+            url:"courseboard_ajax.php",
+            data:{o:name,q:commtext,s:id,fnc:"commentInsert",k:courseid,b:courseboardid, r:coursemoduleid,sesskey:skey},
 
             beforeSend: function(){
                 $("#commloading" + id).show();
                 $(".commShow" + id).hide();
             },
             success: function(){
-                // This changes the text when the first comment was written, that is the case when the attribute "cn" 
+                // This changes the text when the first comment was written, that is the case when the attribute "cn"
                 // is equal 0.Change is like : "Write a comment" to "Show comments (1)".
                 // Otherwise the amount of comments will be increased with 1.
                 if($("#commShow" + id).attr("cn") == 0) {
@@ -138,12 +141,12 @@ function courseboard_commInsert(id, courseid, coursemoduleid, skey) {
                 } else {
                     var commbtnval = $("#commShow" + id).val();
                     var amountcomments = parseInt($("#commShow" + id).attr("cn")) + 1;
-                    $("#commShow" +  id).val($("#commShow" + id).attr("data") + " (" + amountcomments + ")");
+                    $("#commShow" + id).val($("#commShow" + id).attr("data") + " (" + amountcomments + ")");
                     $("#commShow" + id).attr("cn",amountcomments);
 
                 }
 
-                courseboard_commsRefresh(id,courseid,coursemoduleid,skey);
+                courseboard_commsRefresh(id , courseid, coursemoduleid, courseboardid, skey);
             }
 
         });
@@ -193,11 +196,11 @@ the commentssection of a post.
 @param int moduleid of the plugin in the course
 @param String skey the sessionkey as a string
 */
-function courseboard_commsRefresh(id, courseid, coursemoduleid, skey) {
+function courseboard_commsRefresh(id, courseid, coursemoduleid, courseboardid, skey) {
     $.ajax({
             type:"POST",
-            url:"ajaxquery.php",
-            data:{q:id,k:courseid,r:coursemoduleid,fnc:"commentsRefresh",sesskey:skey},
+            url:"courseboard_ajax.php",
+            data:{q:id,k:courseid,r:coursemoduleid,fnc:"commentsRefresh",b:courseboardid, sesskey:skey},
 
             beforeSend: function(){
 
@@ -206,6 +209,7 @@ function courseboard_commsRefresh(id, courseid, coursemoduleid, skey) {
             },
 
             success: function(data){
+                alert(data);
 
                 $(".commanShow" + id).show(500,function(){
                     $("#commfield" + id).html(data);
@@ -228,13 +232,13 @@ posts and comments.
 @param String skey the sessionkey as a string
 */
 
-function courseboard_courseboardRefresh(courseid, coursemoduleid, skey) {
+function courseboard_courseboardRefresh(courseid, coursemoduleid, courseboardid, skey) {
     var sort = $("#sortmenu").val();
 
     $.ajax ({
-            url:"ajaxquery.php",
+            url:"courseboard_ajax.php",
             type:"POST",
-            data:{q:sort,fnc:"courseboardRefresh",k:courseid, r:coursemoduleid, sesskey:skey},
+            data:{q:sort,fnc:"courseboardRefresh",k:courseid, b:courseboardid, r:coursemoduleid, sesskey:skey},
 
             beforeSend : function() {
                 $(".posts").hide();
@@ -243,6 +247,7 @@ function courseboard_courseboardRefresh(courseid, coursemoduleid, skey) {
             },
 
             success : function(data) {
+                alert(data);
                 $("#postsloading").hide();
                 $("#maindiv").html(data);
 

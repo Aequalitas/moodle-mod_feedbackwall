@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -16,23 +15,23 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 if (!defined('MOODLE_INTERNAL')) {
-    die('Direct access to this script is forbidden.'); // It must be included from a Moodle page
+    die('Direct access to this script is forbidden.'); // It must be included from a Moodle page.
 }
 
 $capabilities = array(
 
-	'mod/courseboard:addinstance' => array(
+    'mod/courseboard:addinstance' => array(
         'riskbitmask' => RISK_XSS,
         'captype' => 'write',
         'contextlevel' => CONTEXT_COURSE,
         'archetypes' => array(
             'editingteacher' => CAP_ALLOW,
             'manager' => CAP_ALLOW
-			
+
         )
-       
+
     ),
-	
+
     'mod/courseboard:view' => array(
         'riskbitmask'  => RISK_PERSONAL,
         'captype'      => 'read',
@@ -41,10 +40,10 @@ $capabilities = array(
             'student'        => CAP_ALLOW,
             'teacher'        => CAP_ALLOW,
             'editingteacher' => CAP_ALLOW,
-            'manager'          => CAP_ALLOW
+            'manager'        => CAP_ALLOW
         )
     ),
-	
+
     'mod/courseboard:write' => array(
         'riskbitmask'  => RISK_SPAM,
         'captype'      => 'write',
@@ -53,8 +52,8 @@ $capabilities = array(
             'student'        => CAP_ALLOW,
             'teacher'        => CAP_ALLOW,
             'editingteacher' => CAP_ALLOW,
-            'manager'          => CAP_ALLOW
+            'manager'        => CAP_ALLOW
         )
     )
-	
+
 );

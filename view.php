@@ -19,21 +19,16 @@
      *
      * @author  Franz Weidmann 
      * @version 10/2014
-     * @package mod/courseboard
+     * @package mod_courseboard
      * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
      */
-
-
-global $DB;
-
-
 require_once(dirname(dirname(dirname(__FILE__))).'/config.php');
 require_once(dirname(__FILE__).'/lib.php');
 
 $PAGE->requires->jquery();
 $PAGE->requires->jquery_plugin('ui');
 $PAGE->requires->jquery_plugin('ui-css');
-$PAGE->requires->js(new moodle_url($CFG->wwwroot . '/mod/courseboard/script.js') );
+$PAGE->requires->js(new moodle_url($CFG->wwwroot . '/mod/courseboard/script.js'));
 
 $id = optional_param('id', 0, PARAM_INT); // Course_module ID, or
 $a  = optional_param('a', 0, PARAM_INT);  // courseboard instance ID.
@@ -43,19 +38,19 @@ if ($id) {
         error('Course Module ID was incorrect');
     }
 
-    if (! $course = $DB->get_record('course', array('id' => $cm->course))) {
+    if (! $course = $DB->get_record('course', array('id' => $cm->course), "*", MUST_EXIST)) {
         error('Course is misconfigured');
     }
 
-    if (! $courseboard = $DB->get_record('courseboard', array('id' => $cm->instance))) {
+    if (! $courseboard = $DB->get_record('courseboard', array('id' => $cm->instance), "*", MUST_EXIST)) {
         error('Course module is incorrect');
     }
 
 } else if ($a) {
-    if (! $courseboard = $DB->get_record('courseboard', array('id' => $a))) {
+    if (! $courseboard = $DB->get_record('courseboard', array('id' => $a), "*", MUST_EXIST)) {
         error('Course module is incorrect');
     }
-    if (! $course = $DB->get_record('course', array('id' => $courseboard->course))) {
+    if (! $course = $DB->get_record('course', array('id' => $courseboard->course), "*", MUST_EXIST)) {
         error('Course is misconfigured');
     }
     if (! $cm = get_coursemodule_from_instance('courseboard', $courseboard->id, $course->id)) {
@@ -67,6 +62,9 @@ if ($id) {
 }
 
 require_login($course, true, $cm);
+
+$context = context_module::instance($cm->id);
+require_capability('mod/courseboard:view', $context);
 
 // Show some info for guests.
 if (isguestuser()) {
@@ -89,8 +87,8 @@ $PAGE->set_title($title);
 $PAGE->set_heading($course->fullname);
 
 // Print the page header.
-$strnewmodules = get_string('modulenameplural', 'courseboard');
-$strnewmodule = get_string('modulename', 'courseboard');
+$strcourseboards = get_string('modulenameplural', 'courseboard');
+$strcourseboard = get_string('modulename', 'courseboard');
 
 echo $OUTPUT->header();
 echo $OUTPUT->heading(format_string($courseboard->name), 2);
@@ -103,6 +101,7 @@ $topdiv = new stdclass();
 $topdiv->sesskey = sesskey();
 $topdiv->courseid = $course->id;
 $topdiv->coursemoduleid = $cm->id;
+$topdiv->courseboardid = $courseboard->id;
 $topdiv->firstname = $USER->firstname;
 $topdiv->lastname = $USER->lastname;
 $topdiv->intro = $courseboard->intro;
@@ -114,30 +113,40 @@ echo $rend->render_topdiv($topdiv);
 echo "<br/>";
 echo "<hr>";
 
-echo $OUTPUT->box_start("", "maindiv", array("style" => "overflow:auto;"));
+echo $OUTPUT->box_start("", "maindiv");
 
 // Getting all posts of this module from the database.
 $entry = $DB->get_records('courseboard_posts',
 array('courseid' => $course->id, "coursemoduleid" => $cm->id),
 $sort = 'id DESC');
 
+$allcommentsresult = $DB->get_records("courseboard_comments");
+
 if (!empty($entry)) {
     foreach ($entry as $post) {
-        $comments = $DB->get_records("courseboard_comments", array("postid" => $post->id));
+
+        $allcomments = [];
+        // Fetch the comments for this post.
+        foreach ($allcommentsresult as $comment) {
+            if ($comment->postid == $post->id) {
+                array_push($allcomments, $comment);
+            }
+        }
+
+
         $data = new stdclass();
         $data->post = $post;
-        $data->comments = $comments;
+        $data->comments = $allcomments;
         $data->courseid = $course->id;
         $data->coursemoduleid = $cm->id;
+        $data->courseboardid = $post->courseboardid;
         $data->userid = $USER->id;
         $data->sesskey = sesskey();
 
         echo $rend->render_post($data);
     }
 } else {
-    echo $OUTPUT->heading(get_string("noposts", "courseboard"), 2, "", "",
-    array("class" => 'posts', "style" => 'margin-top:10%;')
-    );
+    echo $OUTPUT->heading(get_string("noposts", "courseboard"), 2, "noposts");
 }
 echo $OUTPUT->box_end();
 
