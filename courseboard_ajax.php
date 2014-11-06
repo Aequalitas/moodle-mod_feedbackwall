@@ -68,20 +68,20 @@ if ($fnc = required_param('fnc', PARAM_ALPHA)) {
             $date = usergetdate(time());
 
             if (strlen($date['mday']) == 1) {
-                $date['mday'] = 0.$date['mday'];
+                $date['mday'] = 0 . $date['mday'];
             }
             if (strlen($date['mon']) == 1) {
-                $date['mon'] = 0.$date['mon'];
+                $date['mon'] = 0 . $date['mon'];
             }
             if (strlen($date['hours']) == 1) {
-                $date['hours'] = 0.$date['hours'];
+                $date['hours'] = 0 . $date['hours'];
             }
             if (strlen($date['minutes']) == 1) {
-                $date['minutes'] = 0.$date['minutes'];
+                $date['minutes'] = 0 . $date['minutes'];
             }
             // 1 is there to prevent the Database to automaticly delete the 0(when there is one) at the beginning.
             // in the output it begins at [1].
-            $timecreated = 1.$date['mday'].$date['mon'].$date['year'].$date['hours'].$date['minutes'];
+            $timecreated = 1 . $date['mday'].$date['mon'].$date['year'].$date['hours'].$date['minutes'];
 
 
             $entry = new stdClass();
@@ -200,16 +200,16 @@ if ($fnc = required_param('fnc', PARAM_ALPHA)) {
             $date = usergetdate(time());
 
             if (strlen($date['mday']) == 1) {
-                $date['mday'] = 0.$date['mday'];
+                $date['mday'] = 0 . $date['mday'];
             }
             if (strlen($date['mon']) == 1) {
-                $date['mon'] = 0.$date['mon'];
+                $date['mon'] = 0 . $date['mon'];
             }
             if (strlen($date['hours']) == 1) {
-                $date['hours'] = 0.$date['hours'];
+                $date['hours'] = 0 . $date['hours'];
             }
             if (strlen($date['minutes']) == 1) {
-                $date['minutes'] = 0.$date['minutes'];
+                $date['minutes'] = 0 . $date['minutes'];
             }
             
             $timecreated = $date['mday'].$date['mon'].$date['year'].$date['hours'].$date['minutes'];
@@ -260,19 +260,19 @@ if ($fnc = required_param('fnc', PARAM_ALPHA)) {
             $date = usergetdate(time());
 
             if (strlen($date['mday']) == 1) {
-                $date['mday'] = 0.$date['mday'];
+                $date['mday'] = 0 . $date['mday'];
             }
             if (strlen($date['mon']) == 1) {
-                $date['mon'] = 0.$date['mon'];
+                $date['mon'] = 0 . $date['mon'];
             }
             if (strlen($date['hours']) == 1) {
-                $date['hours'] = 0.$date['hours'];
+                $date['hours'] = 0 . $date['hours'];
             }
             if (strlen($date['minutes']) == 1) {
-                $date['minutes'] = 0.$date['minutes'];
+                $date['minutes'] = 0 . $date['minutes'];
             }
             // 1 is there to prevent the Database to automaticly delete the 0(when there is one) at the beginning.
-            $timecreated = 1.$date['mday'].$date['mon'].$date['year'].$date['hours'].$date['minutes'];
+            $timecreated = 1 . $date['mday'].$date['mon'].$date['year'].$date['hours'].$date['minutes'];
 
             $entry = new stdClass();
             $entry->courseid = $courseid;
