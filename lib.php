@@ -99,10 +99,43 @@ function courseboard_delete_instance($id) {
  * $return->info = a short text description
  *
  * @return null
- * @todo Finish documenting this function
+ * 
+ * This function prints the latest post, comment and ratings of an instance.
  */
 function courseboard_user_outline($course, $user, $mod, $courseboard) {
-    return $return;
+    global $DB;
+    $post = 0;
+    $result = new stdClass();
+
+    if ($post = $DB->get_record('courseboard_posts', array("course" => $course->id, "coursemoduleid" => $mod->id, "userid" => $user->id))) {
+        $result->post->info = format_string($post->post) . "'\n Postid: " . $post->id;
+        $result->post->time = $post->timemodified;
+        echo $result->info;
+
+    } else {
+        print_string("notposted", "courseboard");
+    }
+
+    if ($comment = $DB->get_record('courseboard_comments', array("course" => $course->id, "coursemoduleid" => $mod->id, "userid" => $user->id))) {
+            $result->comment->info = format_string($comment->comment) . "'\n Postid: " . $comment->postid . "Commentid: " . $comment->id;
+            $result->comment->time = $comment->timemodified;
+            echo $result->info;
+
+    } else {
+        print_string("notcommented", "courseboard");
+    }
+
+    if ($rate = $DB->get_record('courseboard_ratings', array("course" => $course->id, "coursemoduleid" => $mod->id, "userid" => $user->id))) {
+            $result->rating->info = "Rating: " . $rate->didrate . " Postid: " . $rate->postid . "Rateid: " . $rate->id;
+            $result->rating->time = $rate->timemodified;
+            echo $result->info;
+
+    } else {
+        print_string("notrated", "courseboard");
+    }
+
+return $result;
+
 }
 
 
@@ -111,10 +144,39 @@ function courseboard_user_outline($course, $user, $mod, $courseboard) {
  * a given particular instance of this module, for user activity reports.
  *
  * @return boolean
- * @todo Finish documenting this function
+ * 
+ * This function prints all posts, comments and ratings.
  */
 function courseboard_user_complete($course, $user, $mod, $courseboard) {
-    return true;
+
+    global $DB;
+
+    if ($posts = $DB->get_records('courseboard_posts', array("userid" => $user->id))) {
+        foreach ($posts as $post) {
+            echo format_string($post->post) . "'\n Postid: " . $post->id . " Time: " . $post->timemodified;
+
+        }
+    } else {
+        print_string("notposted", "courseboard");
+    }
+
+    if ($comments = $DB->get_records('courseboard_comments', array("userid" => $user->id))) {
+        foreach ($comments as $comment) {
+            echo format_string($comment->comment) . "\n Postid: " . $comment->postid . " Commentid: " . $comment->commentid ." Time: " . $comment->timemodified;
+        }
+    } else {
+        print_string("notcommented", "courseboard");
+    }
+
+    if ($ratings = $DB->get_records('courseboard_comments', array("userid" => $user->id))) {
+        foreach ($ratings as $rating) {
+            echo "\n Rating: " . $rating->didrate . " Postid: " . $rating->postid . " rateid: " . $rating->id ." Time: " . $rating->timemodified;
+        }
+    } else {
+        print_string("notrated", "courseboard");
+    }
+   
+return true;
 }
 
 

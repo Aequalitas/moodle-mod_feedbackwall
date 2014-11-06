@@ -38,7 +38,6 @@ $courseid = required_param("k", PARAM_INT);  // Those three params are used in e
 $coursemoduleid = required_param("r", PARAM_INT);
 $courseboardid = required_param("b", PARAM_INT);
 
-
 if (!$courseboard = $DB->get_record('courseboard', array('id' => $courseboardid), "*", MUST_EXIST)) {
     echo "ERROR(courseid)";
     die();
@@ -52,7 +51,7 @@ if (!$cm = get_coursemodule_from_instance('courseboard', $courseboard->id, $cour
     die();
 }
 
-require_login($course, false, $cm);
+require_course_login($course, false, $cm);
 $context = context_module::instance($cm->id);
 
 // AJAX-Querys, "fnc" tells which kind of query it was.
@@ -67,7 +66,6 @@ if ($fnc = required_param("fnc", PARAM_ALPHA)) {
             $name = required_param("s", PARAM_ALPHAEXT);
 
             $date = usergetdate(time());
-
 
             if (strlen($date["mday"]) == 1) {
                 $date["mday"] = 0 . $date["mday"];
@@ -89,14 +87,14 @@ if ($fnc = required_param("fnc", PARAM_ALPHA)) {
             $entry = new stdClass();
             $entry->courseid = $courseid;
             $entry->coursemoduleid = $coursemoduleid;
-            $entry->courseboardid = $courseboardid;
             $entry->post = $post;
             $entry->name = $name;
-            $entry->didrate = "0";
+            $entry->userid = $USER->id;
             $entry->timecreated = $timecreated;
             $entry->timemodified = $timecreated;
 
-            $DB->insert_record("courseboard_posts", $entry, false);
+            $postid = $DB->insert_record("courseboard_posts", $entry, true);
+
 
         break;
 
@@ -104,69 +102,84 @@ if ($fnc = required_param("fnc", PARAM_ALPHA)) {
 
             require_capability('mod/courseboard:view', $context);
 
-            $s = required_param("q", PARAM_ALPHA);
+            $sort = required_param("q", PARAM_ALPHA);
 
-            $entry = "";
-            switch ($s) {
+            switch ($sort) {
                 case "old" :
-                    $s = "";
+                        $sort = "";
                 break;
-
                 case "new" :
-                    $s = "id DESC";
+                        $sort = "id DESC";
                 break;
-
                 case "averagedescending" :
-                    $s = "ratingaverage DESC";
+                        $sort = "ratingaverage DESC";
                 break;
-
                 case "averageascending" :
-                    $s = "ratingaverage ASC";
+                        $sort = "ratingaverage ASC";
                 break;
-
                 case "amountdescending" :
-                    $s = "rating DESC";
+                        $sort = "rating DESC";
                 break;
-
                 case "amountascending" :
-                    $s = "rating ASC";
+                        $sort = "rating ASC";
                 break;
-
             }
 
             $entry = $DB->get_records('courseboard_posts', array(
-                'courseid' => $courseid,
-                "coursemoduleid" => $coursemoduleid),
-            $sort = $s);
+                    'courseid' => $courseid,
+                    "coursemoduleid" => $coursemoduleid),
+                    $sort);
 
+            // That we havent to go through all the comments, we fetch the
+            // postids which are in this module.
+            $allpostids = array();
+            foreach ($entry as $post) {
+                array_push($allpostids, $post->id);
+            }
+
+            // Fetch all the comments which are in this module.
+            $allcommentsresult = $DB->get_records_list('courseboard_comments', 'postid', $allpostids);
+            // Fetch all the rating entries for posts in this module.
+            $allratingsresult = $DB->get_records_list('courseboard_ratings', 'postid', $allpostids);
+
+            // Select needed data for the output of the posts and its comments.
             if (!empty($entry)) {
-                global $PAGE;
-                $rend = $PAGE->get_renderer("mod_courseboard");
 
-                $allcommentsresult = $DB->get_records("courseboard_comments",array());
+                $rend = $PAGE->get_renderer("mod_courseboard");
 
                 foreach ($entry as $post) {
 
-                    $allcomments = [];
+                    $comments = array();
                     // Fetch the comments for this post.
                     foreach ($allcommentsresult as $comment) {
                         if ($comment->postid == $post->id) {
-                            array_push($allcomments, $comment);
+                            array_push($comments, $comment);
+                        }
+                    }
+
+
+                    $ratedata = "";
+                    // Select the ratedata for this post.
+                    foreach ($allratingsresult as $rating) {
+                        if ($rating->postid == $post->id) {
+                            $ratedata = $rating;
+                            break;
                         }
                     }
 
                     $data = new stdclass();
                     $data->post = $post;
-                    $data->comments = $allcomments;
+                    $data->comments = $comments;
                     $data->courseid = $courseid;
                     $data->coursemoduleid = $coursemoduleid;
                     $data->courseboardid = $courseboardid;
+                    $data->ratedata = $ratedata;
                     $data->userid = $USER->id;
                     $data->sesskey = sesskey();
 
-                    echo $rend->render_post ($data);
-
+                    echo $rend->render_post($data);
                 }
+
 
                 echo html_writer::tag("h3", get_string("loadingpleasewait", "courseboard"), array("id" => 'postsloading'));
 
@@ -184,6 +197,36 @@ if ($fnc = required_param("fnc", PARAM_ALPHA)) {
             $postid = required_param("q", PARAM_INT);
             $stars = required_param("h", PARAM_INT);
 
+            $date = usergetdate(time());
+
+            if (strlen($date["mday"]) == 1) {
+                $date["mday"] = 0 . $date["mday"];
+            }
+            if (strlen($date["mon"]) == 1) {
+                $date["mon"] = 0 . $date["mon"];
+            }
+            if (strlen($date["hours"]) == 1) {
+                $date["hours"] = 0 . $date["hours"];
+            }
+            if (strlen($date["minutes"]) == 1) {
+                $date["minutes"] = 0 . $date["minutes"];
+            }
+            // 1 is there to prevent the Database to automaticly delete the 0(when there is one) at the beginning.
+            // in the output it begins at [1].
+            $timecreated = 1 . $date["mday"] . $date["mon"] . $date["year"] . $date["hours"] . $date["minutes"];
+
+            $rateentry = new stdClass();
+            $rateentry->courseid = $courseid;
+            $rateentry->coursemoduleid = $coursemoduleid;
+            $rateentry->postid = $postid;
+            $rateentry->userid = $USER->id;
+            $rateentry->didrate = $stars;
+            $rateentry->timecreated = $timecreated;
+            $rateentry->timemodified = $timecreated;
+
+            $DB->insert_record("courseboard_ratings", $rateentry, false);
+
+            // Updating the rating of the post.
             $checkpostid = $DB->get_record("courseboard_posts", array("id" => $postid), "*", MUST_EXIST);
 
             $entry = $DB->get_record("courseboard_posts", array(
@@ -194,7 +237,6 @@ if ($fnc = required_param("fnc", PARAM_ALPHA)) {
 
             $newamountrating = 1 + $entry->rating;
             $newaverage = ($stars + ($entry->ratingaverage)) / $newamountrating;
-            $newstringdidrate .= $USER->id . "," . $entry->didrate;
 
             $updaterating = new stdClass();
             $updaterating->id = $postid;
@@ -202,7 +244,6 @@ if ($fnc = required_param("fnc", PARAM_ALPHA)) {
             $updaterating->coursemoduleid = $coursemoduleid;
             $updaterating->rating = $newamountrating;
             $updaterating->ratingaverage = $newaverage;
-            $updaterating->didrate = $newstringdidrate;
 
             $DB->update_record("courseboard_posts", $updaterating);
 
@@ -240,28 +281,11 @@ if ($fnc = required_param("fnc", PARAM_ALPHA)) {
             $entry->comment = $comment;
             $entry->postid = $postid;
             $entry->name = $name;
+            $entry->userid = $USER->id;
             $entry->timecreated = $timecreated;
             $entry->timemodified = $timecreated;
 
             $DB->insert_record("courseboard_comments", $entry, false);
-
-            $checkpostid = $DB->get_record("courseboard_posts", array("id" => $postid), "*", MUST_EXIST);
-
-            $entry = $DB->get_record("courseboard_posts", array(
-                "courseid" => $courseid,
-                "coursemoduleid" => $coursemoduleid,
-                "id" => $postid
-            ), "*", MUST_EXIST);
-
-            $newamountrating = 1 + $entry->amountcomments;
-
-            $updaterating = new stdClass();
-            $updaterating->id = $postid;
-            $updaterating->courseid = $courseid;
-            $updaterating->coursemoduleid = $coursemoduleid;
-            $updaterating->amountcomments = $newamountrating;
-
-            $DB->update_record("courseboard_posts", $updaterating);
 
         break;
 
@@ -285,7 +309,6 @@ if ($fnc = required_param("fnc", PARAM_ALPHA)) {
                 "postid" => $postid)
             );
 
-            global $PAGE;
             $rend = $PAGE->get_renderer("mod_courseboard");
 
             $data = new stdclass();
@@ -293,6 +316,7 @@ if ($fnc = required_param("fnc", PARAM_ALPHA)) {
             $data->comments = $comments;
             $data->courseid = $courseid;
             $data->coursemoduleid = $coursemoduleid;
+            $data->courseboardid = $courseboardid;
             $data->sesskey = sesskey();
 
             echo $rend->render_comment($data);

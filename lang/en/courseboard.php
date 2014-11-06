@@ -34,7 +34,7 @@ The plugin allows the teacher to get a good summary, with the help of sort and r
 $string["setmodulename"] = "Name of this courseboard";
 $string["intro"] = "Description";
 $string['pluginadministration'] = "Pluginadministration";
-$string["nameinputdescription"] = 'If set to "Anonymous", then your post will be send anonymously.';
+$string["nameinputdescription"] = 'If set to "Anonymous", then your name will be Anonymous.';
 $string["oldsortdescription"] = "Date: oldest first";
 $string["newsortdescription"] = "Date: newest first";
 $string["ratingdescending"] = "Rating: descending";
@@ -64,3 +64,6 @@ $string["ratefourStars"] = "(4) Post is well said.";
 $string["ratefiveStars"] = "(5) Post could have been from me.";
 $string["anonymous"] = "Anonymous";
 $string["sortfor"] = "Sort for";
+$string["notposted"] = "The user did not write a post yet.";
+$string["notcommented"] = "The user did not write a comment yet.";
+$string["notrated"] = "The user did not rated yet.";

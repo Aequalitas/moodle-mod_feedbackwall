@@ -144,7 +144,7 @@ class mod_courseboard_renderer extends plugin_renderer_base {
         $pid = $data->post->id;
         $comments = "";
 
-        if ($data->post->amountcomments > 0) {
+        if (count($data->comments) > 0) {
             foreach ($data->comments as $comment) {
                 $comments .= $this->box_start("", s($comment->id) . "comment" . $pid );
 
@@ -176,7 +176,7 @@ class mod_courseboard_renderer extends plugin_renderer_base {
             . $pid . "," .
             s($data->courseid) . "," .
             s($data->coursemoduleid) . "," .
-            s($data->courseboardid) . "," .
+            $data->courseboardid . "," .
             $sesskey . ');',
             "class" => 'commentarbtn',
             "id" => 'commbtn' . $pid,
@@ -190,7 +190,7 @@ class mod_courseboard_renderer extends plugin_renderer_base {
 
         // If there are more than 6 comments then there is
         // a button,next to the sendbutton, which hides the comments.
-        if ($data->post->amountcomments > 5) {
+        if (count($data->comments) > 5) {
 
             $comments .= html_writer::tag("input", "", array(
             "onClick" => 'courseboard_commHide(' . $pid . ');',
@@ -225,26 +225,13 @@ class mod_courseboard_renderer extends plugin_renderer_base {
 
         $pid = $data->post->id;
         $ratingaverage = $data->post->ratingaverage;
-        $alreadyrated = $data->post->didrate;
-        $alreadyratedarray = explode(",", $alreadyrated);
-        $canrate = 1;
-        $i = 0;
-
-        while ($alreadyratedarray[$i] != "0") {
-
-            if ($alreadyratedarray[$i] == $data->userid) {
-                $canrate = 0;
-            }
-
-            $i++;
-        }
 
         $post = $this->output->box_start("posts", $pid);
 
         $post .= $this->output->box(
-        format_text($data->post->post,
-        $format = FORMAT_MOODLE),
-        "", "post") . "</br>";
+                format_text($data->post->post,
+                $format = FORMAT_MOODLE),
+                "", "post") . "</br>";
 
         $date = $data->post->timecreated;
         $datestring = $date[1] . $date[2] . "." . $date[3] . $date[4] . "."
@@ -277,7 +264,7 @@ class mod_courseboard_renderer extends plugin_renderer_base {
         $startable->attributes["class"] = "empty"; // Otherwise the cells are too big.
         $post .= html_writer::table($startable);
 
-        if ($canrate == 1) {
+        if (!$data->didrate) {
             $post .= html_writer::select(array(
                 "noStar" => get_string("ratepost" , "courseboard"),
                 "oneStar" => get_string("rateoneStar" , "courseboard"),
@@ -308,8 +295,8 @@ class mod_courseboard_renderer extends plugin_renderer_base {
         }
 
         $combtn = "";     // Text for the commentbutton which shows the comment.
-        if ($data->post->amountcomments > 0) {
-            $combtn .= get_string("showComments", "courseboard") . " (" . $data->post->amountcomments . ")";
+        if (count($data->comments) > 0) {
+            $combtn .= get_string("showComments", "courseboard") . " (" . count($data->comments) . ")";
         } else {
             $combtn .= get_string("writeaComment", "courseboard");
         }
@@ -327,7 +314,7 @@ class mod_courseboard_renderer extends plugin_renderer_base {
             "class" => 'commShowbtns',
             "id" => 'commShow' . $pid,
             "data" => $combtndata,
-            "cn" => $data->post->amountcomments,
+            "cn" => count($data->comments),
             "value" => $combtn )
         );
 

@@ -7,6 +7,7 @@ Calls a php script which creates the post.
 
 @param int courseid id of the course
 @param int moduleid of the plugin in the course
+@param int courseboardid id of the plugin overall
 @param String skey the sessionkey as a string
 
 */
@@ -19,7 +20,8 @@ function courseboard_postInsert(courseid, coursemoduleid, courseboardid, skey) {
 
             url:"courseboard_ajax.php",
             type:"POST",
-            data:{fnc : "postInsert" , q:post , s:name, b:courseboardid, k:courseid, r:coursemoduleid, sesskey:skey},
+            timeout:5000,
+            data:{fnc : "postInsert" , q:post , s:name, k:courseid, b:courseboardid, r:coursemoduleid, sesskey:skey},
 
             beforeSend : function() {
                 $(".posts").hide();
@@ -27,7 +29,7 @@ function courseboard_postInsert(courseid, coursemoduleid, courseboardid, skey) {
 
             },
             success : function(data) {
-                courseboard_courseboardRefresh(courseid, coursemoduleid,courseboardid, skey);
+                courseboard_courseboardRefresh(courseid, coursemoduleid, courseboardid, skey);
 
             }
         });
@@ -51,6 +53,7 @@ rating of the post.
 @param int id id of the post
 @param int courseid id of the course
 @param int moduleid of the plugin in the course
+@param int courseboardid id of the plugin overall
 @param String skey the sessionkey as a string
 
 */
@@ -85,7 +88,8 @@ function courseboard_rate (id, courseid, coursemoduleid, courseboardid, skey) {
         $.ajax ({
             url:"courseboard_ajax.php",
             type:"POST",
-            data:{q:id,fnc:"rate",k:courseid,r:coursemoduleid,b:courseboardid, h:stars,sesskey:skey},
+            timeout:5000,
+            data:{q:id,fnc:"rate",k:courseid,r:coursemoduleid, b:courseboardid, h:stars,sesskey:skey},
 
             beforeSend:function() {
                 $(".posts").hide();
@@ -110,6 +114,7 @@ function courseboard_rate (id, courseid, coursemoduleid, courseboardid, skey) {
 @param int id  id of the post
 @param int courseid id of the course
 @param int moduleid of the plugin in the course
+@param int courseboardid id of the plugin overall
 @param String skey the sessionkey as a string
 
 */
@@ -121,7 +126,8 @@ function courseboard_commInsert(id, courseid, coursemoduleid, courseboardid, ske
         $.ajax ({
             type:"POST",
             url:"courseboard_ajax.php",
-            data:{o:name,q:commtext,s:id,fnc:"commentInsert",k:courseid,b:courseboardid, r:coursemoduleid,sesskey:skey},
+            timeout:5000,
+            data:{o:name,q:commtext,s:id,fnc:"commentInsert",k:courseid, r:coursemoduleid, b:courseboardid, sesskey:skey},
 
             beforeSend: function(){
                 $("#commloading" + id).show();
@@ -191,13 +197,15 @@ the commentssection of a post.
 @param int id id of the post
 @param int courseid id of the course
 @param int moduleid of the plugin in the course
+@param int courseboardid id of the plugin overall
 @param String skey the sessionkey as a string
 */
 function courseboard_commsRefresh(id, courseid, coursemoduleid, courseboardid, skey) {
     $.ajax({
             type:"POST",
             url:"courseboard_ajax.php",
-            data:{q:id,k:courseid,r:coursemoduleid,fnc:"commentsRefresh",b:courseboardid, sesskey:skey},
+            timeout:5000,
+            data:{q:id,k:courseid,r:coursemoduleid,fnc:"commentsRefresh", b:courseboardid, sesskey:skey},
 
             beforeSend: function(){
 
@@ -206,7 +214,6 @@ function courseboard_commsRefresh(id, courseid, coursemoduleid, courseboardid, s
             },
 
             success: function(data){
-
                 $(".commanShow" + id).show(500,function(){
                     $("#commfield" + id).html(data);
                 });
@@ -225,6 +232,7 @@ posts and comments.
 
 @param int courseid id of the course
 @param int moduleid of the plugin in the course
+@param int courseboardid id of the plugin overall
 @param String skey the sessionkey as a string
 */
 
@@ -234,7 +242,8 @@ function courseboard_courseboardRefresh(courseid, coursemoduleid, courseboardid,
     $.ajax ({
             url:"courseboard_ajax.php",
             type:"POST",
-            data:{q:sort,fnc:"courseboardRefresh",k:courseid, b:courseboardid, r:coursemoduleid, sesskey:skey},
+            timeout:5000,
+            data:{q:sort,fnc:"courseboardRefresh",k:courseid, r:coursemoduleid, b:courseboardid, sesskey:skey},
 
             beforeSend : function() {
                 $(".posts").hide();
@@ -243,6 +252,7 @@ function courseboard_courseboardRefresh(courseid, coursemoduleid, courseboardid,
             },
 
             success : function(data) {
+
                 $("#postsloading").hide();
                 $("#maindiv").html(data);
 

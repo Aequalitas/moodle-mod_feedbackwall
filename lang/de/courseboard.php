@@ -64,3 +64,6 @@ $string["ratefourStars"] = "(4) Eintrag ist gut";
 $string["ratefiveStars"] = "(5) Eintrag könnte von mir sein";
 $string["anonymous"] = "Anonymus";
 $string["sortfor"] = "Sortieren nach";
+$string["notposted"] = "Es wurden kein Post geschrieben.";
+$string["notcommented"] = "Es wurden kein Kommentar geschrieben.";
+$string["notrated"] = "Es wurde noch nicht bewertet.";

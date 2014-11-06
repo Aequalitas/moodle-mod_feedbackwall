@@ -95,15 +95,16 @@ echo $OUTPUT->heading(format_string($courseboard->name), 2);
 
 // Print the main part of the page.
 
-// Topdiv,where you choose name and way of sort.
+// Topdiv, where you choose name and way of sort.
 
 $topdiv = new stdclass();
 $topdiv->sesskey = sesskey();
 $topdiv->courseid = $course->id;
 $topdiv->coursemoduleid = $cm->id;
-$topdiv->courseboardid = $courseboard->id;
+$topdiv->courseboardid = $cm->instance;
 $topdiv->firstname = $USER->firstname;
 $topdiv->lastname = $USER->lastname;
+$topdiv->usierid = $USER->id;
 $topdiv->intro = $courseboard->intro;
 
 echo $rend->render_topdiv($topdiv);
@@ -116,16 +117,28 @@ echo "<hr>";
 echo $OUTPUT->box_start("", "maindiv");
 
 // Getting all posts of this module from the database.
-$entry = $DB->get_records('courseboard_posts',
-array('courseid' => $course->id, "coursemoduleid" => $cm->id),
-$sort = 'id DESC');
+$entry = $DB->get_records('courseboard_posts', array(
+    'courseid' => $course->id,
+    'coursemoduleid' => $cm->id),
+'id DESC');
 
-$allcommentsresult = $DB->get_records("courseboard_comments");
+// That we havent to go through all the comments, we fetch the
+// postids which are in this module.
+$allpostids = array();
+foreach ($entry as $post) {
+    array_push($allpostids, $post->id);
+}
 
+// Fetch all the comments which are in this module.
+$allcommentsresult = $DB->get_records_list('courseboard_comments', 'postid', $allpostids);
+// Fetch all the rating entries for posts in this module.
+$allratingsresult = $DB->get_records_list('courseboard_ratings', 'postid', $allpostids);
+
+// Select needed data for the output of the posts and its comments.
 if (!empty($entry)) {
     foreach ($entry as $post) {
 
-        $allcomments = [];
+        $allcomments = array();
         // Fetch the comments for this post.
         foreach ($allcommentsresult as $comment) {
             if ($comment->postid == $post->id) {
@@ -133,13 +146,22 @@ if (!empty($entry)) {
             }
         }
 
+        $didrate = false;
+        // Select the user who rated this post.
+        foreach ($allratingsresult as $rating) {
+            if ($rating->postid == $post->id && $rating->userid == $USER->id) {
+                $didrate = true;
+                break;
+            }
+        }
 
         $data = new stdclass();
         $data->post = $post;
         $data->comments = $allcomments;
+        $data->didrate= $didrate;
         $data->courseid = $course->id;
         $data->coursemoduleid = $cm->id;
-        $data->courseboardid = $post->courseboardid;
+        $data->courseboardid = $cm->instance;
         $data->userid = $USER->id;
         $data->sesskey = sesskey();
 
