@@ -44,35 +44,35 @@ class mod_courseboard_renderer extends plugin_renderer_base {
      */
     public function render_topdiv(stdclass $data) {
 
-        $topdiv = "";
-        $sesskey = "'" . $data->sesskey . "'"; // Make the sesskey to a string so javascript can use it.
+        $topdiv = '';
+        $sesskey = '"'.$data->sesskey.'"'; // Make the sesskey to a string so javascript can use it.
 
-        $inputdesc = html_writer::tag("label",
-        get_string("nameinputdescription", "courseboard"),
-        array("class" => "nameinputdescription")
+        $inputdesc = html_writer::tag('label',
+        get_string('nameinputdescription', 'courseboard'),
+        array('class' => 'nameinputdescription')
         );
 
-        $textarea = html_writer::tag('textarea', "", array(
-            "id" => "postinputfield",
-            "rows" => "4",
-            "cols" => "90",
-            "placeholder" => get_string("writeapost", "courseboard"))
+        $textarea = html_writer::tag('textarea', '', array(
+                'id' => 'postinputfield',
+                'rows' => '4',
+                'cols' => '90',
+                'placeholder' => get_string('writeapost', 'courseboard'))
         );
 
-        $inputsend = html_writer::tag('input', "", array(
-           "type" => "button",
-           "id" => "postbutton",
-           "onClick" => "courseboard_postInsert(" .
-                    $data->courseid  .','.
-                    $data->coursemoduleid  . ',' .
-                    $data->courseboardid . "," .
-                    $sesskey . ");",
-            "value" => get_string("send", "courseboard")
+        $inputsend = html_writer::tag('input', '', array(
+           'type' => 'button',
+           'id' => 'postbutton',
+           'onClick' => 'courseboard_postInsert('.
+                    $data->courseid.','.
+                    $data->coursemoduleid.','.
+                    $data->courseboardid.','.
+                    $sesskey.');',
+            'value' => get_string('send', 'courseboard')
         ));
 
-        $warnlabel = html_writer::tag('label', get_string("emptypostinput", "courseboard"), array(
-            "id" => "emptyFieldWarning",
-            "class" => "emptyFieldWarning"
+        $warnlabel = html_writer::tag('label', get_string('emptypostinput', 'courseboard'), array(
+            'id' => 'emptyFieldWarning',
+            'class' => 'emptyFieldWarning'
         ));
 
         $table = new html_table();
@@ -81,35 +81,35 @@ class mod_courseboard_renderer extends plugin_renderer_base {
                $data->intro
         ),
         array(html_writer::select(array(
-               get_string("anonymous", "courseboard") => get_string("anonymous", "courseboard"),
-               $data->firstname . "_" . $data->lastname => $data->firstname . "_" . $data->lastname
-            ), "" , 0, "", array("id" => "name")) . $inputdesc
+               get_string('anonymous', 'courseboard') => get_string('anonymous', 'courseboard'),
+               $data->firstname.'_'.$data->lastname => $data->firstname.'_'.$data->lastname
+            ), '' , 0, '', array('id' => 'name')).$inputdesc
         ),
         array(
-            $textarea . $inputsend . $warnlabel)
+            $textarea.$inputsend.$warnlabel)
         );
 
-        $topdiv .= $this->box(html_writer::table($table), "", "topdiv");
+        $topdiv .= $this->box(html_writer::table($table), '', 'topdiv');
 
-        $sesskey = '"' . $data->sesskey . '"';
+        $sesskey = '"'.$data->sesskey.'"';
         $topdiv .= $this->box_start();
-        $topdiv .= get_string("sortfor", "courseboard") . "&nbsp&nbsp";
+        $topdiv .= get_string('sortfor', 'courseboard').'&nbsp&nbsp';
 
             // Selectmenu to sort.
             $topdiv .= html_writer::select(array(
-            'new' => get_string("newsortdescription", "courseboard"),
-            'old' => get_string("oldsortdescription", "courseboard"),
-            'averagedescending' => get_string("ratingdescending" , "courseboard"),
-            'averageascending' => get_string("ratingascending" , "courseboard"),
-            'amountdescending' => get_string("amountdescending" , "courseboard"),
-            'amountascending' => get_string("amountascending" , "courseboard"),
-        ), 'sort', 0, "", array(
-            "id" => "sortmenu",
-            "onchange" => "courseboard_courseboardRefresh(" .
-                        $data->courseid . "," .
-                        $data->coursemoduleid  . "," .
-                        $data->courseboardid . "," .
-                        $sesskey . ");"
+            'new' => get_string('newsortdescription', 'courseboard'),
+            'old' => get_string('oldsortdescription', 'courseboard'),
+            'averagedescending' => get_string('ratingdescending' , 'courseboard'),
+            'averageascending' => get_string('ratingascending' , 'courseboard'),
+            'amountdescending' => get_string('amountdescending' , 'courseboard'),
+            'amountascending' => get_string('amountascending' , 'courseboard'),
+        ), 'sort', 0, '', array(
+            'id' => 'sortmenu',
+            'onchange' => 'courseboard_courseboardRefresh('.
+                        $data->courseid.','.
+                        $data->coursemoduleid.','.
+                        $data->courseboardid.','.
+                        $sesskey.');'
             )
         );
 
@@ -137,67 +137,68 @@ class mod_courseboard_renderer extends plugin_renderer_base {
 
         $date = $data->post->timecreated;
 
-        $datestring = $date[1] . $date[2] . "." . $date[3] . $date[4] . "."
-        . $date[5] . $date[6] . $date[7] . $date[8] . "&nbsp". $date[9]
-        . $date[10] . ":" . $date[11] . $date[12];
+        // Create datestring in this format -> day.month.year hours:mins
+        $datestring = $date[1].$date[2].'.'.$date[3].$date[4].'.'.
+        $date[5].$date[6].$date[7].$date[8].'&nbsp'.$date[9].
+        $date[10].':'.$date[11].$date[12];
 
         $pid = $data->post->id;
-        $comments = "";
+        $comments = '';
 
         if (count($data->comments) > 0) {
             foreach ($data->comments as $comment) {
-                $comments .= $this->box_start("", s($comment->id) . "comment" . $pid );
+                $comments .= $this->box_start('', s($comment->id).'comment'.$pid );
 
-                $comments .= format_text($comment->comment, $format = FORMAT_MOODLE) . "</br>";
-                $comments .= html_writer::tag("p", s($comment->name) . " - " . $datestring);
-                $comments .= $this->box_end() . "<hr>";
+                $comments .= format_text($comment->comment, $format = FORMAT_MOODLE).'</br>';
+                $comments .= html_writer::tag('p', s($comment->name).' - '.$datestring);
+                $comments .= $this->box_end().'<hr>';
             }
 
         } else {
-               $comments .= $this->box(get_string("noComments", "courseboard") . "<hr>");
+               $comments .= $this->box(get_string('noComments', 'courseboard').'<hr>');
 
         }
 
-        $comments .= $this->box_start('commanShow'. $pid, "", array("class" => 'commanShow'));
-        $areaid = "'commtxtarea" . $pid . "'";
+        $comments .= $this->box_start('commanShow'.$pid, '', array('class' => 'commanShow'));
+        $areaid = 'commtxtarea'.$pid."'";
 
-        $comments .= html_writer::tag("textarea", "", array(
-            "id" => 'commtxtarea' . $pid,
-            "cols" => '90',
-            "rows" => '3',
-            "placeholder" => get_string("writeaComment", "courseboard"))
+        $comments .= html_writer::tag('textarea', '', array(
+                'id' => 'commtxtarea'.$pid,
+                'cols' => '90',
+                'rows' => '3',
+                'placeholder' => get_string('writeaComment', 'courseboard'))
         );
 
-        $sesskey = '"' .  $data->sesskey . '"';
+        $sesskey = '"'. $data->sesskey.'"';
         // Button to send a comment.
-        $comments .= html_writer::tag("input", "", array(
-            "type" => 'button',
-            "onClick" => 'courseboard_commInsert('
-            . $pid . "," .
-            s($data->courseid) . "," .
-            s($data->coursemoduleid) . "," .
-            $data->courseboardid . "," .
-            $sesskey . ');',
-            "class" => 'commentarbtn',
-            "id" => 'commbtn' . $pid,
-            "value" => get_string("send", "courseboard"))
+        $comments .= html_writer::tag('input', '', array(
+                'type' => 'button',
+                'onClick' => 'courseboard_commInsert('.
+                $pid.','.
+                s($data->courseid).','.
+                s($data->coursemoduleid).','.
+                $data->courseboardid.','.
+                $sesskey.');',
+                'class' => 'commentarbtn',
+                'id' => 'commbtn'.$pid,
+                'value' => get_string('send', 'courseboard'))
         );
 
-        $comments .= html_writer::tag('label', get_string("emptyCommentinput", "courseboard"), array(
-            "id" => "emptyCommFieldwarning". $pid,
-            "class" => "emptyFieldWarning"
+        $comments .= html_writer::tag('label', get_string('emptyCommentinput', 'courseboard'), array(
+            'id' => 'emptyCommFieldwarning'.$pid,
+            'class' => 'emptyFieldWarning'
         ));
 
         // If there are more than 6 comments then there is
         // a button,next to the sendbutton, which hides the comments.
         if (count($data->comments) > 5) {
 
-            $comments .= html_writer::tag("input", "", array(
-            "onClick" => 'courseboard_commHide(' . $pid . ');',
-            "class" => 'commHide',
-            "type" => 'button',
-            "id" => 'commHide' . $pid,
-            "value" => get_string("hideComments", "courseboard"))
+            $comments .= html_writer::tag('input', '', array(
+                    'onClick' => 'courseboard_commHide('.$pid.');',
+                    'class' => 'commHide',
+                    'type' => 'button',
+                    'id' => 'commHide'.$pid,
+                    'value' => get_string('hideComments', 'courseboard'))
             );
         }
         $comments .= $this->box_end();
@@ -226,110 +227,112 @@ class mod_courseboard_renderer extends plugin_renderer_base {
         $pid = $data->post->id;
         $ratingaverage = $data->post->ratingaverage;
 
-        $post = $this->output->box_start("posts", $pid);
+        $post = $this->output->box_start('posts', $pid);
 
         $post .= $this->output->box(
                 format_text($data->post->post,
                 $format = FORMAT_MOODLE),
-                "", "post") . "</br>";
+                '', 'post').'</br>';
 
         $date = $data->post->timecreated;
-        $datestring = $date[1] . $date[2] . "." . $date[3] . $date[4] . "."
-        . $date[5] . $date[6] . $date[7] . $date[8] . "&nbsp". $date[9]
-        . $date[10] . ":" . $date[11] . $date[12];
 
-        $post .= html_writer::tag("p", s($data->post->name) . " - " . $datestring);
+         // Create datestring in this format -> day.month.year hours:mins
+        $datestring = $date[1].$date[2].'.'.$date[3].$date[4].'.'.
+        $date[5].$date[6].$date[7].$date[8].'&nbsp'.$date[9].
+        $date[10].':'.$date[11].$date[12];
+
+        $post .= html_writer::tag('p', s($data->post->name).' - '.$datestring);
 
         $startable = new html_table();
 
         for ($i = 0; $i < 5; $i++) {
             if ($ratingaverage - 1 >= 0 ) {
-                $startable->data[0][$i] = html_writer::tag("img", "", array("src" => "pix/fullStar.jpg", "alt" => "fullStar"));
+                $startable->data[0][$i] = html_writer::tag('img', '', array('src' => 'pix/fullStar.jpg', 'alt' => 'fullStar'));
                 $ratingaverage -= 1;
 
             } else if ($ratingaverage - 0.5 >= 0 ) {
-                $startable->data[0][$i] = html_writer::tag("img", "", array("src" => "pix/halfStar.jpg", "alt" => "halfStar"));
+                $startable->data[0][$i] = html_writer::tag('img', '', array('src' => 'pix/halfStar.jpg', 'alt' => 'halfStar'));
                 $ratingaverage -= 0.5;
 
             } else {
-                $startable->data[0][$i] = html_writer::tag("img", "", array("src" => "pix/emptyStar.jpg", "alt" => "emptyStar"));
+                $startable->data[0][$i] = html_writer::tag('img', '', array('src' => 'pix/emptyStar.jpg', 'alt' => 'emptyStar'));
             }
         }
 
-        $startable->data[0][5] = html_writer::tag("p",
-        "(" . s($data->post->rating) .  ")",
-        array("title" => get_string("rating", "courseboard"))
+        $startable->data[0][5] = html_writer::tag('p',
+                '('.s($data->post->rating). ')',
+                array('title' => get_string('rating', 'courseboard'))
         );
 
-        $startable->attributes["class"] = "empty"; // Otherwise the cells are too big.
+        $startable->attributes['class'] = 'empty'; // Otherwise the cells are too big.
         $post .= html_writer::table($startable);
 
         if (!$data->didrate) {
             $post .= html_writer::select(array(
-                "noStar" => get_string("ratepost" , "courseboard"),
-                "oneStar" => get_string("rateoneStar" , "courseboard"),
-                "twoStars" => get_string("ratetwoStars" , "courseboard"),
-                "threeStars" => get_string("ratethreeStars" , "courseboard"),
-                "fourStars" => get_string("ratefourStars", "courseboard"),
-                "fiveStars" => get_string("ratefiveStars", "courseboard")
-            ), "", 0, "", array("id" => "selectStar"  . $pid));
+                'noStar'     => get_string('ratepost' , 'courseboard'),
+                'oneStar'    => get_string('rateoneStar' , 'courseboard'),
+                'twoStars'   => get_string('ratetwoStars' , 'courseboard'),
+                'threeStars' => get_string('ratethreeStars' , 'courseboard'),
+                'fourStars'  => get_string('ratefourStars', 'courseboard'),
+                'fiveStars'  => get_string('ratefiveStars', 'courseboard')
+            ), '', 0, '', array('id' => 'selectStar'  . $pid));
 
-            $sesskeyoutput = '"' . $data->sesskey . '"';
+            $sesskeyoutput = '"'.$data->sesskey.'"';
 
-            $post .= html_writer::tag("input", "", array(
-                "type" => 'button',
-                "onClick" => 'courseboard_rate('
-                    . $pid . "," .
-                    s($data->courseid) . "," .
-                    s($data->coursemoduleid) . "," .
-                    s($data->courseboardid) . "," .
-                    $sesskeyoutput . ');',
-            "id" => 'rate' . $pid,
-            "value" => get_string("rate", "courseboard"))
+            $post .= html_writer::tag('input', '', array(
+                        'type'    => 'button',
+                        'onClick' => 'courseboard_rate('.
+                        $pid.','.
+                        s($data->courseid).','.
+                        s($data->coursemoduleid).','.
+                        s($data->courseboardid).','.
+                        $sesskeyoutput.');',
+                'id' => 'rate'.$pid,
+                'value' => get_string('rate', 'courseboard'))
             );
 
-            $post .= "</br>";
+            $post .= '</br>';
         } else {
-            $post .= html_writer::tag('p', get_string("alreadyrated", "courseboard"), array("id" => "alreadyrated"));
+            $post .= html_writer::tag('p', get_string('alreadyrated', 'courseboard'), array('id' => 'alreadyrated'));
 
         }
 
-        $combtn = "";     // Text for the commentbutton which shows the comment.
+        $combtn = '';     // Text for the commentbutton which shows the comment.
         if (count($data->comments) > 0) {
-            $combtn .= get_string("showComments", "courseboard") . " (" . count($data->comments) . ")";
+            $combtn .= get_string('showComments', 'courseboard').' ('.count($data->comments).')';
         } else {
-            $combtn .= get_string("writeaComment", "courseboard");
+            $combtn .= get_string('writeaComment', 'courseboard');
         }
 
         // Will be used when someone writes a comment and there was no comment before.
         // Then the text will be taken from the attribute data.
         // Otherwise it will be used to increase the number in the brackets(number of comments).
-        $combtndata = get_string("showComments", "courseboard");
+        $combtndata = get_string('showComments', 'courseboard');
 
         // Button which shows the comments.
 
-        $post .= html_writer::tag("input", "", array(
-            "type" => 'button',
-            "onClick" => 'courseboard_commShow(' . $pid . ');',
-            "class" => 'commShowbtns',
-            "id" => 'commShow' . $pid,
-            "data" => $combtndata,
-            "cn" => count($data->comments),
-            "value" => $combtn )
+        $post .= html_writer::tag('input', '', array(
+                'type'    => 'button',
+                'onClick' => 'courseboard_commShow('.$pid.');',
+                'class'   => 'commShowbtns',
+                'id'      => 'commShow'.$pid,
+                'data'    => $combtndata,
+                'cn'      => count($data->comments),
+                'value'   => $combtn )
         );
 
         // Button which hides the comments.
-        $post .= html_writer::tag("input", "", array(
-            "style" => "display:none;",
-            "onClick" => 'courseboard_commHide(' . $pid . ');',
-            "class" => 'commHidebtns',
-            "type" => 'button',
-            "id" => 'commHide' . $pid,
-            "value" => get_string("hideComments", "courseboard"))
+        $post .= html_writer::tag('input', '', array(
+                'style'   => 'display:none;',
+                'onClick' => 'courseboard_commHide('.$pid.');',
+                'class'   => 'commHidebtns',
+                'type'    => 'button',
+                'id'      => 'commHide'.$pid,
+                'value'   => get_string('hideComments', 'courseboard'))
         );
 
-        $post .= "<hr>";
-        $post .= $this->output->box_start("comments", 'commfield'. $pid, array("class" => 'commfield'));
+        $post .= '<hr>';
+        $post .= $this->output->box_start('comments', 'commfield'.$pid, array('class' => 'commfield'));
 
         // Get data which will be needed to create the comments for this post.
         $commentdata = new stdclass();
@@ -340,7 +343,7 @@ class mod_courseboard_renderer extends plugin_renderer_base {
         $commentdata->courseboardid = $data->courseboardid;
         $commentdata->sesskey = $data->sesskey;
 
-        $rend = $this->page->get_renderer("mod_courseboard");
+        $rend = $this->page->get_renderer('mod_courseboard');
         $post .= $rend->render_comment($commentdata);
 
         $post .= $this->output->box_end();

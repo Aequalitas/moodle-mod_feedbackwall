@@ -25,9 +25,8 @@
  */
 
 // ...$Id: lib.php,v 1.7.2.5 2009/04/22 21:30:57 skodak Exp $.
-if (!defined('MOODLE_INTERNAL')) {
-    die('Direct access to this script is forbidden.'); // It must be included from a Moodle page.
-}
+defined('MOODLE_INTERNAL') || die();
+
 function courseboard_add_instance($courseboard) {
 
     global $DB;
@@ -75,7 +74,7 @@ function courseboard_delete_instance($id) {
 
     global $DB;
 
-    if (! $courseboard = $DB->get_record('courseboard', array("id" => $id), $id)) {
+    if (! $courseboard = $DB->get_record('courseboard', array('id' => $id), $id)) {
         return false;
     }
 
@@ -83,7 +82,7 @@ function courseboard_delete_instance($id) {
 
     // Delete any dependent records here.
 
-    if (! $DB->delete_records('courseboard', array("id" => $id), $courseboard->id)) {
+    if (! $DB->delete_records('courseboard', array('id' => $id), $courseboard->id)) {
         $result = false;
     }
 
@@ -107,31 +106,31 @@ function courseboard_user_outline($course, $user, $mod, $courseboard) {
     $post = 0;
     $result = new stdClass();
 
-    if ($post = $DB->get_record('courseboard_posts', array("course" => $course->id, "coursemoduleid" => $mod->id, "userid" => $user->id))) {
-        $result->post->info = format_string($post->post) . "'\n Postid: " . $post->id;
-        $result->post->time = $post->timemodified;
+    if ($post = $DB->get_record('courseboard_posts', array('course' => $course->id, 'coursemoduleid' => $mod->id, 'userid' => $user->id))) {
+        $result->post->info = format_string($post->post).'\n Postid: '.$post->id;
+        $result->post->time = $post->timemodified - 10000000000000;
         echo $result->info;
 
     } else {
-        print_string("notposted", "courseboard");
+        print_string('notposted', 'courseboard');
     }
 
-    if ($comment = $DB->get_record('courseboard_comments', array("course" => $course->id, "coursemoduleid" => $mod->id, "userid" => $user->id))) {
-            $result->comment->info = format_string($comment->comment) . "'\n Postid: " . $comment->postid . "Commentid: " . $comment->id;
-            $result->comment->time = $comment->timemodified;
+    if ($comment = $DB->get_record('courseboard_comments', array('course' => $course->id, 'coursemoduleid' => $mod->id, 'userid' => $user->id))) {
+            $result->comment->info = format_string($comment->comment).'\n Postid: '.$comment->postid.'Commentid: '.$comment->id;
+            $result->comment->time = $comment->timemodified - 10000000000000;
             echo $result->info;
 
     } else {
-        print_string("notcommented", "courseboard");
+        print_string('notcommented', 'courseboard');
     }
 
-    if ($rate = $DB->get_record('courseboard_ratings', array("course" => $course->id, "coursemoduleid" => $mod->id, "userid" => $user->id))) {
-            $result->rating->info = "Rating: " . $rate->didrate . " Postid: " . $rate->postid . "Rateid: " . $rate->id;
+    if ($rate = $DB->get_record('courseboard_ratings', array('course' => $course->id, 'coursemoduleid' => $mod->id, 'userid' => $user->id))) {
+            $result->rating->info = 'Rating: '.$rate->didrate.' Postid: '.$rate->postid.'Rateid: '.$rate->id;
             $result->rating->time = $rate->timemodified;
             echo $result->info;
 
     } else {
-        print_string("notrated", "courseboard");
+        print_string('notrated', 'courseboard');
     }
 
 return $result;
@@ -151,29 +150,29 @@ function courseboard_user_complete($course, $user, $mod, $courseboard) {
 
     global $DB;
 
-    if ($posts = $DB->get_records('courseboard_posts', array("userid" => $user->id))) {
+    if ($posts = $DB->get_records('courseboard_posts', array('userid' => $user->id))) {
         foreach ($posts as $post) {
-            echo format_string($post->post) . "'\n Postid: " . $post->id . " Time: " . $post->timemodified;
+            echo format_string($post->post).'\n Postid: '.$post->id.' Time: '.$post->timemodified - 10000000000000;
 
         }
     } else {
-        print_string("notposted", "courseboard");
+        print_string('notposted', 'courseboard');
     }
 
-    if ($comments = $DB->get_records('courseboard_comments', array("userid" => $user->id))) {
+    if ($comments = $DB->get_records('courseboard_comments', array('userid' => $user->id))) {
         foreach ($comments as $comment) {
-            echo format_string($comment->comment) . "\n Postid: " . $comment->postid . " Commentid: " . $comment->commentid ." Time: " . $comment->timemodified;
+            echo format_string($comment->comment).'\n Postid: '.$comment->postid.' Commentid: '.$comment->commentid.' Time: '.$comment->timemodified - 10000000000000;
         }
     } else {
-        print_string("notcommented", "courseboard");
+        print_string('notcommented', 'courseboard');
     }
 
-    if ($ratings = $DB->get_records('courseboard_comments', array("userid" => $user->id))) {
+    if ($ratings = $DB->get_records('courseboard_comments', array('userid' => $user->id))) {
         foreach ($ratings as $rating) {
-            echo "\n Rating: " . $rating->didrate . " Postid: " . $rating->postid . " rateid: " . $rating->id ." Time: " . $rating->timemodified;
+            echo '\n Rating: '.$rating->didrate.' Postid: '.$rating->postid.' rateid: '.$rating->id.'Time: '.$rating->timemodified;
         }
     } else {
-        print_string("notrated", "courseboard");
+        print_string('notrated', 'courseboard');
     }
    
 return true;
@@ -262,4 +261,4 @@ function courseboard_uninstall() {
 // Any other courseboard functions go here.  Each of them must have a name that
 // starts with courseboard_
 // Remember (see note in first lines) that, if this section grows, it's HIGHLY
-// recommended to move all funcions below to a new "localib.php" file.
+// recommended to move all funcions below to a new 'localib.php' file.

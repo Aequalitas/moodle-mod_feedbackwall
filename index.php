@@ -19,7 +19,7 @@
  *
  * @author  Franz Weidmann
  * @package mod_courseboard
- * @copyright ""
+ * @copyright ''
  * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
@@ -38,7 +38,7 @@ if (! $course = $DB->get_record('course', 'id', $id)) {
 
 require_course_login($course);
 
-add_to_log($course->id, 'courseboard', 'view all', "index.php?id=$course->id", '');
+add_to_log($course->id, 'courseboard', 'view all', 'index.php?id=$course->id', '');
 
 
 // Get all required strings.
@@ -58,7 +58,7 @@ print_header_simple($strcoursemodules, '', $navigation, '', '', true, '', navmen
 // Get all the appropriate data.
 
 if (! $coursemodules = get_all_instances_in_course('courseboard', $course)) {
-    notice('There are no instances of coursemodule', "../../course/view.php?id=$course->id");
+    notice('There are no instances of coursemodule', '../../course/view.php?id=$course->id');
     die;
 }
 
@@ -83,10 +83,10 @@ if ($course->format == 'weeks') {
 foreach ($coursemodules as $courseboard) {
     if (!$courseboard->visible) {
         // Show dimmed if the mod is hidden.
-        $link = '<a class="dimmed" href="view.php?id='.$courseboard->coursemodule.'">'.format_string($courseboard->name).'</a>';
+        $link = '<a class='dimmed' href='view.php?id='.$courseboard->coursemodule.''>'.format_string($courseboard->name).'</a>';
     } else {
         // Show normal if the mod is visible.
-        $link = '<a href="view.php?id='.$courseboard->coursemodule.'">'.format_string($courseboard->name).'</a>';
+        $link = '<a href='view.php?id='.$courseboard->coursemodule.''>'.format_string($courseboard->name).'</a>';
     }
 
     if ($course->format == 'weeks' or $course->format == 'topics') {

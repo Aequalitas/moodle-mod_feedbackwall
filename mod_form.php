@@ -48,16 +48,16 @@ class mod_courseboard_mod_form extends moodleform_mod {
         global $COURSE;
         $mform =& $this->_form;
 
-        // Adding the "general" fieldset, where all the common settings are showed.
+        // Adding the 'general' fieldset, where all the common settings are showed.
             $mform->addElement('header', 'general', get_string('general', 'form'));
 
-        // Adding the standard "name" field.
+        // Adding the standard 'name' field.
             $mform->addElement('text', 'name', get_string('setmodulename', 'courseboard'), array('size' => '64'));
             $mform->setType('name', PARAM_TEXT);
             $mform->addRule('name', null, 'required', null, 'client');
             $mform->addRule('name', get_string('maximumchars', '', 255), 'maxlength', 255, 'client');
 
-        // Adding the required "intro" field to hold the description of the instance.
+        // Adding the required 'intro' field to hold the description of the instance.
            $this->add_intro_editor(true, get_string('intro', 'courseboard'));
 
             // Add standard elements, common to all modules.

@@ -28,7 +28,7 @@ require_once(dirname(__FILE__).'/lib.php');
 $PAGE->requires->jquery();
 $PAGE->requires->jquery_plugin('ui');
 $PAGE->requires->jquery_plugin('ui-css');
-$PAGE->requires->js(new moodle_url($CFG->wwwroot . '/mod/courseboard/script.js'));
+$PAGE->requires->js(new moodle_url($CFG->wwwroot.'/mod/courseboard/script.js'));
 
 $id = optional_param('id', 0, PARAM_INT); // Course_module ID, or
 $a  = optional_param('a', 0, PARAM_INT);  // courseboard instance ID.
@@ -38,19 +38,19 @@ if ($id) {
         error('Course Module ID was incorrect');
     }
 
-    if (! $course = $DB->get_record('course', array('id' => $cm->course), "*", MUST_EXIST)) {
+    if (! $course = $DB->get_record('course', array('id' => $cm->course), '*', MUST_EXIST)) {
         error('Course is misconfigured');
     }
 
-    if (! $courseboard = $DB->get_record('courseboard', array('id' => $cm->instance), "*", MUST_EXIST)) {
+    if (! $courseboard = $DB->get_record('courseboard', array('id' => $cm->instance), '*', MUST_EXIST)) {
         error('Course module is incorrect');
     }
 
 } else if ($a) {
-    if (! $courseboard = $DB->get_record('courseboard', array('id' => $a), "*", MUST_EXIST)) {
+    if (! $courseboard = $DB->get_record('courseboard', array('id' => $a), '*', MUST_EXIST)) {
         error('Course module is incorrect');
     }
-    if (! $course = $DB->get_record('course', array('id' => $courseboard->course), "*", MUST_EXIST)) {
+    if (! $course = $DB->get_record('course', array('id' => $courseboard->course), '*', MUST_EXIST)) {
         error('Course is misconfigured');
     }
     if (! $cm = get_coursemodule_from_instance('courseboard', $courseboard->id, $course->id)) {
@@ -70,8 +70,8 @@ require_capability('mod/courseboard:view', $context);
 if (isguestuser()) {
     $PAGE->set_title($courseboard->name);
     echo $OUTPUT->header();
-    echo $OUTPUT->confirm('<p>' . get_string('noguests', 'courseboard') . '</p>' . get_string('liketologin'),
-        get_login_url(), $CFG->wwwroot . '/course/view.php?id=' . $course->id);
+    echo $OUTPUT->confirm('<p>'.get_string('noguests', 'courseboard').'</p>'.get_string('liketologin'),
+        get_login_url(), $CFG->wwwroot.'/course/view.php?id='.$course->id);
 
     echo $OUTPUT->footer();
     exit;
@@ -79,7 +79,7 @@ if (isguestuser()) {
 
 // Initialise site.
 $courseshortname = format_string($course->shortname, true, array('context' => context_course::instance($course->id)));
-$title = $courseshortname . ': ' . format_string($courseboard->name);
+$title = $courseshortname.': '.format_string($courseboard->name);
 
 $rend = $PAGE->get_renderer('mod_courseboard');
 $PAGE->set_url('/mod/courseboard/view.php', array('id' => $cm->id));
@@ -111,14 +111,14 @@ echo $rend->render_topdiv($topdiv);
 
 // Maindiv, show posts and its comments.
 
-echo "<br/>";
-echo "<hr>";
+echo '<br/>';
+echo '<hr>';
 
-echo $OUTPUT->box_start("", "maindiv");
+echo $OUTPUT->box_start('', 'maindiv');
 
 // Getting all posts of this module from the database.
 $entry = $DB->get_records('courseboard_posts', array(
-    'courseid' => $course->id,
+    'courseid'       => $course->id,
     'coursemoduleid' => $cm->id),
 'id DESC');
 
@@ -147,7 +147,7 @@ if (!empty($entry)) {
         }
 
         $didrate = false;
-        // Select the user who rated this post.
+        // Find wether the user rated this post.
         foreach ($allratingsresult as $rating) {
             if ($rating->postid == $post->id && $rating->userid == $USER->id) {
                 $didrate = true;
@@ -168,7 +168,7 @@ if (!empty($entry)) {
         echo $rend->render_post($data);
     }
 } else {
-    echo $OUTPUT->heading(get_string("noposts", "courseboard"), 2, "noposts");
+    echo $OUTPUT->heading(get_string('noposts', 'courseboard'), 2, 'noposts');
 }
 echo $OUTPUT->box_end();
 

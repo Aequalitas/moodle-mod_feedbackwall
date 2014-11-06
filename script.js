@@ -12,20 +12,20 @@ Calls a php script which creates the post.
 
 */
 function courseboard_postInsert(courseid, coursemoduleid, courseboardid, skey) {
-    if ($.trim($("#postinputfield").val()).length != 0) {
-        var post = $("#postinputfield").val().replace(/</g, "&lt;").replace(/>/g, "&gt;");
-        var name = $("#name").val();
+    if ($.trim($('#postinputfield').val()).length != 0) {
+        var post = $('#postinputfield').val().replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        var name = $('#name').val();
 
         $.ajax({
 
-            url:"courseboard_ajax.php",
-            type:"POST",
+            url:'courseboard_ajax.php',
+            type:'POST',
             timeout:5000,
-            data:{fnc : "postInsert" , q:post , s:name, k:courseid, b:courseboardid, r:coursemoduleid, sesskey:skey},
+            data:{fnc : 'postInsert' , q:post , s:name, k:courseid, b:courseboardid, r:coursemoduleid, sesskey:skey},
 
             beforeSend : function() {
-                $(".posts").hide();
-                $("#postsloading").show();
+                $('.posts').hide();
+                $('#postsloading').show();
 
             },
             success : function(data) {
@@ -34,11 +34,11 @@ function courseboard_postInsert(courseid, coursemoduleid, courseboardid, skey) {
             }
         });
 
-        $("#emptyFieldWarning").hide();
-        $("#postinputfield").val("");
+        $('#emptyFieldWarning').hide();
+        $('#postinputfield').val('');
 
     } else {
-        $("#emptyFieldWarning").show();
+        $('#emptyFieldWarning').show();
     }
 
 }
@@ -59,41 +59,41 @@ rating of the post.
 */
 
 function courseboard_rate (id, courseid, coursemoduleid, courseboardid, skey) {
-    var stars = $("#selectStar" + id).val();
+    var stars = $('#selectStar' + id).val();
 
-    if (stars != "noStar") {
+    if (stars != 'noStar') {
 
         switch (stars) {
-            case "oneStar":
+            case 'oneStar':
                 stars = 1;
             break;
 
-            case "twoStars":
+            case 'twoStars':
                 stars = 2;
             break;
 
-            case "threeStars":
+            case 'threeStars':
                 stars = 3;
             break;
 
-            case "fourStars":
+            case 'fourStars':
                 stars = 4;
             break;
 
-            case "fiveStars":
+            case 'fiveStars':
                 stars = 5;
             break;
         }
 
         $.ajax ({
-            url:"courseboard_ajax.php",
-            type:"POST",
+            url:'courseboard_ajax.php',
+            type:'POST',
             timeout:5000,
-            data:{q:id,fnc:"rate",k:courseid,r:coursemoduleid, b:courseboardid, h:stars,sesskey:skey},
+            data:{q:id,fnc:'rate',k:courseid,r:coursemoduleid, b:courseboardid, h:stars,sesskey:skey},
 
             beforeSend:function() {
-                $(".posts").hide();
-                $("#postsloading").show();
+                $('.posts').hide();
+                $('#postsloading').show();
 
             },
 
@@ -119,33 +119,33 @@ function courseboard_rate (id, courseid, coursemoduleid, courseboardid, skey) {
 
 */
 function courseboard_commInsert(id, courseid, coursemoduleid, courseboardid, skey) {
-    if ($.trim($("#commtxtarea" + id).val()).length != 0) {
-        var commtext = $("#commtxtarea" + id).val().replace(/</g, "&lt;").replace(/>/g, "&gt;");
-        var name = $("#name").val();
+    if ($.trim($('#commtxtarea' + id).val()).length != 0) {
+        var commtext = $('#commtxtarea' + id).val().replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        var name = $('#name').val();
 
         $.ajax ({
-            type:"POST",
-            url:"courseboard_ajax.php",
+            type:'POST',
+            url:'courseboard_ajax.php',
             timeout:5000,
-            data:{o:name,q:commtext,s:id,fnc:"commentInsert",k:courseid, r:coursemoduleid, b:courseboardid, sesskey:skey},
+            data:{o:name,q:commtext,s:id,fnc:'commentInsert',k:courseid, r:coursemoduleid, b:courseboardid, sesskey:skey},
 
             beforeSend: function(){
-                $("#commloading" + id).show();
-                $(".commShow" + id).hide();
+                $('#commloading' + id).show();
+                $('.commShow' + id).hide();
             },
             success: function(){
-                // This changes the text when the first comment was written, that is the case when the attribute "cn"
-                // is equal 0.Change is like : "Write a comment" to "Show comments (1)".
+                // This changes the text when the first comment was written, that is the case when the attribute 'cn'
+                // is equal 0.Change is like : 'Write a comment' to 'Show comments (1)'.
                 // Otherwise the amount of comments will be increased with 1.
-                if($("#commShow" + id).attr("cn") == 0) {
-                    $("#commShow" + id).val($("#commShow" + id).attr("data") + " (1)");
-                    $("#commShow" + id).attr("cn","1");
+                if($('#commShow' + id).attr('cn') == 0) {
+                    $('#commShow' + id).val($('#commShow' + id).attr('data') + ' (1)');
+                    $('#commShow' + id).attr('cn','1');
 
                 } else {
-                    var commbtnval = $("#commShow" + id).val();
-                    var amountcomments = parseInt($("#commShow" + id).attr("cn")) + 1;
-                    $("#commShow" + id).val($("#commShow" + id).attr("data") + " (" + amountcomments + ")");
-                    $("#commShow" + id).attr("cn",amountcomments);
+                    var commbtnval = $('#commShow' + id).val();
+                    var amountcomments = parseInt($('#commShow' + id).attr('cn')) + 1;
+                    $('#commShow' + id).val($('#commShow' + id).attr('data') + ' (' + amountcomments + ')');
+                    $('#commShow' + id).attr('cn',amountcomments);
 
                 }
 
@@ -154,10 +154,10 @@ function courseboard_commInsert(id, courseid, coursemoduleid, courseboardid, ske
 
         });
 
-        $("#emptyCommFieldwarning" + id).hide();
+        $('#emptyCommFieldwarning' + id).hide();
 
     } else {
-        $("#emptyCommFieldwarning" + id).show();
+        $('#emptyCommFieldwarning' + id).show();
     }
 
 }
@@ -169,10 +169,10 @@ makes the comment section of a post visible
 */
 
 function courseboard_commShow(id) {
-    $("#comments" + id).show();
-    $("#commfield" + id).show();
-    $("#commShow" + id).hide();
-    $("#commHide" + id).show();
+    $('#comments' + id).show();
+    $('#commfield' + id).show();
+    $('#commShow' + id).hide();
+    $('#commHide' + id).show();
 
 }
 
@@ -184,10 +184,10 @@ hides the comment section of a post.
 
 */
 function courseboard_commHide(id) {
-    $("#comments" + id).hide();
-    $("#commfield" + id).hide();
-    $("#commShow" + id).show();
-    $("#commHide" + id).hide();
+    $('#comments' + id).hide();
+    $('#commfield' + id).hide();
+    $('#commShow' + id).show();
+    $('#commHide' + id).hide();
 }
 
 /*
@@ -202,24 +202,24 @@ the commentssection of a post.
 */
 function courseboard_commsRefresh(id, courseid, coursemoduleid, courseboardid, skey) {
     $.ajax({
-            type:"POST",
-            url:"courseboard_ajax.php",
+            type:'POST',
+            url:'courseboard_ajax.php',
             timeout:5000,
-            data:{q:id,k:courseid,r:coursemoduleid,fnc:"commentsRefresh", b:courseboardid, sesskey:skey},
+            data:{q:id,k:courseid,r:coursemoduleid,fnc:'commentsRefresh', b:courseboardid, sesskey:skey},
 
             beforeSend: function(){
 
-                $("#commloading" + id).show();
-                $(".commanShow" + id).hide();
+                $('#commloading' + id).show();
+                $('.commanShow' + id).hide();
             },
 
             success: function(data){
-                $(".commanShow" + id).show(500,function(){
-                    $("#commfield" + id).html(data);
+                $('.commanShow' + id).show(500,function(){
+                    $('#commfield' + id).html(data);
                 });
 
-                $("#commloading" + id).hide();
-                $("#commfield" + id).show();
+                $('#commloading' + id).hide();
+                $('#commfield' + id).show();
             }
 
         });
@@ -237,24 +237,24 @@ posts and comments.
 */
 
 function courseboard_courseboardRefresh(courseid, coursemoduleid, courseboardid, skey) {
-    var sort = $("#sortmenu").val();
+    var sort = $('#sortmenu').val();
 
     $.ajax ({
-            url:"courseboard_ajax.php",
-            type:"POST",
+            url:'courseboard_ajax.php',
+            type:'POST',
             timeout:5000,
-            data:{q:sort,fnc:"courseboardRefresh",k:courseid, r:coursemoduleid, b:courseboardid, sesskey:skey},
+            data:{q:sort,fnc:'courseboardRefresh',k:courseid, r:coursemoduleid, b:courseboardid, sesskey:skey},
 
             beforeSend : function() {
-                $(".posts").hide();
-                $("#postsloading").show();
+                $('.posts').hide();
+                $('#postsloading').show();
 
             },
 
             success : function(data) {
 
-                $("#postsloading").hide();
-                $("#maindiv").html(data);
+                $('#postsloading').hide();
+                $('#maindiv').html(data);
 
             }
         });
