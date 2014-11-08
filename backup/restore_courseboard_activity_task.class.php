@@ -14,9 +14,9 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-/*
+/**
  * @package mod_courseboard
- * @subpackage backup
+ * @subpackage backup-moodle2
  * @copyright 2010 onwards Franz Weidmann {https://github.com/Aequalitas}
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */

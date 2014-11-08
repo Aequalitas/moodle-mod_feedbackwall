@@ -16,7 +16,7 @@
 
 /**
  * @package mod_courseboard
- * @subpackage backup
+ * @subpackage backup-moodle2
  * @copyright 2010 onwards Franz Weidmann {https://github.com/Aequalitas}
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */

@@ -36,6 +36,15 @@
  *             See lib/weblib.php Constants and the format_text()
  *             function for more info
  */
+
+
+/**
+ * @author  Franz Weidmann
+ * @package mod_courseboard
+ * @copyright ''
+ * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+
 if (!defined('MOODLE_INTERNAL')) {
     die('Direct access to this script is forbidden.'); // It must be included from a Moodle page.
 }

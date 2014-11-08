@@ -15,6 +15,12 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
+ * @author  Franz Weidmann
+ * @package mod_courseboard
+ * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+
+/**
  * Given an object containing all the necessary data,
  * (defined by the form in mod_form.php) this function
  * will create a new instance and return the id number
@@ -92,7 +98,7 @@ function courseboard_delete_instance($id) {
 
 /**
  * 
- * This function returns the latest post, comment and rating of an instance.
+ * This function returns the latest userdata => post, comment and rating of an instance.
  * 
  * @return sdtClass $result->info and $result->time
  */
@@ -104,7 +110,7 @@ function courseboard_user_outline($course, $user, $mod, $courseboard) {
 
     $result->info = '<h4>Latest post </h4>';
     if ($posts = $DB->get_records('courseboard_posts', array('courseid' => $course->id, 'coursemoduleid' => $mod->id, 'userid' => $user->id), 'id DESC', 'id, post, timemodified', 0, 1)) {
-        foreach ($posts as $post) {
+        foreach ($posts as $post) { // Foreach loop has only one round to go.
             $result->info .= format_string($post->post).'<p> Postid: '.$post->id.'</p>';
             $result->time .= $post->timemodified - 1000000000000 . '(Post), '; // Substraction because all the time entries in the database beginn with 1.
         }
@@ -141,7 +147,7 @@ function courseboard_user_outline($course, $user, $mod, $courseboard) {
  *
  * @return boolean
  * 
- * This function prints all posts, comments and ratings of an instance.
+ * This function prints all userdate => posts, comments and ratings of an instance.
  */
 function courseboard_user_complete($course, $user, $mod, $courseboard) {
 

@@ -19,14 +19,14 @@
  * This fragment is called by moodle_needs_upgrading() and /admin/index.php
  *
  * @author  Franz Weidmann 
- * @package mod/courseboard
+ * @package mod_courseboard
  * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->version  = 2014102400;
+$plugin->version  = 2014110700;
 $plugin->requires = 2014041100;
 $plugin->component = 'mod_courseboard';
-$plugin->release = "0.81";
+$plugin->release = "0.82";
 $plugin->maturity = MATURITY_BETA;

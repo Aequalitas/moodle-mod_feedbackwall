@@ -14,14 +14,14 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-    /**
-     * 
-     *
-     * @author  Franz Weidmann 
-     * @version 10/2014
-     * @package mod_courseboard
-     * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
-     */
+ /**
+  * 
+  *
+  * @author  Franz Weidmann 
+  * @version 10/2014
+  * @package mod_courseboard
+  * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+  */
 require_once(dirname(dirname(dirname(__FILE__))).'/config.php');
 require_once(dirname(__FILE__).'/lib.php');
 
