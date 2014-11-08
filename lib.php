@@ -91,91 +91,91 @@ function courseboard_delete_instance($id) {
 
 
 /**
- * Return a small object with summary information about what a
- * user has done with a given particular instance of this module
- * Used for user activity reports.
- * $return->time = the time they did it
- * $return->info = a short text description
- *
- * @return null
  * 
- * This function prints the latest post, comment and ratings of an instance.
+ * This function returns the latest post, comment and rating of an instance.
+ * 
+ * @return sdtClass $result->info and $result->time
  */
 function courseboard_user_outline($course, $user, $mod, $courseboard) {
     global $DB;
     $post = 0;
     $result = new stdClass();
+    $result->time = "Time: ";
 
-    if ($post = $DB->get_record('courseboard_posts', array('course' => $course->id, 'coursemoduleid' => $mod->id, 'userid' => $user->id))) {
-        $result->post->info = format_string($post->post).'\n Postid: '.$post->id;
-        $result->post->time = $post->timemodified - 10000000000000;
-        echo $result->info;
-
+    $result->info = '<h4>Latest post </h4>';
+    if ($posts = $DB->get_records('courseboard_posts', array('courseid' => $course->id, 'coursemoduleid' => $mod->id, 'userid' => $user->id), 'id DESC', 'id, post, timemodified', 0, 1)) {
+        foreach ($posts as $post) {
+            $result->info .= format_string($post->post).'<p> Postid: '.$post->id.'</p>';
+            $result->time .= $post->timemodified - 1000000000000 . '(Post), '; // Substraction because all the time entries in the database beginn with 1.
+        }
     } else {
-        print_string('notposted', 'courseboard');
+        $result->info = '<p>'.get_string('notposted', 'courseboard').'</p>';
     }
 
-    if ($comment = $DB->get_record('courseboard_comments', array('course' => $course->id, 'coursemoduleid' => $mod->id, 'userid' => $user->id))) {
-            $result->comment->info = format_string($comment->comment).'\n Postid: '.$comment->postid.'Commentid: '.$comment->id;
-            $result->comment->time = $comment->timemodified - 10000000000000;
-            echo $result->info;
-
+    $result->info .= '<h4>Latest comment </h4>';
+    if ($comments = $DB->get_records('courseboard_comments', array('courseid' => $course->id, 'coursemoduleid' => $mod->id, 'userid' => $user->id), 'id DESC', '*', 0, 1)) {
+        foreach ($comments as $comment) {    
+            $result->info .= format_string($comment->comment).'<p> Postid: '.$comment->postid.' Commentid: '.$comment->id.'</p>';
+            $result->time .= $comment->timemodified - 1000000000000 . '(Comment), ';
+        }
     } else {
-        print_string('notcommented', 'courseboard');
+        $result->info .= '<p>'.get_string('notcommented', 'courseboard').'</p>';
     }
 
-    if ($rate = $DB->get_record('courseboard_ratings', array('course' => $course->id, 'coursemoduleid' => $mod->id, 'userid' => $user->id))) {
-            $result->rating->info = 'Rating: '.$rate->didrate.' Postid: '.$rate->postid.'Rateid: '.$rate->id;
-            $result->rating->time = $rate->timemodified;
-            echo $result->info;
-
+    $result->info .= '<h4> Latest rating </h4>';
+    if ($ratings = $DB->get_records('courseboard_ratings', array('courseid' => $course->id, 'coursemoduleid' => $mod->id, 'userid' => $user->id), 'id DESC', '*', 0, 1)) {
+        foreach ($ratings as $rate) {    
+            $result->info .= 'Rating: '.$rate->didrate.'<p> Postid: '.$rate->postid.' Rateid: '.$rate->id.'</p>';
+            $result->time .= $rate->timemodified . '(Rating)';
+        }
     } else {
-        print_string('notrated', 'courseboard');
+        $result->info .= '<p>'.get_string('notrated', 'courseboard').'</p>';
     }
 
-return $result;
+    return $result;
 
 }
 
 
 /**
- * Print a detailed representation of what a user has done with
- * a given particular instance of this module, for user activity reports.
  *
  * @return boolean
  * 
- * This function prints all posts, comments and ratings.
+ * This function prints all posts, comments and ratings of an instance.
  */
 function courseboard_user_complete($course, $user, $mod, $courseboard) {
 
     global $DB;
 
+    echo '<h4>Latest posts </h4>';
     if ($posts = $DB->get_records('courseboard_posts', array('userid' => $user->id))) {
         foreach ($posts as $post) {
-            echo format_string($post->post).'\n Postid: '.$post->id.' Time: '.$post->timemodified - 10000000000000;
+            echo format_string($post->post).'<p> Postid: '.$post->id.' Time: '.($post->timemodified - 1000000000000) . '</p>';
 
         }
     } else {
-        print_string('notposted', 'courseboard');
+        echo '<p>'.get_string('notposted', 'courseboard').'</p>';
     }
 
+   echo '<h4>Latest comment </h4>';
     if ($comments = $DB->get_records('courseboard_comments', array('userid' => $user->id))) {
         foreach ($comments as $comment) {
-            echo format_string($comment->comment).'\n Postid: '.$comment->postid.' Commentid: '.$comment->commentid.' Time: '.$comment->timemodified - 10000000000000;
+            echo format_string($comment->comment).'<p> Postid: '.$comment->postid.' Commentid: '.$comment->id.' Time: '.($comment->timemodified - 1000000000000) . '</p>';
         }
     } else {
-        print_string('notcommented', 'courseboard');
+        echo '<p>'.get_string('notcommented', 'courseboard').'</p>';
     }
 
-    if ($ratings = $DB->get_records('courseboard_comments', array('userid' => $user->id))) {
+    echo '<h4> Latest rating </h4>';
+    if ($ratings = $DB->get_records('courseboard_ratings', array('userid' => $user->id))) {
         foreach ($ratings as $rating) {
-            echo '\n Rating: '.$rating->didrate.' Postid: '.$rating->postid.' rateid: '.$rating->id.'Time: '.$rating->timemodified;
+            echo ' Rating: '.$rating->didrate.'<p> Postid: '.$rating->postid.' rateid: '.$rating->id.'Time: '.$rating->timemodified . '</p>';
         }
     } else {
-        print_string('notrated', 'courseboard');
+        echo '<p>'.get_string('notrated', 'courseboard').'</p>';
     }
-   
-return true;
+
+    return true;
 }
 
 
@@ -256,9 +256,22 @@ function courseboard_uninstall() {
     return true;
 }
 
+/**
+ * @param string $feature FEATURE_xx constant for requested feature
+ * @return mixed True if module supports feature, null if doesn't know
+ */
+function courseboard_supports($feature) {
+    switch($feature) {
 
+        case FEATURE_MOD_INTRO:
+            return true;
+        case FEATURE_BACKUP_MOODLE2:
+            return true;
+        case FEATURE_SHOW_DESCRIPTION:
+            return true;
 
-// Any other courseboard functions go here.  Each of them must have a name that
-// starts with courseboard_
-// Remember (see note in first lines) that, if this section grows, it's HIGHLY
-// recommended to move all funcions below to a new 'localib.php' file.
+        default:
+            return null;
+    }
+}
+

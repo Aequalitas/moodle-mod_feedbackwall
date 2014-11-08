@@ -106,23 +106,23 @@ if ($fnc = required_param('fnc', PARAM_ALPHA)) {
 
             switch ($sort) {
                 case 'old' :
-                        $sort = '';
-                break;
+                    $sort = '';
+                    break;
                 case 'new' :
-                        $sort = 'id DESC';
-                break;
+                    $sort = 'id DESC';
+                    break;
                 case 'averagedescending' :
-                        $sort = 'ratingaverage DESC';
-                break;
+                    $sort = 'ratingaverage DESC';
+                    break;
                 case 'averageascending' :
-                        $sort = 'ratingaverage ASC';
-                break;
+                    $sort = 'ratingaverage ASC';
+                    break;
                 case 'amountdescending' :
-                        $sort = 'rating DESC';
-                break;
+                    $sort = 'rating DESC';
+                    break;
                 case 'amountascending' :
-                        $sort = 'rating ASC';
-                break;
+                    $sort = 'rating ASC';
+                    break;
             }
 
             $entry = $DB->get_records('courseboard_posts', array(
@@ -211,7 +211,7 @@ if ($fnc = required_param('fnc', PARAM_ALPHA)) {
             if (strlen($date['minutes']) == 1) {
                 $date['minutes'] = 0 . $date['minutes'];
             }
-            
+
             $timecreated = $date['mday'].$date['mon'].$date['year'].$date['hours'].$date['minutes'];
 
             $rateentry = new stdClass();

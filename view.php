@@ -129,6 +129,9 @@ foreach ($entry as $post) {
     array_push($allpostids, $post->id);
 }
 
+$result = courseboard_user_outline($course, $USER, $cm, $courseboard);
+echo $result->info;
+echo $result->time;
 // Fetch all the comments which are in this module.
 $allcommentsresult = $DB->get_records_list('courseboard_comments', 'postid', $allpostids);
 // Fetch all the rating entries for posts in this module.
@@ -147,7 +150,7 @@ if (!empty($entry)) {
         }
 
         $didrate = false;
-        // Find wether the user rated this post.
+        // Checks wether the user rated this post or not.
         foreach ($allratingsresult as $rating) {
             if ($rating->postid == $post->id && $rating->userid == $USER->id) {
                 $didrate = true;
@@ -158,7 +161,7 @@ if (!empty($entry)) {
         $data = new stdclass();
         $data->post = $post;
         $data->comments = $allcomments;
-        $data->didrate= $didrate;
+        $data->didrate = $didrate;
         $data->courseid = $course->id;
         $data->coursemoduleid = $cm->id;
         $data->courseboardid = $cm->instance;

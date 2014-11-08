@@ -48,20 +48,20 @@ class mod_courseboard_renderer extends plugin_renderer_base {
         $sesskey = '"'.$data->sesskey.'"'; // Make the sesskey to a string so javascript can use it.
 
         $inputdesc = html_writer::tag('label',
-        get_string('nameinputdescription', 'courseboard'),
-        array('class' => 'nameinputdescription')
+                get_string('nameinputdescription', 'courseboard'),
+                array('class' => 'nameinputdescription')
         );
 
         $textarea = html_writer::tag('textarea', '', array(
-                'id' => 'postinputfield',
-                'rows' => '4',
-                'cols' => '90',
+                'id'          => 'postinputfield',
+                'rows'        => '4',
+                'cols'        => '90',
                 'placeholder' => get_string('writeapost', 'courseboard'))
         );
 
         $inputsend = html_writer::tag('input', '', array(
-           'type' => 'button',
-           'id' => 'postbutton',
+           'type'    => 'button',
+           'id'      => 'postbutton',
            'onClick' => 'courseboard_postInsert('.
                     $data->courseid.','.
                     $data->coursemoduleid.','.
@@ -71,7 +71,7 @@ class mod_courseboard_renderer extends plugin_renderer_base {
         ));
 
         $warnlabel = html_writer::tag('label', get_string('emptypostinput', 'courseboard'), array(
-            'id' => 'emptyFieldWarning',
+            'id'    => 'emptyFieldWarning',
             'class' => 'emptyFieldWarning'
         ));
 
@@ -97,14 +97,14 @@ class mod_courseboard_renderer extends plugin_renderer_base {
 
             // Selectmenu to sort.
             $topdiv .= html_writer::select(array(
-            'new' => get_string('newsortdescription', 'courseboard'),
-            'old' => get_string('oldsortdescription', 'courseboard'),
+            'new'               => get_string('newsortdescription', 'courseboard'),
+            'old'               => get_string('oldsortdescription', 'courseboard'),
             'averagedescending' => get_string('ratingdescending' , 'courseboard'),
-            'averageascending' => get_string('ratingascending' , 'courseboard'),
-            'amountdescending' => get_string('amountdescending' , 'courseboard'),
-            'amountascending' => get_string('amountascending' , 'courseboard'),
+            'averageascending'  => get_string('ratingascending' , 'courseboard'),
+            'amountdescending'  => get_string('amountdescending' , 'courseboard'),
+            'amountascending'   => get_string('amountascending' , 'courseboard'),
         ), 'sort', 0, '', array(
-            'id' => 'sortmenu',
+            'id'       => 'sortmenu',
             'onchange' => 'courseboard_courseboardRefresh('.
                         $data->courseid.','.
                         $data->coursemoduleid.','.
@@ -137,7 +137,7 @@ class mod_courseboard_renderer extends plugin_renderer_base {
 
         $date = $data->post->timecreated;
 
-        // Create datestring in this format -> day.month.year hours:mins
+        // Create datestring in this format -> day.month.year hours:mins.
         $datestring = $date[1].$date[2].'.'.$date[3].$date[4].'.'.
         $date[5].$date[6].$date[7].$date[8].'&nbsp'.$date[9].
         $date[10].':'.$date[11].$date[12];
@@ -163,16 +163,16 @@ class mod_courseboard_renderer extends plugin_renderer_base {
         $areaid = 'commtxtarea'.$pid."'";
 
         $comments .= html_writer::tag('textarea', '', array(
-                'id' => 'commtxtarea'.$pid,
-                'cols' => '90',
-                'rows' => '3',
+                'id'          => 'commtxtarea'.$pid,
+                'cols'        => '90',
+                'rows'        => '3',
                 'placeholder' => get_string('writeaComment', 'courseboard'))
         );
 
         $sesskey = '"'. $data->sesskey.'"';
         // Button to send a comment.
         $comments .= html_writer::tag('input', '', array(
-                'type' => 'button',
+                'type'    => 'button',
                 'onClick' => 'courseboard_commInsert('.
                 $pid.','.
                 s($data->courseid).','.
@@ -180,12 +180,12 @@ class mod_courseboard_renderer extends plugin_renderer_base {
                 $data->courseboardid.','.
                 $sesskey.');',
                 'class' => 'commentarbtn',
-                'id' => 'commbtn'.$pid,
+                'id'    => 'commbtn'.$pid,
                 'value' => get_string('send', 'courseboard'))
         );
 
         $comments .= html_writer::tag('label', get_string('emptyCommentinput', 'courseboard'), array(
-            'id' => 'emptyCommFieldwarning'.$pid,
+            'id'    => 'emptyCommFieldwarning'.$pid,
             'class' => 'emptyFieldWarning'
         ));
 
@@ -195,10 +195,10 @@ class mod_courseboard_renderer extends plugin_renderer_base {
 
             $comments .= html_writer::tag('input', '', array(
                     'onClick' => 'courseboard_commHide('.$pid.');',
-                    'class' => 'commHide',
-                    'type' => 'button',
-                    'id' => 'commHide'.$pid,
-                    'value' => get_string('hideComments', 'courseboard'))
+                    'class'   => 'commHide',
+                    'type'    => 'button',
+                    'id'      => 'commHide'.$pid,
+                    'value'   => get_string('hideComments', 'courseboard'))
             );
         }
         $comments .= $this->box_end();
@@ -236,7 +236,7 @@ class mod_courseboard_renderer extends plugin_renderer_base {
 
         $date = $data->post->timecreated;
 
-         // Create datestring in this format -> day.month.year hours:mins
+         // Create datestring in this format -> day.month.year hours:mins.
         $datestring = $date[1].$date[2].'.'.$date[3].$date[4].'.'.
         $date[5].$date[6].$date[7].$date[8].'&nbsp'.$date[9].
         $date[10].':'.$date[11].$date[12];

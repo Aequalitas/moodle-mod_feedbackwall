@@ -14,7 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-/**
+/*
  * @package mod_courseboard
  * @subpackage backup
  * @copyright 2010 onwards Franz Weidmann {https://github.com/Aequalitas}
@@ -23,7 +23,7 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-/**
+/*
  * courseboard restore task that provides all the settings and steps to perform one
  * complete restore of the activity
  */
