@@ -158,11 +158,11 @@ if ($fnc = required_param('fnc', PARAM_ALPHA)) {
                     }
 
 
-                    $ratedata = '';
-                    // Select the ratedata for this post.
+                    $didrate = false;
+                    // Checks wether the user rated this post or not.
                     foreach ($allratingsresult as $rating) {
-                        if ($rating->postid == $post->id) {
-                            $ratedata = $rating;
+                        if ($rating->postid == $post->id && $rating->userid == $USER->id) {
+                            $didrate = true;
                             break;
                         }
                     }
@@ -173,7 +173,7 @@ if ($fnc = required_param('fnc', PARAM_ALPHA)) {
                     $data->courseid = $courseid;
                     $data->coursemoduleid = $coursemoduleid;
                     $data->courseboardid = $courseboardid;
-                    $data->ratedata = $ratedata;
+                    $data->didrate = $didrate;
                     $data->userid = $USER->id;
                     $data->sesskey = sesskey();
 

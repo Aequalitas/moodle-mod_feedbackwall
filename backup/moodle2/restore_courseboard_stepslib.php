@@ -37,8 +37,8 @@ class restore_courseboard_activity_structure_step extends restore_activity_struc
 
         if ($userinfo) {
             $paths[] = new restore_path_element('courseboard_post', '/activity/courseboard/posts/post');
-            $paths[] = new restore_path_element('courseboard_comment', '/activity/courseboard/comments/comment');
-            $paths[] = new restore_path_element('courseboard_ratings', '/activity/courseboard/ratings/rating');
+            $paths[] = new restore_path_element('courseboard_comment', '/activity/courseboard/posts/post/comments/comment');
+            $paths[] = new restore_path_element('courseboard_rating', '/activity/courseboard/posts/post/ratings/rating');
         }
 
         // Return the paths wrapped into standard activity structure.
@@ -52,8 +52,6 @@ class restore_courseboard_activity_structure_step extends restore_activity_struc
         $oldid = $data->id;
         $data->course = $this->get_courseid();
 
-        $data->timeopen = $this->apply_date_offset($data->timeopen);
-        $data->timeclose = $this->apply_date_offset($data->timeclose);
         $data->timemodified = $this->apply_date_offset($data->timemodified);
 
         // Insert the courseboard record.
@@ -67,38 +65,47 @@ class restore_courseboard_activity_structure_step extends restore_activity_struc
 
         $data = (object)$data;
         $oldid = $data->id;
+        $oldcmid = $data->coursemoduleid;
 
         $data->courseid = $this->get_courseid();
-        $data->coursemoduleid = $this->get_coursemoduleid();
+        $data->coursemoduleid = $this->get_mappingid('course_module', $oldcmid);
+
         $data->timemodified = $this->apply_date_offset($data->timemodified);
 
         $newitemid = $DB->insert_record('courseboard_posts', $data);
-        $this->set_mapping('courseboard_post', $oldid, $newitemid);
+
+        $this->set_mapping('courseboard_post', $oldid, $newitemid, true);
     }
 
-    protected function process_courseboard_comments($data) {
+    protected function process_courseboard_comment($data) {
         global $DB;
 
         $data = (object)$data;
+        $oldcmid = $data->coursemoduleid;
 
-        $data->postid = $this->get_new_parentid('post');
-        $data->userid = $this->get_mappingid('user', $data->userid);
+        $data->courseid = $this->get_courseid();
+        $data->coursemoduleid = $this->get_mappingid('course_module', $oldcmid);
+
+        $data->postid = $this->get_new_parentid('courseboard_post');
         $data->timemodified = $this->apply_date_offset($data->timemodified);
 
-        $newitemid = $DB->insert_record('courseboard_comments', $data);
+        $DB->insert_record('courseboard_comments', $data);
 
     }
 
-    protected function process_courseboard_ratings($data) {
+    protected function process_courseboard_rating($data) {
         global $DB;
 
         $data = (object)$data;
+        $oldcmid = $data->coursemoduleid;
 
-        $data->postid = $data->postid = $this->get_new_parentid('post');
-        $data->userid = $this->get_mappingid('user', $data->userid);
+        $data->courseid = $this->get_courseid();
+        $data->coursemoduleid = $this->get_mappingid('course_module', $oldcmid);
+
+        $data->postid = $this->get_new_parentid('courseboard_post');
         $data->timemodified = $this->apply_date_offset($data->timemodified);
 
-        $newitemid = $DB->insert_record('courseboard_ratings', $data);
+        $DB->insert_record('courseboard_ratings', $data);
 
     }
 

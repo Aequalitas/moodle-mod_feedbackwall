@@ -57,11 +57,11 @@ class backup_courseboard_activity_task extends backup_activity_task {
 
         // Link to the list of courseboards.
         $search = '/('.$base.'\/mod\/courseboard\/index.php\?id\=)([0-9]+)/';
-        $content = preg_replace($search, '$@courseboardINDEX*$2@$', $content);
+        $content = preg_replace($search, '$@COURSEBOARDINDEX*$2@$', $content);
 
         // Link to courseboard view by moduleid.
         $search = '/('.$base.'\/mod\/courseboard\/view.php\?id\=)([0-9]+)/';
-        $content = preg_replace($search, '$@courseboardVIEWBYID*$2@$', $content);
+        $content = preg_replace($search, '$@COURSEBOARDVIEWBYID*$2@$', $content);
 
         return $content;
     }

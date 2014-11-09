@@ -80,7 +80,7 @@ function courseboard_delete_instance($id) {
 
     global $DB;
 
-    if (! $courseboard = $DB->get_record('courseboard', array('id' => $id), $id)) {
+    if (! $courseboard = $DB->get_record('courseboard', array('id' => $id), 'id, course')) {
         return false;
     }
 
@@ -88,7 +88,19 @@ function courseboard_delete_instance($id) {
 
     // Delete any dependent records here.
 
-    if (! $DB->delete_records('courseboard', array('id' => $id), $courseboard->id)) {
+    if (! $DB->delete_records('courseboard_posts', array('courseid' => $courseboard->course))) {
+        $result = false;
+    }
+
+    if (! $DB->delete_records('courseboard_comments', array('courseid' => $courseboard->course))) {
+        $result = false;
+    }
+
+    if (! $DB->delete_records('courseboard_ratings', array('courseid' => $courseboard->course))) {
+        $result = false;
+    }
+
+    if (! $DB->delete_records('courseboard', array('id' => $id))) {
         $result = false;
     }
 
@@ -222,22 +234,6 @@ function courseboard_cron () {
  */
 function courseboard_get_participants($courseboardid) {
     return false;
-}
-
-/**
- * Checks if scale is being used by any instance of courseboard.
- * This function was added in 1.9
- *
- * This is used to find out if scale used anywhere
- * @param $scaleid int
- * @return boolean True if the scale is used by any courseboard
- */
-function courseboard_scale_used_anywhere($scaleid) {
-    if ($scaleid and record_exists('courseboard', 'grade', -$scaleid)) {
-        return true;
-    } else {
-        return false;
-    }
 }
 
 

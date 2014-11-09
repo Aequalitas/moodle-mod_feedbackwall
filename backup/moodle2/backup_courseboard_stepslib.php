@@ -36,31 +36,35 @@ class backup_courseboard_activity_structure_step extends backup_activity_structu
         // Define each element separated.
 
         $courseboard = new backup_nested_element('courseboard', array('id'), array(
-            'course', 'name', 'intro', 'introformat', 'timecreated'));
+            'course', 'name', 'intro', 'introformat', 'timecreated',
+            'timemodified'));
 
         $posts = new backup_nested_element('posts');
         $post = new backup_nested_element('post', array('id'), array(
             'courseid', 'coursemoduleid', 'post', 'name', 'userid',
-            'timecreated', 'timemodified'));
+            'rating', 'ratingaverage', 'timecreated', 'timemodified'));
 
         $comments = new backup_nested_element('comments');
         $comment = new backup_nested_element('comment', array('id'), array(
-            'courseid', 'coursemoduleid', 'postid', 'name', 'userid',
-            'comment', 'timecreated'));
+            'postid', 'courseid', 'coursemoduleid','comment', 'name',
+            'userid', 'timecreated', 'timemodified'));
 
         $ratings = new backup_nested_element('ratings');
         $rating = new backup_nested_element('rating', array('id'), array(
-            'postid', 'courseid', 'coursemoduleid', 'userid'));
+            'postid', 'courseid', 'coursemoduleid', 'userid', 'didrate',
+            'timecreated', 'timemodified'));
 
         // Build the tree.
 
         $courseboard->add_child($posts);
-                      $posts->add_child($post);
+        $posts->add_child($post);
 
-                      $posts->add_child($comments);
-                          $comments->add_child($comment);
-                      $posts->add_child($ratings);
-                          $ratings->add_child($rating);
+        $post->add_child($comments);
+        $comments->add_child($comment);
+
+        $post->add_child($ratings);
+        $ratings->add_child($rating);
+
         // Define sources.
 
         $courseboard->set_source_table('courseboard', array('id' => backup::VAR_ACTIVITYID));
