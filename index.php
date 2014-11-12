@@ -25,7 +25,6 @@
 
 require_once(dirname(dirname(dirname(__FILE__))).'/config.php');
 require_once(dirname(__FILE__).'/lib.php');
-require_once(dirname(__FILE__).'/locallib.php');
 
 $id = required_param('id', PARAM_INT);   // Course.
 
@@ -82,10 +81,10 @@ if ($course->format == 'weeks') {
 foreach ($coursemodules as $courseboard) {
     if (!$courseboard->visible) {
         // Show dimmed if the mod is hidden.
-        $link = '<a class = 'dimmed' href = 'view.php ? id = '.$courseboard->coursemodule.''>'.format_string($courseboard->name).'</a>';
+        $link = "<a class = 'dimmed' href = 'view.php ? id = ".$courseboard->coursemodule."'>".format_string($courseboard->name)."</a>";
     } else {
         // Show normal if the mod is visible.
-        $link = '<a href ='view.php ? id = '.$courseboard->coursemodule.''>'.format_string($courseboard->name).'</a>';
+        $link = "<a href ='view.php ? id = ".$courseboard->coursemodule."'>".format_string($courseboard->name)."</a>";
     }
 
     if ($course->format == 'weeks' or $course->format == 'topics') {

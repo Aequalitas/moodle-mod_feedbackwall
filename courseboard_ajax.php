@@ -65,24 +65,7 @@ if ($fnc = required_param('fnc', PARAM_ALPHA)) {
             $post = required_param('q', PARAM_TEXT);
             $name = required_param('s', PARAM_ALPHAEXT);
 
-            $date = usergetdate(time());
-
-            if (strlen($date['mday']) == 1) {
-                $date['mday'] = 0 . $date['mday'];
-            }
-            if (strlen($date['mon']) == 1) {
-                $date['mon'] = 0 . $date['mon'];
-            }
-            if (strlen($date['hours']) == 1) {
-                $date['hours'] = 0 . $date['hours'];
-            }
-            if (strlen($date['minutes']) == 1) {
-                $date['minutes'] = 0 . $date['minutes'];
-            }
-            // 1 is there to prevent the Database to automaticly delete the 0(when there is one) at the beginning.
-            // in the output it begins at [1].
-            $timecreated = 1 . $date['mday'].$date['mon'].$date['year'].$date['hours'].$date['minutes'];
-
+            $timecreated = time();
 
             $entry = new stdClass();
             $entry->courseid = $courseid;
@@ -197,22 +180,7 @@ if ($fnc = required_param('fnc', PARAM_ALPHA)) {
             $postid = required_param('q', PARAM_INT);
             $stars = required_param('h', PARAM_INT);
 
-            $date = usergetdate(time());
-
-            if (strlen($date['mday']) == 1) {
-                $date['mday'] = 0 . $date['mday'];
-            }
-            if (strlen($date['mon']) == 1) {
-                $date['mon'] = 0 . $date['mon'];
-            }
-            if (strlen($date['hours']) == 1) {
-                $date['hours'] = 0 . $date['hours'];
-            }
-            if (strlen($date['minutes']) == 1) {
-                $date['minutes'] = 0 . $date['minutes'];
-            }
-
-            $timecreated = $date['mday'].$date['mon'].$date['year'].$date['hours'].$date['minutes'];
+            $timecreated = time();
 
             $rateentry = new stdClass();
             $rateentry->courseid = $courseid;
@@ -256,23 +224,7 @@ if ($fnc = required_param('fnc', PARAM_ALPHA)) {
             $postid = required_param('s', PARAM_INT);
             $name = required_param('o', PARAM_ALPHAEXT);
 
-
-            $date = usergetdate(time());
-
-            if (strlen($date['mday']) == 1) {
-                $date['mday'] = 0 . $date['mday'];
-            }
-            if (strlen($date['mon']) == 1) {
-                $date['mon'] = 0 . $date['mon'];
-            }
-            if (strlen($date['hours']) == 1) {
-                $date['hours'] = 0 . $date['hours'];
-            }
-            if (strlen($date['minutes']) == 1) {
-                $date['minutes'] = 0 . $date['minutes'];
-            }
-            // 1 is there to prevent the Database to automaticly delete the 0(when there is one) at the beginning.
-            $timecreated = 1 . $date['mday'].$date['mon'].$date['year'].$date['hours'].$date['minutes'];
+            $timecreated = time();
 
             $entry = new stdClass();
             $entry->courseid = $courseid;

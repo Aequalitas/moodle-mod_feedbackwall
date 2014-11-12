@@ -136,12 +136,6 @@ class mod_courseboard_renderer extends plugin_renderer_base {
     public function render_comment(stdclass $data) {
 
         $date = $data->post->timecreated;
-
-        // Create datestring in this format -> day.month.year hours:mins.
-        $datestring = $date[1].$date[2].'.'.$date[3].$date[4].'.'.
-        $date[5].$date[6].$date[7].$date[8].'&nbsp'.$date[9].
-        $date[10].':'.$date[11].$date[12];
-
         $pid = $data->post->id;
         $comments = '';
 
@@ -150,7 +144,7 @@ class mod_courseboard_renderer extends plugin_renderer_base {
                 $comments .= $this->box_start('', s($comment->id).'comment'.$pid );
 
                 $comments .= format_text($comment->comment, $format = FORMAT_MOODLE).'</br>';
-                $comments .= html_writer::tag('p', s($comment->name).' - '.$datestring);
+                $comments .= html_writer::tag('p', s($comment->name).' - '.userdate($date), array('class'=>'authoranddate'));
                 $comments .= $this->box_end().'<hr>';
             }
 
@@ -235,13 +229,7 @@ class mod_courseboard_renderer extends plugin_renderer_base {
                 '', 'post').'</br>';
 
         $date = $data->post->timecreated;
-
-         // Create datestring in this format -> day.month.year hours:mins.
-        $datestring = $date[1].$date[2].'.'.$date[3].$date[4].'.'.
-        $date[5].$date[6].$date[7].$date[8].'&nbsp'.$date[9].
-        $date[10].':'.$date[11].$date[12];
-
-        $post .= html_writer::tag('p', s($data->post->name).' - '.$datestring);
+        $post .= html_writer::tag('p', s($data->post->name).' - '.userdate($date), array('class'=>'authoranddate'));
 
         $startable = new html_table();
 

@@ -124,7 +124,7 @@ function courseboard_user_outline($course, $user, $mod, $courseboard) {
     if ($posts = $DB->get_records('courseboard_posts', array('courseid' => $course->id, 'coursemoduleid' => $mod->id, 'userid' => $user->id), 'id DESC', 'id, post, timemodified', 0, 1)) {
         foreach ($posts as $post) { // Foreach loop has only one round to go.
             $result->info .= format_string($post->post).'<p> Postid: '.$post->id.'</p>';
-            $result->time .= $post->timemodified - 1000000000000 . '(Post), '; // Substraction because all the time entries in the database beginn with 1.
+            $result->time .= usertime($post->timemodified). '(Post), '; 
         }
     } else {
         $result->info = '<p>'.get_string('notposted', 'courseboard').'</p>';
@@ -134,7 +134,7 @@ function courseboard_user_outline($course, $user, $mod, $courseboard) {
     if ($comments = $DB->get_records('courseboard_comments', array('courseid' => $course->id, 'coursemoduleid' => $mod->id, 'userid' => $user->id), 'id DESC', '*', 0, 1)) {
         foreach ($comments as $comment) {    
             $result->info .= format_string($comment->comment).'<p> Postid: '.$comment->postid.' Commentid: '.$comment->id.'</p>';
-            $result->time .= $comment->timemodified - 1000000000000 . '(Comment), ';
+            $result->time .= usertime($comment->timemodified).'(Comment), ';
         }
     } else {
         $result->info .= '<p>'.get_string('notcommented', 'courseboard').'</p>';
@@ -144,7 +144,7 @@ function courseboard_user_outline($course, $user, $mod, $courseboard) {
     if ($ratings = $DB->get_records('courseboard_ratings', array('courseid' => $course->id, 'coursemoduleid' => $mod->id, 'userid' => $user->id), 'id DESC', '*', 0, 1)) {
         foreach ($ratings as $rate) {    
             $result->info .= 'Rating: '.$rate->didrate.'<p> Postid: '.$rate->postid.' Rateid: '.$rate->id.'</p>';
-            $result->time .= $rate->timemodified . '(Rating)';
+            $result->time .= usertime($rate->timemodified).'(Rating)';
         }
     } else {
         $result->info .= '<p>'.get_string('notrated', 'courseboard').'</p>';
@@ -168,7 +168,7 @@ function courseboard_user_complete($course, $user, $mod, $courseboard) {
     echo '<h4>Latest posts </h4>';
     if ($posts = $DB->get_records('courseboard_posts', array('userid' => $user->id))) {
         foreach ($posts as $post) {
-            echo format_string($post->post).'<p> Postid: '.$post->id.' Time: '.($post->timemodified - 1000000000000) . '</p>';
+            echo format_string($post->post).'<p> Postid: '.$post->id.' Time: '.usertime($post->timemodified).'</p>';
 
         }
     } else {
@@ -178,7 +178,7 @@ function courseboard_user_complete($course, $user, $mod, $courseboard) {
    echo '<h4>Latest comment </h4>';
     if ($comments = $DB->get_records('courseboard_comments', array('userid' => $user->id))) {
         foreach ($comments as $comment) {
-            echo format_string($comment->comment).'<p> Postid: '.$comment->postid.' Commentid: '.$comment->id.' Time: '.($comment->timemodified - 1000000000000) . '</p>';
+            echo format_string($comment->comment).'<p> Postid: '.$comment->postid.' Commentid: '.$comment->id.' Time: '.usertime($comment->timemodified).'</p>';
         }
     } else {
         echo '<p>'.get_string('notcommented', 'courseboard').'</p>';
@@ -187,7 +187,7 @@ function courseboard_user_complete($course, $user, $mod, $courseboard) {
     echo '<h4> Latest rating </h4>';
     if ($ratings = $DB->get_records('courseboard_ratings', array('userid' => $user->id))) {
         foreach ($ratings as $rating) {
-            echo ' Rating: '.$rating->didrate.'<p> Postid: '.$rating->postid.' rateid: '.$rating->id.'Time: '.$rating->timemodified . '</p>';
+            echo ' Rating: '.$rating->didrate.'<p> Postid: '.$rating->postid.' rateid: '.$rating->id.'Time: '.usertime($rating->timemodified).'</p>';
         }
     } else {
         echo '<p>'.get_string('notrated', 'courseboard').'</p>';
