@@ -114,7 +114,7 @@ echo $rend->render_topdiv($topdiv);
 echo '<br/>';
 echo '<hr>';
 
-echo $OUTPUT->box_start('', 'maindiv');
+echo $OUTPUT->box_start('courseboard_maindiv', 'maindiv');
 
 // Getting all posts of this module from the database.
 $entry = $DB->get_records('courseboard_posts', array(
@@ -168,7 +168,7 @@ if (!empty($entry)) {
         echo $rend->render_post($data);
     }
 } else {
-    echo $OUTPUT->heading(get_string('noposts', 'courseboard'), 2, 'noposts');
+    echo $OUTPUT->heading(get_string('noposts', 'courseboard'), 2, 'courseboard_noposts');
 }
 echo $OUTPUT->box_end();
 

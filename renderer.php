@@ -49,11 +49,12 @@ class mod_courseboard_renderer extends plugin_renderer_base {
 
         $inputdesc = html_writer::tag('label',
                 get_string('nameinputdescription', 'courseboard'),
-                array('class' => 'nameinputdescription')
+                array('class' => 'courseboard_nameinputdescription')
         );
 
         $textarea = html_writer::tag('textarea', '', array(
                 'id'          => 'postinputfield',
+                'class'       => 'courseboard_postinputfield',
                 'rows'        => '4',
                 'cols'        => '90',
                 'placeholder' => get_string('writeapost', 'courseboard'))
@@ -72,7 +73,7 @@ class mod_courseboard_renderer extends plugin_renderer_base {
 
         $warnlabel = html_writer::tag('label', get_string('emptypostinput', 'courseboard'), array(
             'id'    => 'emptyFieldWarning',
-            'class' => 'emptyFieldWarning'
+            'class' => 'courseboard_emptyFieldWarning'
         ));
 
         $table = new html_table();
@@ -144,7 +145,7 @@ class mod_courseboard_renderer extends plugin_renderer_base {
                 $comments .= $this->box_start('', s($comment->id).'comment'.$pid );
 
                 $comments .= format_text($comment->comment, $format = FORMAT_MOODLE).'</br>';
-                $comments .= html_writer::tag('p', s($comment->name).' - '.userdate($date), array('class'=>'authoranddate'));
+                $comments .= html_writer::tag('p', s($comment->name).' - '.userdate($date), array('class'=>'courseboard_authoranddate'));
                 $comments .= $this->box_end().'<hr>';
             }
 
@@ -180,7 +181,7 @@ class mod_courseboard_renderer extends plugin_renderer_base {
 
         $comments .= html_writer::tag('label', get_string('emptyCommentinput', 'courseboard'), array(
             'id'    => 'emptyCommFieldwarning'.$pid,
-            'class' => 'emptyFieldWarning'
+            'class' => 'courseboard_emptyFieldWarning'
         ));
 
         // If there are more than 6 comments then there is
@@ -189,7 +190,7 @@ class mod_courseboard_renderer extends plugin_renderer_base {
 
             $comments .= html_writer::tag('input', '', array(
                     'onClick' => 'courseboard_commHide('.$pid.');',
-                    'class'   => 'commHide',
+                    'class'   => 'courseboard_commHide',
                     'type'    => 'button',
                     'id'      => 'commHide'.$pid,
                     'value'   => get_string('hideComments', 'courseboard'))
@@ -226,10 +227,10 @@ class mod_courseboard_renderer extends plugin_renderer_base {
         $post .= $this->output->box(
                 format_text($data->post->post,
                 $format = FORMAT_MOODLE),
-                '', 'post').'</br>';
+                '', 'post', array('class' => 'courseboard_post')).'</br>';
 
         $date = $data->post->timecreated;
-        $post .= html_writer::tag('p', s($data->post->name).' - '.userdate($date), array('class'=>'authoranddate'));
+        $post .= html_writer::tag('p', s($data->post->name).' - '.userdate($date), array('class'=>'courseboard_authoranddate'));
 
         $startable = new html_table();
 
@@ -302,7 +303,7 @@ class mod_courseboard_renderer extends plugin_renderer_base {
         $post .= html_writer::tag('input', '', array(
                 'type'    => 'button',
                 'onClick' => 'courseboard_commShow('.$pid.');',
-                'class'   => 'commShowbtns',
+                'class'   => 'courseboard_commShowbtns',
                 'id'      => 'commShow'.$pid,
                 'data'    => $combtndata,
                 'cn'      => count($data->comments),
@@ -313,14 +314,14 @@ class mod_courseboard_renderer extends plugin_renderer_base {
         $post .= html_writer::tag('input', '', array(
                 'style'   => 'display:none;',
                 'onClick' => 'courseboard_commHide('.$pid.');',
-                'class'   => 'commHidebtns',
+                'class'   => 'courseboard_commHidebtns',
                 'type'    => 'button',
                 'id'      => 'commHide'.$pid,
                 'value'   => get_string('hideComments', 'courseboard'))
         );
 
         $post .= '<hr>';
-        $post .= $this->output->box_start('comments', 'commfield'.$pid, array('class' => 'commfield'));
+        $post .= $this->output->box_start('courseboard_comments', 'commfield'.$pid, array('class' => 'commfield'));
 
         // Get data which will be needed to create the comments for this post.
         $commentdata = new stdclass();

@@ -164,7 +164,8 @@ if ($fnc = required_param('fnc', PARAM_ALPHA)) {
                 }
 
 
-                echo html_writer::tag('h3', get_string('loadingpleasewait', 'courseboard'), array('id' => 'postsloading'));
+                echo html_writer::tag('h3', get_string('loadingpleasewait', 'courseboard'), 
+                                        array('id' => 'postsloading', 'class' => 'courseboard_postsloading'));
 
             } else {
                 echo html_writer::tag('h2', get_string('noposts', 'courseboard'), array(

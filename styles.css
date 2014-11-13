@@ -1,52 +1,52 @@
 /* Styles in view.php */
-#main{
+.courseboard_main{
     overflow:auto;
 }
-.noposts{
+.courseboard_noposts{
     margin-top:10%;
     margin-bottom:20%;
 }
 /* Styles in renderer.php */
 
-.nameinputdescription{
+.courseboard_nameinputdescription{
     font-size:11.9px;
     color:#999;
     cursor:default;
 }
 
-.authoranddate{
+.courseboard_authoranddate{
     font-size:13px;
     color:#999;
 }
 
-#postinputfield{
+.courseboard_postinputfield{
     margin-top:1%;
 }
 
-.emptyFieldWarning{
+.courseboard_emptyFieldWarning{
     display:none;
     color:red;
 }
 
-.commShowbtns{
+.courseboard_commShowbtns{
     margin-top:3%;
 }
 
-#post{
+.courseboard_post{
     margin-top:2%;
 }
 
-.commHidebtns{
+.courseboard_commHidebtns{
     display:none;
 }
 
-.comments{
+.courseboard_comments{
     display:none;
     margin-left:15%;
 }
 
 /* Styles in courseboard_ajax.php */
 
-#postsloading{
+.courseboard_postsloading{
     display:none;
 }

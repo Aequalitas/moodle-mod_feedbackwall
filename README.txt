@@ -7,5 +7,3 @@ the students choose so, anonymously and that in a quick way
 a little discussion could also be possible. In the end, this plugin should
 enhance the communication between student and teacher, but student to student too.
 
-Anonymously means that the author of a post would be Anonymous.
-Rating a post isnt anonymous.
