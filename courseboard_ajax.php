@@ -28,11 +28,11 @@ define('AJAX_SCRIPT', true);
 require_once(dirname(dirname(dirname(__FILE__))).'/config.php');
 require_once(dirname(__FILE__).'/lib.php');
 
-
 if (!confirm_sesskey()) {
     echo 'ERROR(sesskey)';
     die();
 }
+
 
 $courseid = required_param('k', PARAM_INT);  // Those three params are used in every action.
 $coursemoduleid = required_param('r', PARAM_INT);
@@ -204,7 +204,12 @@ if ($fnc = required_param('fnc', PARAM_ALPHA)) {
             ), '*', MUST_EXIST);
 
             $newamountrating = 1 + $entry->rating;
-            $newaverage = ($stars + ($entry->ratingaverage)) / $newamountrating;
+            if($newamountrating != 1) {
+                $newaverage = ($stars + ($entry->ratingaverage)) / 2;
+            } else {
+                $newaverage = $stars; // If it is the first rate.
+            }
+            
 
             $updaterating = new stdClass();
             $updaterating->id = $postid;

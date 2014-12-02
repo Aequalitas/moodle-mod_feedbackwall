@@ -136,7 +136,6 @@ class mod_courseboard_renderer extends plugin_renderer_base {
 
     public function render_comment(stdclass $data) {
 
-        $date = $data->post->timecreated;
         $pid = $data->post->id;
         $comments = '';
 
@@ -145,7 +144,7 @@ class mod_courseboard_renderer extends plugin_renderer_base {
                 $comments .= $this->box_start('', s($comment->id).'comment'.$pid );
 
                 $comments .= format_text($comment->comment, $format = FORMAT_MOODLE).'</br>';
-                $comments .= html_writer::tag('p', s($comment->name).' - '.userdate($date), array('class'=>'courseboard_authoranddate'));
+                $comments .= html_writer::tag('p', s($comment->name).' - '.userdate($comment->timecreated), array('class'=>'courseboard_authoranddate'));
                 $comments .= $this->box_end().'<hr>';
             }
 
