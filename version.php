@@ -25,8 +25,8 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->version  = 2014111300;
+$plugin->version  = 2014120200;
 $plugin->requires = 2014041100;
 $plugin->component = 'mod_courseboard';
-$plugin->release = "0.83";
+$plugin->release = "0.84";
 $plugin->maturity = MATURITY_BETA;

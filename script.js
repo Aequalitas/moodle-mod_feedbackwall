@@ -252,7 +252,6 @@ function courseboard_courseboardRefresh(courseid, coursemoduleid, courseboardid,
             },
 
             success : function(data) {
-
                 $('#postsloading').hide();
                 $('#maindiv').html(data);
 

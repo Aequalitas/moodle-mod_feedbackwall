@@ -33,7 +33,6 @@ if (!confirm_sesskey()) {
     die();
 }
 
-
 $courseid = required_param('k', PARAM_INT);  // Those three params are used in every action.
 $coursemoduleid = required_param('r', PARAM_INT);
 $courseboardid = required_param('b', PARAM_INT);
@@ -53,6 +52,8 @@ if (!$cm = get_coursemodule_from_instance('courseboard', $courseboard->id, $cour
 
 require_course_login($course, false, $cm);
 $context = context_module::instance($cm->id);
+
+header('Content-Type: text/html; charset=utf-8'); // otherwise the response would be send in JSON-Type
 
 // AJAX-Querys, 'fnc' tells which kind of query it was.
 if ($fnc = required_param('fnc', PARAM_ALPHA)) {
@@ -207,7 +208,7 @@ if ($fnc = required_param('fnc', PARAM_ALPHA)) {
             if($newamountrating != 1) {
                 $newaverage = ($stars + ($entry->ratingaverage)) / 2;
             } else {
-                $newaverage = $stars; // If it is the first rate.
+                $newaverage = $stars; // If it is the first rate for this post.
             }
             
 
