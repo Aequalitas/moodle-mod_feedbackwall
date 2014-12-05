@@ -24,7 +24,7 @@
 
 function xmldb_courseboard_upgrade($oldversion) {
 
-    global $CFG, $THEME, $db;
+    global $CFG, $DB;
 
     $dbman = $DB->get_manager(); // loads ddl manager and xmldb classes
  
