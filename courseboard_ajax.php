@@ -28,6 +28,14 @@ define('AJAX_SCRIPT', true);
 require_once(dirname(dirname(dirname(__FILE__))).'/config.php');
 require_once(dirname(__FILE__).'/lib.php');
 
+
+header('Content-Type: text/html; charset=utf-8'); // otherwise the response would be send in JSON-Type
+
+if (!isloggedin()) {
+    echo "ERROR: " . get_string("offlineerror", "courseboard");
+    die(); 
+}
+
 if (!confirm_sesskey()) {
     echo 'ERROR(sesskey)';
     die();
@@ -51,9 +59,9 @@ if (!$cm = get_coursemodule_from_instance('courseboard', $courseboard->id, $cour
 }
 
 require_course_login($course, false, $cm);
+
 $context = context_module::instance($cm->id);
 
-header('Content-Type: text/html; charset=utf-8'); // otherwise the response would be send in JSON-Type
 
 // AJAX-Querys, 'fnc' tells which kind of query it was.
 if ($fnc = required_param('fnc', PARAM_ALPHA)) {
