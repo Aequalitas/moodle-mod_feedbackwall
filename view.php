@@ -63,6 +63,9 @@ if ($id) {
 
 require_login($course, true, $cm);
 
+$completion = new completion_info($course);
+$completion->set_module_viewed($cm);
+
 $context = context_module::instance($cm->id);
 require_capability('mod/courseboard:view', $context);
 
