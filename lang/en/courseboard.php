@@ -75,3 +75,26 @@ $string['latestcomment'] = 'latest comment';
 $string['latestratings'] = 'latest ratings';
 $string['latestrating'] = 'latest rating';
 $string['time'] = 'time';
+$string['newpostsubject'] = 'Courseboard: New Post - {$a->courseboardname}.';
+$string['newpostmessage'] = 'A new post is on a courseboard({$a->courseboardname}) available.
+ {$a->author} posted a new post - {$a->date}.
+ Courseboardlink: {$a->courseboardurl}.';
+$string['newpostsmall'] = '{$a->author} posted a new post.';
+$string['messageprovider:newpost'] = 'Notification about a new post.';
+$string['newcommentsubject'] = 'Courseboard: New comment - {$a->courseboardname}.';
+$string['newcommentmessage'] = 'There is a new comment available on a courseboard({$a->courseboardname}).
+ {$a->author} posted a new comment - {$a->date}.
+ Courseboardlink: {$a->courseboardurl}.';
+$string['newcommentsmall'] = 'Courseboard: New comment from {$a->author} is available.';
+$string['messageprovider:newcomment'] = 'Notification about a new comment.';
+$string['newratesubject'] = 'Courseboard: A post was rated - {$a->courseboardname}.';
+$string['newratemessage'] = 'A post was rated with {$a->stars} stars. {$a->courseboardname} - {$a->date}.
+ Courseboardlink: {$a->courseboardurl}.';
+$string['newratesmall'] = 'Courseboard: A post was rated with {$a->stars} stars.';
+$string['messageprovider:newrate'] = 'Notification when a post got rated.';
+$string['courseboard:notifynewcomment'] = 'Permission to get a notification about a new comment.';
+$string['courseboard:notifynewpost'] = 'Permission to get a notification about a new post.';
+$string['courseboard:notifynewrate'] = 'Permission to get a notification when a post got rated.';
+$string['courseboard:view'] = 'Permission to view a courseboard';
+$string['courseboard:write'] = 'Permission to write on a courseboard.';
+$string['courseboard:addinstance'] = 'Add a new courseboard.';

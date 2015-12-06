@@ -15,18 +15,25 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Code fragment to define the version of courseboard
- * This fragment is called by moodle_needs_upgrading() and /admin/index.php
+ * Defines message providers (types of message sent) for the courseboard module.
  *
- * @author  Franz Weidmann 
- * @package mod_courseboard
- * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package   mod_courseboard
+ * @copyright 12/2015 Franz Weidmann
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->version  = 2015120600; // The current module version (Date: YYYYMMDDXX).
-$plugin->requires = 2014051211; // Requires this Moodle version.
-$plugin->component = 'mod_courseboard';
-$plugin->release = "1.0";
-$plugin->maturity = MATURITY_STABLE;
+$messageproviders = array(
+    // Notify enrolled teacher/students about a new post/comment/rate.
+
+    'newpost' => array(
+        'capability' => 'mod/courseboard:notifynewpost'
+    ),
+    'newcomment' => array(
+        'capability' => 'mod/courseboard:notifynewcomment'
+    ),
+    'newrate' => array(
+        'capability' => 'mod/courseboard:notifynewrate'
+    )
+);

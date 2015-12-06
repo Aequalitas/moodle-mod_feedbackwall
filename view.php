@@ -63,9 +63,6 @@ if ($id) {
 
 require_login($course, true, $cm);
 
-$completion = new completion_info($course);
-$completion->set_module_viewed($cm);
-
 $context = context_module::instance($cm->id);
 require_capability('mod/courseboard:view', $context);
 
@@ -173,6 +170,7 @@ if (!empty($entry)) {
 } else {
     echo $OUTPUT->heading(get_string('noposts', 'courseboard'), 2, 'courseboard_noposts');
 }
+
 echo $OUTPUT->box_end();
 
 // Finish the page.

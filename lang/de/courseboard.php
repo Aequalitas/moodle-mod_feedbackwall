@@ -75,3 +75,26 @@ $string['latestcomment'] = 'letzter Kommentar';
 $string['latestratings'] = 'letzte Bewertungen';
 $string['latestrating'] = 'letzte Bewertung';
 $string['time'] = 'Zeit';
+$string['newpostsubject'] = 'Courseboard: Neuer Post - {$a->courseboardname}.';
+$string['newpostmessage'] = 'Ein neuer Post ist nun auf dem Courseboard {$a->courseboardname} zu lesen.
+ {$a->author} hat einen Post gepostet - {$a->date}.
+ Courseboardlink: {$a->courseboardurl}.';
+$string['newpostsmall'] = 'Neuer Courseboardpost von {$a->postAuthor} ist zu nun vefügbar.';
+$string['messageprovider:newpost'] = 'Nachricht über einen neuen Courseboardpost.';
+$string['newcommentsubject'] = 'Courseboard: Neuer Kommentar - {$a->courseboardname}.';
+$string['newcommentmessage'] = 'Ein neuer Kommentar ist nun auf dem Courseboard {$a->courseboardname} zu lesen.
+ {$a->author} hat ein neuen Kommentar verfasst - {$a->date}.
+ Courseboardlink: {$a->courseboardurl}.';
+$string['newcommentsmall'] = 'Courseboard: Neuer Kommentar von {$a->postAuthor} ist zu nun vefügbar.';
+$string['messageprovider:newcomment'] = 'Nachricht über einen neues Kommentar auf einem Courseboard.';
+$string['newratesubject'] = 'Courseboard: Neue Bewertung eines Posts - {$a->courseboardname}.';
+$string['newratemessage'] = 'Ein Post wurde mit {$a->stars} Sternen auf dem Courseboard bewertet. {$a->courseboardname} - {$a->date}.
+ Courseboardlink: {$a->courseboardurl}.';
+$string['newratesmall'] = 'Courseboard: Ein Post wurde mit {$a->stars} Sternen bewertet.';
+$string['messageprovider:newrate'] = 'Nachricht wenn ein Post geratet wurde.';
+$string['courseboard:notifynewcomment'] = 'Erlaubnis eine Nachricht über einen neuen Kommentar zu erhalten.';
+$string['courseboard:notifynewpost'] = 'Erlaubnis eine Nachricht über einen neuen Post zu erhalten.';
+$string['courseboard:notifynewrate'] = 'Erlaubnis eine Nachricht über eine Bewertung eines Posts zu erhalten.';
+$string['courseboard:view'] = 'Erlaubnis ein Courseboard anzusehen.';
+$string['courseboard:write'] = 'Erlaubnis auf ein Courseboard zu schreiben.';
+$string['courseboard:addinstance'] = 'Erstellung eines Courseboards.';

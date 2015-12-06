@@ -18,7 +18,7 @@
  * 
  *
  * @author  Franz Weidmann 
- * @version 10/2014
+ * @version 12/2015
  * @package mod_courseboard
  * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -27,7 +27,7 @@ define('AJAX_SCRIPT', true);
 
 require_once(dirname(dirname(dirname(__FILE__))).'/config.php');
 require_once(dirname(__FILE__).'/lib.php');
-
+require_once(dirname(__FILE__).'/locallib.php');
 
 header('Content-Type: text/html; charset=utf-8'); // otherwise the response would be send in JSON-Type
 
@@ -67,6 +67,7 @@ $context = context_module::instance($cm->id);
 if ($fnc = required_param('fnc', PARAM_ALPHA)) {
     switch($fnc) {
 
+
         case 'postInsert':
 
             require_capability('mod/courseboard:write', $context);
@@ -88,7 +89,18 @@ if ($fnc = required_param('fnc', PARAM_ALPHA)) {
             $postid = $DB->insert_record('courseboard_posts', $entry, true);
 
 
+            $messageInfo = new stdClass();
+            //Info for the message function
+            $messageInfo->courseboardname = $courseboard->name;
+            $messageInfo->author = $name;
+            $messageInfo->date = userdate($timecreated);
+            $messageInfo->courseboardurl = $CFG->wwwroot . '/mod/courseboard/view.php?id=' .  $coursemoduleid;
+            
+            courseboard_send_eventNotifications('post', $messageInfo, $context);
+
             break;
+
+
 
         case 'courseboardRefresh':
 
@@ -183,6 +195,9 @@ if ($fnc = required_param('fnc', PARAM_ALPHA)) {
 
             break;
 
+
+
+
         case 'rate':
 
             require_capability('mod/courseboard:write', $context);
@@ -229,7 +244,19 @@ if ($fnc = required_param('fnc', PARAM_ALPHA)) {
 
             $DB->update_record('courseboard_posts', $updaterating);
 
+            $messageInfo = new stdClass();
+            //Info for the message function
+            $messageInfo->courseboardname = $courseboard->name;
+            $messageInfo->stars = $stars;
+            $messageInfo->date = userdate($timecreated);
+            $messageInfo->courseboardurl = $CFG->wwwroot . '/mod/courseboard/view.php?id=' .  $coursemoduleid;
+            
+            courseboard_send_eventNotifications('rate', $messageInfo, $context);
+
             break;
+
+
+
 
         case 'commentInsert':
 
@@ -253,7 +280,19 @@ if ($fnc = required_param('fnc', PARAM_ALPHA)) {
 
             $DB->insert_record('courseboard_comments', $entry, false);
 
+            $messageInfo = new stdClass();
+            //Info for the message function
+            $messageInfo->courseboardname = $courseboard->name;
+            $messageInfo->author = $name;
+            $messageInfo->date = userdate($timecreated);
+            $messageInfo->courseboardurl = $CFG->wwwroot . '/mod/courseboard/view.php?id=' .  $coursemoduleid;
+            
+            courseboard_send_eventNotifications('comment', $messageInfo, $context);
+
             break;
+
+
+
 
         case 'commentsRefresh':
 
@@ -288,6 +327,9 @@ if ($fnc = required_param('fnc', PARAM_ALPHA)) {
             echo $rend->render_comment($data);
 
             break;
+
+
+
 
         default:
             break;
