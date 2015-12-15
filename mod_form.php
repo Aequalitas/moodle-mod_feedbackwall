@@ -67,7 +67,14 @@ class mod_courseboard_mod_form extends moodleform_mod {
             $mform->addRule('name', get_string('maximumchars', '', 255), 'maxlength', 255, 'client');
 
         // Adding the required 'intro' field to hold the description of the instance.
-           $this->add_intro_editor(true, get_string('intro', 'courseboard'));
+		if (version_compare(moodle_major_version(true), '2.9', '>='))
+		{
+			$this->standard_intro_elements();
+		}
+		else
+		{
+			$this->add_intro_editor(true, get_string('intro', 'courseboard'));
+		}
 
             // Add standard elements, common to all modules.
                 $features = new object();
